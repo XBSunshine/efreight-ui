@@ -1,0 +1,117 @@
+{
+  "info":[
+            {
+               "label": "航司代码",
+               "prop": "carrierCode",
+               "flag":"true",
+               "index":1,
+               "width":70,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "始发港",
+               "prop": "departureStation",
+               "flag":"true",
+               "index":2,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "目的港",
+               "prop": "arrivalStation",
+               "flag":"true",
+               "index":3,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "目的国",
+               "prop": "arrivalNationCode",
+               "flag":"true",
+               "index":4,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "IATA分区",
+               "prop": "routingName",
+               "flag":"true",
+               "index":5,
+               "width":85,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "运单排序",
+               "prop": "awbSort",
+               "flag":"true",
+               "index":6,
+               "width":75,
+               "align":"center",
+               "sortable":false
+             }, {
+               "label": "附加费代码",
+               "prop": "surchargeCode",
+               "flag":"true",
+               "index":7,
+               "width":90,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "附加费名称",
+               "prop": "surchargeName",
+               "flag":"true",
+               "index":8,
+               "width":120,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "单价",
+               "prop": "unitPrice",
+               "flag":"true",
+               "index":9,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "收费方式",
+               "prop": "chargeMethod",
+               "flag":"true",
+               "index":10,
+               "width":75,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "最低收费",
+               "prop": "chargeMin",
+               "flag":"true",
+               "index":11,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "最高收费",
+               "prop": "chargeMax",
+               "flag":"true",
+               "index":12,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "生效日期",
+               "prop": "beginDate",
+               "flag":"true",
+               "index":13,
+               "width":85,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "失效日期",
+               "prop": "endDate",
+               "flag":"true",
+               "index":14,
+               "width":85,
+               "align":"center",
+               "sortable":false
+             }
+     ]
+}

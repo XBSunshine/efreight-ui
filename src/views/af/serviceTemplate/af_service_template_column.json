@@ -1,0 +1,61 @@
+{
+  "info":[
+            {
+               "label": "业务范畴",
+               "prop": "businessScope",
+               "flag":"true",
+               "index":1,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "模板类型",
+               "prop": "templateType",
+               "flag":"true",
+               "index":2,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "始发港/目的港",
+               "prop": "portCode",
+               "flag":"true",
+               "index":3,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "模板名称",
+               "prop": "templateName",
+               "flag":"true",
+               "index":4,
+               "width":220,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "备注",
+               "prop": "templateRemark",
+               "flag":"true",
+               "index":5,
+               "width":320,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "操作人",
+               "prop": "editorName",
+               "flag":"true",
+               "index":6,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             }, {
+               "label": "操作日期",
+               "prop": "editTime",
+               "flag":"true",
+               "index":7,
+               "width":160,
+               "align":"center",
+               "sortable":false
+             }
+     ]
+}

@@ -1,0 +1,93 @@
+{
+  "info":[
+            {
+               "label": "人员姓名",
+               "prop": "userName",
+               "flag":"true",
+               "index":1,
+               "width":100,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "部门",
+               "prop": "deptName",
+               "flag":"true",
+               "index":2,
+               "width":180,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "票数",
+               "prop": "votes",
+               "flag":"true",
+               "index":3,
+               "width":150,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "件数",
+               "prop": "pieces",
+               "flag":"true",
+               "index":4,
+               "width":150,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "毛重",
+               "prop": "weight",
+               "flag":"true",
+               "index":5,
+               "width":150,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "体积",
+               "prop": "volume",
+               "flag":"true",
+               "index":6,
+               "width":150,
+               "align":"left",
+               "sortable":false
+             }, {
+               "label": "计费重量/计费吨",
+               "prop": "chargeWeight",
+               "flag":"true",
+               "index":7,
+               "width":150,
+               "align":"left",
+               "sortable":false
+             }, {
+              "label": "标箱量",
+              "prop": "containerNumber",
+              "flag":"true",
+              "index":8,
+              "width":70,
+              "align":"left",
+              "sortable":false
+            }, {
+              "label": "收入",
+              "prop": "incomeFunctionalAmount",
+              "flag":"true",
+              "index":9,
+              "width":150,
+              "align":"left",
+              "sortable":false
+            }, {
+              "label": "成本",
+              "prop": "costFunctionalAmount",
+              "flag":"true",
+              "index":10,
+              "width":150,
+              "align":"left",
+              "sortable":false
+            }, {
+              "label": "毛利",
+              "prop": "grossProfit",
+              "flag":"true",
+              "index":11,
+              "width":150,
+              "align":"left",
+              "sortable":false
+            }
+     ]
+}

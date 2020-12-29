@@ -1,0 +1,45 @@
+{
+  "css_report_no_writeoff":[
+            {
+               "label": "客户代码",
+               "prop": "coopCode",
+               "flag":"true",
+               "index":1,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "客户名称",
+               "prop": "coopName",
+               "flag":"true",
+               "index":2,
+               "width":350,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "应收未核销本币金额",
+               "prop": "incomeNoWriteoffFunctionalAmount",
+               "flag":"true",
+               "index":3,
+               "width":200,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "应付未核销本币金额",
+               "prop": "costNoWriteoffFunctionalAmount",
+               "flag":"true",
+               "index":4,
+               "width":200,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "余额",
+               "prop": "functionalAmountSubstraction",
+               "flag":"true",
+               "index":5,
+               "width":200,
+               "align":"right",
+               "sortable":false
+             }
+     ]
+}

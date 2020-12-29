@@ -1,0 +1,53 @@
+{
+  "info":[
+            {
+               "label": "类型",
+               "prop": "scType",
+               "flag":"true",
+               "index":1,
+               "width":70,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "代码",
+               "prop": "scCode",
+               "flag":"true",
+               "index":2,
+               "width":180,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "名称",
+               "prop": "scName",
+               "flag":"true",
+               "index":3,
+               "width":450,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "国家",
+               "prop": "nationNameEn",
+               "flag":"true",
+               "index":4,
+               "width":140,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "城市",
+               "prop": "cityNameEn",
+               "flag":"true",
+               "index":5,
+               "width":130,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "是否生效",
+               "prop": "isValid",
+               "flag":"true",
+               "index":6,
+               "width":70,
+               "align":"center",
+               "sortable":false
+             }
+     ]
+}

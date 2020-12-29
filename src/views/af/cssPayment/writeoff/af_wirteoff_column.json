@@ -1,0 +1,84 @@
+{
+  "afWriteoffInfo":[{
+              "label": "核销日期",
+              "prop": "writeoffDate",
+              "flag":"true",
+              "index":1,
+              "width":120,
+              "align":"center",
+              "sortable":false
+            }, {
+               "label": "核销单号",
+               "prop": "writeoffNum",
+               "flag":"true",
+               "index":2,
+               "width":160,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "供应商",
+               "prop": "customerName",
+               "flag":"true",
+               "index":3,
+               "width":280,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "对账单编号",
+               "prop": "paymentNum",
+               "flag":"true",
+               "index":4,
+               "width":160,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "对账单金额",
+               "prop": "amountPaymentStr",
+               "flag":"true",
+               "index":5,
+               "width":170,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "本次核销金额",
+               "prop": "amountWriteoffStr",
+               "flag":"true",
+               "index":6,
+               "width":170,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "核销人",
+               "prop": "creatorName",
+               "flag":"true",
+               "index":7,
+               "width":250,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "核销时间",
+              "prop": "createTime",
+               "flag":"true",
+               "index":8,
+               "width":150,
+               "align":"center",
+               "sortable":false
+             },{
+              "label": "科目代码",
+              "prop": "financialAccountCode",
+              "flag":"true",
+              "index":9,
+              "width":100,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "科目名称",
+              "prop": "financialAccountName",
+              "flag":"true",
+              "index":10,
+              "width":150,
+              "align":"center",
+              "sortable":false
+            }
+     ]
+}

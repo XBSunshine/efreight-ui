@@ -1,0 +1,141 @@
+{
+  "info":[
+            {
+               "label": "业务范畴",
+               "prop": "business_scope",
+               "flag":"true",
+               "index":1,
+               "width":50,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "客户代码",
+               "prop": "coop_code",
+               "flag":"true",
+               "index":2,
+               "width":90,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "客户名称",
+               "prop": "coop_name",
+               "flag":"true",
+               "index":3,
+               "width":220,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "票数",
+               "prop": "order_count",
+               "flag":"true",
+               "index":4,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "票数占比",
+               "prop": "order_count_per",
+               "flag":"true",
+               "index":5,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "计重/计费吨/标箱",
+               "prop": "plan_charge_weight_count",
+               "flag":"true",
+               "index":6,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "占比(计重/计费吨/标箱)",
+               "prop": "plan_charge_weight_count_per",
+               "flag":"true",
+               "index":7,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "收入",
+               "prop": "income_functional_amount_count",
+               "flag":"true",
+               "index":8,
+               "width":100,
+               "align":"right",
+               "sortable":true
+             },{
+               "label": "收入占比",
+               "prop": "income_functional_amount_count_per",
+               "flag":"true",
+               "index":9,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "毛利",
+               "prop": "gross_profit_count",
+               "flag":"true",
+               "index":10,
+               "width":100,
+               "align":"right",
+               "sortable":true
+             },{
+               "label": "毛利占比",
+               "prop": "gross_profit_count_per",
+               "flag":"true",
+               "index":11,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "单位毛利",
+               "prop": "unit_gross_profit",
+               "flag":"true",
+               "index":12,
+               "width":100,
+               "align":"right",
+               "sortable":true
+             },{
+               "label": "毛利率",
+               "prop": "gross_profit_margin",
+               "flag":"true",
+               "index":13,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "上次合作订单号",
+               "prop": "order_code",
+               "flag":"true",
+               "index":14,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "年度合作票数",
+               "prop": "order_count_year",
+               "flag":"true",
+               "index":15,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "年度合作(计重/计费吨/标箱)",
+               "prop": "plan_charge_weight_count_year",
+               "flag":"true",
+               "index":16,
+               "width":100,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "年度合作毛利",
+               "prop": "gross_profit_year",
+               "flag":"true",
+               "index":17,
+               "width":100,
+               "align":"right",
+               "sortable":true
+             }
+     ]
+}

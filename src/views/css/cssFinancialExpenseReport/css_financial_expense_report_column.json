@@ -1,0 +1,126 @@
+{
+  "info":[
+            {
+               "label": "状态",
+               "prop": "expenseReportStatus",
+               "flag":"true",
+               "index":1,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },
+             {
+                "label": "申请日期",
+                "prop": "expenseReportDate",
+                "flag":"true",
+                "index":2,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "报销单号",
+                "prop": "expenseReportNum",
+                "flag":"true",
+                "index":3,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "申请人",
+                "prop": "creatorName",
+                "flag":"true",
+                "index":4,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "申请部门",
+                "prop": "deptName",
+                "flag":"true",
+                "index":5,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "付款方式",
+                "prop": "paymentMethod",
+                "flag":"true",
+                "index":6,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "报销性质",
+                "prop": "expenseReportMode",
+                "flag":"true",
+                "index":7,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "费用用途",
+                "prop": "expensesUse",
+                "flag":"true",
+                "index":8,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "报销金额",
+                "prop": "expenseAmount",
+                "flag":"true",
+                "index":9,
+                "width":120,
+                "align":"right",
+                "sortable":false
+              },{
+                "label": "审批人",
+                "prop": "approvalDeptManagerName",
+                "flag":"true",
+                "index":10,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "复审人",
+                "prop": "approvalFinancialUserName",
+                "flag":"true",
+                "index":11,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "随附单据",
+                "prop": "attachedDocument",
+                "flag":"true",
+                "index":12,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "报销备注",
+                "prop": "expenseReportRemark",
+                "flag":"true",
+                "index":13,
+                "width":120,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "费用科目",
+                "prop": "expenseFinancialAccountName",
+                "flag":"true",
+                "index":14,
+                "width":200,
+                "align":"center",
+                "sortable":false
+              },{
+                "label": "银行科目",
+                "prop": "bankFinancialAccountName",
+                "flag":"true",
+                "index":15,
+                "width":200,
+                "align":"center",
+                "sortable":false
+              }
+     ]
+}

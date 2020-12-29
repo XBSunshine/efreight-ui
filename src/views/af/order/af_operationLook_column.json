@@ -1,0 +1,199 @@
+{
+  "afInfo":[
+             {
+               "label": "主运单号",
+               "prop": "awbNumber",
+               "flag":"true",
+               "index":1,
+               "width":120,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "分单号",
+               "prop": "hawbNumber",
+               "flag":"true",
+               "index":2,
+               "width": 250,
+               "align":"center",
+               "sortable":true
+             },{
+               "label": "客户名称",
+               "prop": "coopName",
+               "flag":"true",
+               "index":3,
+               "width":250,
+               "align":"left",
+               "headerAlign": "center",
+               "sortable":false
+            },{
+              "label": "始发港",
+              "prop": "departureStation",
+              "flag":"true",
+              "index":4,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "目的港",
+              "prop": "arrivalStation",
+              "flag":"true",
+              "index":5,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "预配件重",
+              "prop": "pieces",
+              "flag":"true",
+              "index":5,
+              "width": 100,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "运单件重",
+              "prop": "waybillHeavy",
+              "flag":"true",
+              "index":5,
+              "width": 100,
+              "align":"center",
+              "sortable":false
+
+            },{
+               "label": "航班号",
+               "prop": "expectFlight",
+               "flag":"true",
+               "index":6,
+               "width":90,
+               "align":"center",
+               "sortable":false
+              },{
+                "label": "航班日期",
+                "prop": "expectDeparture",
+                "flag":"true",
+                "index":7,
+                "width":90,
+                "align":"center",
+                "sortable":false
+              },{
+               "label": "货站",
+              "prop": "departureWarehouseName",
+               "flag":"true",
+               "index":8,
+               "width":90,
+               "align":"center",
+               "sortable":false
+              },{
+                "label": "状态",
+                "prop": "presets",
+                "flag":"true",
+                "index":9,
+                "width":90,
+                "align":"center",
+                "sortable":false
+              },{
+               "label": "审结",
+               "prop": "audit",
+               "flag":"true",
+               "index":10,
+               "width":90,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "运抵",
+               "prop": "arrived",
+               "flag":"true",
+               "index":11,
+               "width":90,
+               "align":"center",
+               "sortable":false
+            },{
+               "label": "放行",
+               "prop": "passed",
+               "flag":"true",
+               "index":12,
+               "width":90,
+               "align":"center",
+               "sortable":false
+            },{
+              "label": "查验",
+              "prop": "checked",
+              "flag":"true",
+              "index":13,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "标签",
+              "prop": "tag",
+              "flag":"true",
+              "index":14,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "AMS",
+              "prop": "ams",
+               "flag":"true",
+               "index":14,
+               "width":90,
+               "align":"center",
+               "sortable":false
+            },{
+               "label": "入区车牌",
+               "prop": "entryPlate",
+               "flag":"true",
+               "index":15,
+               "width":90,
+               "align":"center",
+               "sortable":false
+            },{
+              "label": "预报件数",
+              "prop": "planPieces",
+              "flag":"true",
+              "index":16,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "预报毛重",
+              "prop": "planWeight",
+              "flag":"true",
+              "index":17,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "预报体积",
+              "prop": "planVolume",
+              "flag":"true",
+              "index":18,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+               "label": "实际件数",
+               "prop": "confirmPieces",
+               "flag":"true",
+               "index":19,
+               "width":90,
+               "align":"center",
+               "sortable":false
+             },{
+                "label": "实际毛重",
+                "prop": "confirmWeight",
+                "flag":"true",
+                "index":20,
+                "width":90,
+                "align":"center",
+                "sortable":false
+              },{
+               "label": "实际体积",
+               "prop": "confirmVolume",
+               "flag":"true",
+               "index":21,
+               "width":90,
+               "align":"center",
+               "sortable":false
+             }
+     ]
+}

@@ -1,0 +1,85 @@
+{
+  "info":[
+            {
+               "label": "业务范畴",
+               "prop": "businessScope",
+               "flag":"true",
+               "index":1,
+               "width":80,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "主单号/客户单号",
+               "prop": "awbNumber",
+               "flag":"true",
+               "index":2,
+               "width":130,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "订单号",
+               "prop": "orderCode",
+               "flag":"true",
+               "index":3,
+               "width":125,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "离港日期/到港日期/用车日期/发车日期/业务日期",
+               "prop": "flightDate",
+               "flag":"true",
+               "index":4,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "客户名称",
+               "prop": "orderCustomerName",
+               "flag":"true",
+               "index":5,
+               "width":250,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "责任销售",
+               "prop": "salesName",
+               "flag":"true",
+               "index":6,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "责任客服",
+               "prop": "servicerName",
+               "flag":"true",
+               "index":7,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "收款客户",
+               "prop": "customerName",
+               "flag":"true",
+               "index":8,
+               "width":250,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "应收费用项目",
+               "prop": "serviceName",
+               "flag":"true",
+               "index":9,
+               "width":200,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "应收金额",
+               "prop": "incomeAmountStr",
+               "flag":"true",
+               "index":10,
+               "width":150,
+               "align":"right",
+               "sortable":false
+             }
+     ]
+}

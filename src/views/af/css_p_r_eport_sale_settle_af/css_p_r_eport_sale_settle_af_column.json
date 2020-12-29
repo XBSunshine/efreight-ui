@@ -1,0 +1,269 @@
+{
+  "cssPREportSettleAf":[
+             {
+               "label": "业务范畴",
+               "prop": "businessScope",
+               "flag":"true",
+               "index":1,
+               "width":50,
+               "align":"center",
+               "sortable":false
+             },{
+              "label": "订单号",
+              "prop": "orderCode",
+              "flag":"true",
+              "index":2,
+              "width":120,
+              "align":"center",
+              "sortable":true
+            },{
+              "label": "主单号",
+              "prop": "awbNumber",
+              "flag":"true",
+              "index":3,
+              "width":120,
+              "align":"center",
+              "sortable":true
+            },{
+              "label": "客户单号",
+              "prop": "customerNumber",
+              "flag":"true",
+              "index":3,
+              "width":120,
+              "align":"center",
+              "sortable":true
+            },{
+              "label": "订单状态",
+              "prop": "order_status",
+              "flag":"true",
+              "index":4,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "应收情况",
+              "prop": "income_status",
+              "flag":"true",
+              "index":5,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "应付情况",
+              "prop": "cost_status",
+              "flag":"true",
+              "index":6,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "客户代码",
+              "prop": "coopCode",
+              "flag":"true",
+              "index":7,
+              "width":90,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "客户名称",
+              "prop": "coopName",
+              "flag":"true",
+              "index":8,
+              "width":220,
+              "align":"left",
+              "sortable":false
+            },{
+              "label": "服务产品",
+              "prop": "businessProduct",
+              "flag":"true",
+              "index":9,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "始发港",
+              "prop": "departureStation",
+              "flag":"true",
+              "index":10,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "目的港",
+              "prop": "arrivalStation",
+              "flag":"true",
+              "index":11,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "中转港1",
+              "prop": "transitStation",
+              "flag":"true",
+              "index":12,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "中转港2",
+              "prop": "transitStation2",
+              "flag":"true",
+              "index":13,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "货源地",
+              "prop": "goodsSourceCode",
+              "flag":"true",
+              "index":14,
+              "width":80,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "航线",
+              "prop": "routingName",
+              "flag":"true",
+              "index":15,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "航班号/船次号",
+              "prop": "expectFlight",
+              "flag":"true",
+              "index":16,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "开航日期/到港日期",
+              "prop": "expectDeparture",
+              "flag":"true",
+              "index":17,
+              "width":100,
+              "align":"center",
+              "sortable":true
+            },{
+              "label": "责任销售",
+              "prop": "salesName",
+              "flag":"true",
+              "index":18,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "责任客服",
+              "prop": "servicerName",
+              "flag":"true",
+              "index":19,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "货物类型",
+              "prop": "goodsType",
+              "flag":"true",
+              "index":20,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "件数/标箱数",
+              "prop": "pieces",
+              "flag":"true",
+              "index":21,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "毛重",
+              "prop": "weight",
+              "flag":"true",
+              "index":22,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "体积",
+              "prop": "volume",
+              "flag":"true",
+              "index":23,
+              "width":70,
+              "align":"center",
+              "sortable":false
+            },{
+              "label": "计重/计费吨",
+              "prop": "chargeWeight",
+              "flag":"true",
+              "index":24,
+              "width":70,
+              "align":"center",
+              "sortable":true
+            },{
+              "label": "应收金额 (本币)",
+              "prop": "incomeFunctionalAmount",
+              "flag":"true",
+              "index":25,
+              "width":100,
+              "align":"right",
+              "sortable":true
+            },{
+              "label": "应付金额(本币)",
+              "prop": "costFunctionalAmount",
+              "flag":"true",
+              "index":26,
+              "width":100,
+              "align":"right",
+              "sortable":true
+            },{
+              "label": "毛利(本币)",
+              "prop": "grossProfit",
+              "flag":"true",
+              "index":27,
+              "width":100,
+              "align":"right",
+              "sortable":true
+            },{
+              "label": "单公斤毛利/单位毛利",
+              "prop": "grossProfitWeight",
+              "flag":"true",
+              "index":28,
+              "width":70,
+              "align":"right",
+              "sortable":true
+            },{
+               "label": "财务日期",
+               "prop": "financialDate",
+               "flag":"true",
+               "index":29,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+             "label": "供应商代码",
+             "prop": "supplierCode",
+             "flag":"true",
+             "index":30,
+             "width":90,
+             "align":"center",
+             "sortable":false
+           },{
+             "label": "订舱代理/运单来源",
+             "prop": "awbFrom",
+             "flag":"true",
+             "index":31,
+             "width":220,
+             "align":"left",
+             "sortable":false
+           },{
+             "label": "销售部门",
+             "prop": "deptName",
+             "flag":"true",
+             "index":32,
+             "width":70,
+             "align":"left",
+             "sortable":false
+           }
+     ]
+}

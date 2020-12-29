@@ -1,0 +1,104 @@
+{
+  "supplier":[
+           {
+               "label": "供应商代码",
+               "prop": "coopCode",
+               "index":1,
+               "width":90,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "供应商名称",
+               "prop": "coopName",
+               "index":2,
+               "width":220,
+               "align":"left",
+               "sortable":false
+             },{
+               "label": "供应商类型",
+               "prop": "coopType",
+               "index":3,
+               "width":110,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "票数",
+               "prop": "orderCount",
+               "index":4,
+               "width":60,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "票数占比",
+               "prop": "orderCountRatio",
+               "index":5,
+               "width":80,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "计重/计费吨/箱量",
+               "prop": "chargeWeight",
+               "index":6,
+               "width":120,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "占比(计重/计费吨/箱量)",
+               "prop": "chargeWeightRatio",
+               "index":7,
+               "width":80,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "成本",
+               "prop": "costFunctionalAmount",
+               "index":8,
+               "width":120,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "成本占比",
+               "prop": "costFunctionalAmountRatio",
+               "index":9,
+               "width":80,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "单位成本",
+               "prop": "unitCostFunctionalAmount",
+               "index":10,
+               "width":120,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "上次合作订单号",
+               "prop": "orderCode",
+               "index":11,
+               "width":120,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "年度合作票数",
+               "prop": "yearOrderCount",
+               "flag":"true",
+               "index":12,
+               "width":100,
+               "align":"center",
+               "sortable":false
+             },{
+               "label": "年度合作货量",
+               "prop": "yearChargeWeight",
+               "index":13,
+               "width":120,
+               "align":"right",
+               "sortable":false
+             },{
+               "label": "年度合作成本",
+               "prop": "yearCostFunctionalAmount",
+               "index":14,
+               "width":120,
+               "align":"right",
+               "sortable":false
+             }
+     ]
+}
