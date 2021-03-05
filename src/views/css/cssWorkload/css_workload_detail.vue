@@ -14,9 +14,9 @@
 						<a href="javascript:void(0)" @click="cellClick(scope.row)" style="color: #137DFA;text-decoration: underline;">{{scope.row.order_code}}</a>
 					</template>
 				</el-table-column>
-				<el-table-column v-if="item.prop=='awb_number'&&(flagAE||flagAI||flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" label="主单号" :width="item.width" :align="item.align" :sortable="item.sortable">
+				<el-table-column v-if="item.prop=='awb_number'&&(flagAE||flagAI||flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" label="主单号" :width="item.width" :align="item.align" :sortable="item.sortable">
 					<template slot-scope="scope">
-						<span v-if="flagAE||flagTE">{{scope.row.awb_number}}</span>
+						<span v-if="flagAE||flagTE||flagTI">{{scope.row.awb_number}}</span>
 						<span v-if="flagAI">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
 						<span v-if="flagSE">{{returnAwb(scope.row,'mbl_number','hawb_number')}}</span>
 						<span v-if="flagSI">{{returnAwb(scope.row,'mbl_number','hawb_number')}}</span>
@@ -25,21 +25,22 @@
 
         <el-table-column v-if="item.prop=='awb_number' && flagIO" :key="index" :prop="item.prop" label="客户单号" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
         <el-table-column v-if="item.prop=='business_product' && flagAE" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-				<el-table-column v-if="item.prop=='container_method' && (flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='container_method' && (flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='coop_name'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 
 				<el-table-column v-if="item.prop=='awb_from_name' && flagAE" :key="index" :prop="item.prop" label="运单来源" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-				<el-table-column v-if="item.prop=='awb_from_name' && (flagSE||flagTE)" :key="index" :prop="item.prop" label="订舱代理" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='awb_from_name' && (flagSE||flagTE||flagTI)" :key="index" :prop="item.prop" label="订舱代理" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 
 				<!--AE-->
 				<el-table-column v-if="item.prop=='departure_station' && (flagAE||flagAI) " :key="index" :prop="item.prop" label="始发港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='arrival_station'&& (flagLC)" :key="index" :prop="item.prop" label="目的城市" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
         <el-table-column v-if="item.prop=='arrival_station'&& (flagIO)" :key="index" :prop="item.prop" label="目的地" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-				<el-table-column v-if="item.prop=='arrival_station'&& (flagSE||flagSI||flagTE||flagAE||flagAI)" :key="index" :prop="item.prop" label="目的港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='arrival_station'&& (flagSE||flagSI||flagTE||flagTI||flagAE||flagAI)" :key="index" :prop="item.prop" label="目的港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='expect_flight' && (flagAE||flagAI)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='expect_departure' && flagAE" :key="index" :prop="item.prop" label="航班日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='expect_departure' && flagLC" :key="index" :prop="item.prop" label="用车日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='expect_departure' && flagTE" :key="index" :prop="item.prop" label="发车日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+        <el-table-column v-if="item.prop=='expect_departure' && flagTI" :key="index" :prop="item.prop" label="到达日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
         <el-table-column v-if="item.prop=='expect_departure' && flagIO" :key="index" :prop="item.prop" label="业务日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<!--AI-->
 				<el-table-column v-if="item.prop=='expect_departure' && (flagAI||flagSI)" :key="index" :prop="item.prop" label="到港日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
@@ -53,7 +54,7 @@
 				<el-table-column v-if="item.prop=='creatorName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 
 				<!--SE or SI or TE-->
-				<el-table-column v-if="item.prop=='departure_station' && (flagSE||flagSI||flagTE) " :key="index" :prop="item.prop" label="起运港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='departure_station' && (flagSE||flagSI||flagTE||flagTI) " :key="index" :prop="item.prop" label="起运港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='departure_station' && (flagLC) " :key="index" :prop="item.prop" label="始发城市" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
         <el-table-column v-if="item.prop=='departure_station' && (flagIO) " :key="index" :prop="item.prop" label="始发地" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 				<el-table-column v-if="item.prop=='ship_name' && (flagSE||flagSI)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
@@ -62,9 +63,9 @@
 					</template>
 				</el-table-column>
 				<el-table-column v-if="item.prop=='expect_departure' && flagSE" :key="index" :prop="item.prop" label="离港日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-				<el-table-column v-if="item.prop=='chargeWeight' && (flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" label="计费吨" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-				<el-table-column v-if="item.prop=='containerList' && (flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-				<el-table-column v-if="item.prop=='containerNumber' && (flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='chargeWeight' && (flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" label="计费吨" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='containerList' && (flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+				<el-table-column v-if="item.prop=='containerNumber' && (flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 			</template>
 		</el-table>
 		<viewVisibleTagAE ref="addMission" v-if="viewVisibleAE" :visible.sync="viewVisibleAE" :frow="ffrow"></viewVisibleTagAE>
@@ -72,6 +73,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="ffrow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="ffrow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="ffrow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="ffrow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="ffrow"></viewVisibleTagLC>
     <viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="ffrow"></viewVisibleTagIO>
 		<setVisibleTag ref="addMission" v-if="setVisible" :visible.sync="setVisible"></setVisibleTag>
@@ -84,6 +86,7 @@
 	import viewVisibleVueSE from '../../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '../../sc/si/order/main/order_view.vue'
 	import viewVisibleVueTE from '../../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '../../tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLC from '../../lc/order/main/order_view.vue'
   import viewVisibleVueIO from '../../io/order/main/order_view.vue'
 	import columns from './css_workload_detail_column.json'
@@ -107,6 +110,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
         viewVisibleIO: false,
 				flagAE: false,
@@ -114,6 +118,7 @@
 				flagSE: false,
 				flagSI: false,
 				flagTE: false,
+        flagTI: false,
 				flagLC: false,
         flagIO: false,
 				setVisible: false,
@@ -133,6 +138,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
       'viewVisibleTagIO': viewVisibleVueIO,
 		},
@@ -167,6 +173,11 @@
 			} else {
 				this.flagTE = false;
 			}
+      if (this.frow.businessScope == 'TI') {
+          this.flagTI = true;
+      } else {
+          this.flagTI = false;
+      }
 			if (this.frow.businessScope == 'LC') {
 				this.flagLC = true;
 			} else {
@@ -216,7 +227,7 @@
 						if ((this.frow.businessScope === 'AE') && arrayC[i].prop === 'awb_from_name') {
 							arrayC[i].label = "运单来源";
 						}
-						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'awb_from_name') {
+						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'awb_from_name') {
 							arrayC[i].label = "订舱代理";
 						}
 						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI') && arrayC[i].prop === 'departure_station') {
@@ -228,10 +239,10 @@
             if ((this.frow.businessScope === 'IO') && arrayC[i].prop === 'departure_station') {
               arrayC[i].label = "始发地";
             }
-						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'departure_station') {
+						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'departure_station') {
 							arrayC[i].label = "起运港";
 						}
-						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'arrival_station') {
+						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'arrival_station') {
 							arrayC[i].label = "目的港";
 						}
 						if ((this.frow.businessScope === 'LC') && arrayC[i].prop === 'arrival_station') {
@@ -252,6 +263,9 @@
 						if ((this.frow.businessScope === 'TE') && arrayC[i].prop === 'expect_departure') {
 							arrayC[i].label = "发车日期";
 						}
+            if ((this.frow.businessScope === 'TI') && arrayC[i].prop === 'expect_departure') {
+                arrayC[i].label = "到达日期";
+            }
 						if ((this.frow.businessScope === 'SE') && arrayC[i].prop === 'expect_departure') {
 							arrayC[i].label = "离港日期";
 						}
@@ -261,7 +275,7 @@
 						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'LC' || this.frow.businessScope ==="IO") && arrayC[i].prop === 'chargeWeight') {
 							arrayC[i].label = "计费重量";
 						}
-						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'chargeWeight') {
+						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE'|| this.frow.businessScope === 'TI') && arrayC[i].prop === 'chargeWeight') {
 							arrayC[i].label = "计费吨";
 						}
             if ((this.frow.businessScope === 'IO')) {
@@ -279,10 +293,10 @@
 						if ((this.frow.businessScope !== 'AE') && arrayC[i].prop === 'business_product') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'container_method') {
+						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'container_method') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'AE' && this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'awb_from_name') {
+						if ((this.frow.businessScope !== 'AE' && this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'awb_from_name') {
 							indexDelete.push(i);
 						}
 						if ((this.frow.businessScope !== 'AE' && this.frow.businessScope !== 'AI') && arrayC[i].prop === 'expect_flight') {
@@ -291,10 +305,10 @@
 						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI') && arrayC[i].prop === 'ship_name') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'containerList') {
+						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'containerList') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'containerNumber') {
+						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'containerNumber') {
 							indexDelete.push(i);
 						}
 						if ((this.frow.businessScope == 'LC') && arrayC[i].prop === 'awb_number') {
@@ -319,7 +333,7 @@
 						if ((this.frow.businessScope === 'AE') && arrayC[i].prop === 'awb_from_name') {
 							arrayC[i].label = "运单来源";
 						}
-						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'awb_from_name') {
+						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'awb_from_name') {
 							arrayC[i].label = "订舱代理";
 						}
 						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI') && arrayC[i].prop === 'departure_station') {
@@ -331,10 +345,10 @@
             if ((this.frow.businessScope === 'IO') && arrayC[i].prop === 'departure_station') {
               arrayC[i].label = "始发地";
             }
-						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'departure_station') {
+						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'departure_station') {
 							arrayC[i].label = "起运港";
 						}
-						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'arrival_station') {
+						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'arrival_station') {
 							arrayC[i].label = "目的港";
 						}
 						if ((this.frow.businessScope === 'LC') && arrayC[i].prop === 'arrival_station') {
@@ -355,6 +369,9 @@
 						if ((this.frow.businessScope === 'TE') && arrayC[i].prop === 'expect_departure') {
 							arrayC[i].label = "发车日期";
 						}
+            if ((this.frow.businessScope === 'TI') && arrayC[i].prop === 'expect_departure') {
+              arrayC[i].label = "到达日期";
+            }
 						if ((this.frow.businessScope === 'SE') && arrayC[i].prop === 'expect_departure') {
 							arrayC[i].label = "离港日期";
 						}
@@ -364,7 +381,7 @@
 						if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'LC' || this.frow.businessScope === 'IO') && arrayC[i].prop === 'chargeWeight') {
 							arrayC[i].label = "计费重量";
 						}
-						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && arrayC[i].prop === 'chargeWeight') {
+						if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && arrayC[i].prop === 'chargeWeight') {
 							arrayC[i].label = "计费吨";
 						}
             if ((this.frow.businessScope === 'IO')) {
@@ -381,10 +398,10 @@
 						if ((this.frow.businessScope !== 'AE') && arrayC[i].prop === 'business_product') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'container_method') {
+						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'container_method') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'AE' && this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'awb_from_name') {
+						if ((this.frow.businessScope !== 'AE' && this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'awb_from_name') {
 							indexDelete.push(i);
 						}
 						if ((this.frow.businessScope !== 'AE' && this.frow.businessScope !== 'AI') && arrayC[i].prop === 'expect_flight') {
@@ -393,10 +410,10 @@
 						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI') && arrayC[i].prop === 'ship_name') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'containerList') {
+						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'containerList') {
 							indexDelete.push(i);
 						}
-						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE') && arrayC[i].prop === 'containerNumber') {
+						if ((this.frow.businessScope !== 'SE' && this.frow.businessScope !== 'SI' && this.frow.businessScope !== 'TE' && this.frow.businessScope !== 'TI') && arrayC[i].prop === 'containerNumber') {
 							indexDelete.push(i);
 						}
 						if ((this.frow.businessScope == 'LC') && arrayC[i].prop === 'awb_number') {
@@ -546,6 +563,16 @@
 						this.viewVisibleTE = true;
 					}
 				}
+        if (row.businessScope === 'TI') {
+            this.ffrow.activeName = "first";
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.ffrow.ifFullscreen = true
+                this.jumpToNewPage('view', this.ffrow, '/ti_order')
+            } else {
+                this.ffrow.ifFullscreen = false
+                this.viewVisibleTI = true;
+            }
+        }
 				if (row.businessScope === 'LC') {
 					this.ffrow.activeName = "first";
 					if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {

@@ -648,7 +648,7 @@
 
 			},
 
-      submitForm() {debugger
+      submitForm() {
         //校验装载时间并提示
         if (this.ruleForm.loadingDate&&this.getDateObj(this.ruleForm.loadingDate).getTime() < this.getCurrDateObj().getTime()) {
           this.$confirm('您录入的装载时间过早，如果继续发送有可能进入风险分析（海关罚款5W以下），继续提交点确认，返回修改点取消（建议装载时间在发送时间至少加4小时）', '提示', {
@@ -663,7 +663,7 @@
           this.doSaveForOperateLook()
         }
       },
-      doSaveForOperateLook() {debugger
+      doSaveForOperateLook() {
         this.$emit("shipperLetterCallback", {
           orderInfo: this.awbForm,
           hawbList: this.hawbList
@@ -875,7 +875,7 @@
 				this.ruleForm = this.hawbList[index]
 			}
 		},
-    created() {debugger
+    created() {
 			if (this.frow.ifHaveAwbNumber) {
 				this.ifHaveAwbNumberMake = this.frow.ifHaveAwbNumber
 			}

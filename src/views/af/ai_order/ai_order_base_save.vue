@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="" :fullscreen="ifFullscreen" width="1300px" :visible.sync="visible" :close-on-press-escape="false" :close-on-click-modal="false" :before-close="handleClose" :style="style" :show-close="!ifFullscreen">
+	<el-dialog title="" :fullscreen="ifFullscreen" width="1300px" :visible.sync="visible" :close-on-press-escape="false" :close-on-click-modal="false" :before-close="handleClose" :style="style" :show-close="!ifFullscreen" append-to-body='true'>
 		<div class="orderEditPage" style="width: 1280px;">
 			<el-form :model="ruleForm" :rules="rules" :inline="true" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="margin-left: 10px;">
 				<div style="margin-top: -15px;margin-bottom: 20px;">
@@ -37,21 +37,21 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-          <el-col class="elementWidth">
-            <el-form-item prop="servicerId">
-              <el-input style="width:80px;">
-                <template slot="prepend">
-                  <span>&nbsp;&nbsp;&nbsp;</span>
-                </template>
-                <el-select slot="suffix" v-model="ruleForm.servicerId" filterable placeholder="请选择" @change="setServicerName" style="width:102px;margin-right: -5px;">
-                  <el-option v-for="item in useroptions" :key="item.value" :label="item.label" :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
-                  </el-option>
-                </el-select>
-              </el-input>
-            </el-form-item>
-          </el-col>
+					<el-col class="elementWidth">
+						<el-form-item prop="servicerId">
+						<el-input style="width:80px;">
+							<template slot="prepend">
+							<span>&nbsp;&nbsp;&nbsp;</span>
+							</template>
+							<el-select slot="suffix" v-model="ruleForm.servicerId" filterable placeholder="请选择" @change="setServicerName" style="width:102px;margin-right: -5px;">
+							<el-option v-for="item in useroptions" :key="item.value" :label="item.label" :value="item.value">
+								<span style="float: left">{{ item.label }}</span>
+								<span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
+							</el-option>
+							</el-select>
+						</el-input>
+						</el-form-item>
+					</el-col>
 				</el-row>
 				<el-row>
 					<el-col class="elementWidth">
@@ -75,20 +75,20 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-          <el-col class="elementWidth">
-            <el-form-item>
-              <el-input class="widthWorkGroup" auto-complete="off" style="width:338px;" clearable>
-                <template slot="prepend">
-                  <span>工作组</span>
-                </template>
-                <el-select slot="suffix" v-model="ruleForm.workgroupId" placeholder="请选择工作组" style="width:240px;margin-right: -5px;" clearable>
-                  <el-option v-for="item in workgroups" :key="item.workgroupId" :label="item.workgroupName" :value="item.workgroupId">
-                  </el-option>
-                </el-select>
-              </el-input>
-            </el-form-item>
-          </el-col>
-<!--					<el-col class="elementWidth">
+					<el-col class="elementWidth">
+						<el-form-item>
+						<el-input class="widthWorkGroup" auto-complete="off" style="width:338px;" clearable>
+							<template slot="prepend">
+							<span>工作组</span>
+							</template>
+							<el-select slot="suffix" v-model="ruleForm.workgroupId" placeholder="请选择工作组" style="width:240px;margin-right: -5px;" clearable>
+							<el-option v-for="item in workgroups" :key="item.workgroupId" :label="item.workgroupName" :value="item.workgroupId">
+							</el-option>
+							</el-select>
+						</el-input>
+						</el-form-item>
+					</el-col>
+<!--				<el-col class="elementWidth">
 						<el-form-item label="" prop="servicerId">
 							<el-input style="width:340px;">
 								<template slot="prepend">责任客服</template>
@@ -102,7 +102,6 @@
 							</el-input>
 						</el-form-item>
 					</el-col>-->
-
 				</el-row>
 				<div style="padding:0px 0px 10px 0px">
 					<HR color="#eee" size="5">
@@ -311,6 +310,39 @@
 							</el-form-item>
 						</el-col>
 					</el-row>
+					<el-row v-show="showFlag2">
+					<el-col class="elementWidth" style="margin-left: 50px;">
+						<el-form-item prop="businessType">
+							<el-input style="width:300px;margin-right: 15px;">
+							<template slot="prepend">
+								<span>业务类型</span>
+							</template>
+							<el-select
+								slot="suffix"
+								v-model="ruleForm.businessType"
+								clearable
+								placeholder=""
+								style="width: 203px; margin-right:-5px"
+							>
+								<el-option
+								v-for="item in businessTypeOptions"
+								:key="item.code"
+								:label="item.label"
+								:value="item.code"
+								>
+								</el-option>
+							</el-select>
+							</el-input>
+						</el-form-item>
+            		</el-col>
+					<el-col class="elementWidth">
+						<el-form-item label="" prop="goodsNameEn">
+							<el-input class="widthWithFive" v-model="ruleForm.goodsNameEn" @input="ruleForm.goodsNameEn=strTrim(ruleForm.goodsNameEn).toUpperCase()" auto-complete="off" style="width:775px"  show-word-limit maxlength="200" clearable>
+								<template slot="prepend">&nbsp;&nbsp;英文品名</template>
+							</el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
 					<el-row v-show="showFlag2">
 						<el-col class="elementWidth" style="margin-left: 50px;">
 							<el-form-item label="" prop="cargoFlowType">
@@ -799,7 +831,9 @@
 						scName: '',
 						scPrintRemark: ''
 					},
-          workgroupId: '',
+					workgroupId: '',
+					businessType:'',
+					goodsNameEn:''
 				},
 				rules: {
 
@@ -950,7 +984,8 @@
 					//						message: '请输入成本',
 					//						trigger: ['blur', 'change']
 					//					}]
-				}
+				},
+				businessTypeOptions:[]
 			};
 		},
 		inject: ['findByPage', 'continueOperation'],
@@ -1292,6 +1327,12 @@
 				}
 			},
 			submitForm(formName) {
+				const loadingObj=this.$loading({
+					lock:true,
+					text:"提交中...",
+					spinner:"el-icon-loading",
+					background:"rgba(0,0,0,0.5)"
+				})
 				if (this.ruleForm.hawbNumber.length > 12) {
 					this.$confirm('分单号大于12位，确定继续么？', '提示', {
 						confirmButtonText: '确定',
@@ -1357,6 +1398,8 @@
 										this.loading = false
 									})
 
+							}else{
+								loadingObj.close();
 							}
 						});
 					}).catch(() => {});
@@ -1409,7 +1452,7 @@
 													} else {
 														codeFlag3 = 0
 													}
-													this.doSubmit(codeFlag1, codeFlag2, codeFlag3, formName);
+													this.doSubmit(codeFlag1, codeFlag2, codeFlag3, formName,loadingObj);
 
 												}.bind(this));
 										}.bind(this)).catch((error) => {
@@ -1419,15 +1462,18 @@
 									this.loading = false
 								})
 
+						}else{
+							loadingObj.close();
 						}
 					});
 				}
 			},
-			doSubmit(codeFlag1, codeFlag2, codeFlag3, formName) {
+			doSubmit(codeFlag1, codeFlag2, codeFlag3, formName,loadingObj) {
 
 				if (codeFlag1 == 1 && codeFlag2 == 1 && codeFlag3 == 1) {
-					this.submitForm3(formName);
+					this.submitForm3(formName,loadingObj);
 				} else {
+					loadingObj.close();
 					let info = "";
 					if (codeFlag1 != 1) {
 						info = info + "始发港"
@@ -1454,9 +1500,10 @@
 					});
 				}
 			},
-			submitForm3(formName) {
+			submitForm3(formName,loadingObj) {
 
 				if (this.ruleForm.awbNumber.length != 0 && (this.ruleForm.awbNumber.length != 11 && this.ruleForm.awbNumber.length != 12)) {
+					loadingObj.close();
 					this.openError("主单号为十一位或十二位");
 					return;
 				} else if (this.ruleForm.awbNumber.length != 0 && this.ruleForm.awbNumber.length == 12) {
@@ -1466,15 +1513,18 @@
 					let awbNumber3 = this.ruleForm.awbNumber.substring(4, 12);
 					let regE = /^[0-9]\d{0,2}$/;
 					if (!regE.test(awbNumber1)) {
+						loadingObj.close();
 						this.openError("主单号前三位为数字，请重新输入");
 						return;
 					}
 					let regE1 = /^[0-9]\d{0,7}$/;
 					if (!regE1.test(awbNumber3)) {
+						loadingObj.close();
 						this.openError("主单号后八位为数字，请重新输入");
 						return;
 					}
 					if (awbNumber2 != '-') {
+						loadingObj.close();
 						this.openError("主单号第四位为-，请重新输入");
 						return;
 					}
@@ -1483,6 +1533,7 @@
 					let awbNumber1 = this.ruleForm.awbNumber;
 					let regE = /^[0-9]\d{0,10}$/;
 					if (!regE.test(awbNumber1)) {
+						loadingObj.close();
 						this.openError("主单号为11位数字，请重新输入");
 						return;
 					}
@@ -1531,12 +1582,11 @@
 								} else {
 									this.openError(response.data.messageInfo);
 								}
-
+								loadingObj.close();
 							}.bind(this)).catch(function(error) {
 								let errorinfo = error.response.data.messageInfo;
-
 								this.openError(errorinfo);
-
+								loadingObj.close();
 							}.bind(this));
 					} else {
 						console.log('error submit!!');
@@ -1881,13 +1931,12 @@
 			this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
 				this.currencyCodeOptions = response.data.data;
 				this.msrCurrecnyCodeOptions = response.data.data;
-				if (this.currencyCodeOptions && this.currencyCodeOptions[0]) {
-					if ('CNY' != this.currencyCodeOptions[0].currency_code) {
-						this.ruleForm.currencyCode = this.currencyCodeOptions[0].currency_code;
-						this.ruleForm.msrCurrecnyCode = this.msrCurrecnyCodeOptions[0].currency_code;
-					}
-
-				}
+				// if (this.currencyCodeOptions && this.currencyCodeOptions[0]) {
+				// 	if ('CNY' != this.currencyCodeOptions[0].currency_code) {
+				// 		this.ruleForm.currencyCode = this.currencyCodeOptions[0].currency_code;
+				// 		this.ruleForm.msrCurrecnyCode = this.msrCurrecnyCodeOptions[0].currency_code;
+				// 	}
+				// }
 			}.bind(this));
 			this.$axios.get('/afbase/awb/selectCategory?category=货物海关代码').then(function(response) {
 				this.codeOptions = response.data.data;
@@ -1963,6 +2012,11 @@
 						this.openError(response.data.messageInfo)
 					}
 				});
+			this.$axios.get("/afbase/awb/selectCategory?category=业务模式").then(
+				function (response) {
+					this.businessTypeOptions = response.data.data;
+				}.bind(this)
+			);
 
 		}
 	}

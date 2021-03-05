@@ -4,9 +4,11 @@
 			<el-row>
 				<el-col class="elementWidth">
 					<el-form-item label="附件名称" prop="fileName" required label-width="115px">
-						<el-input v-model="ruleForm.fileName" auto-complete="off" clearable style="width:465px" :disabled="disabledFlag">
-						</el-input>
-					</el-form-item>
+            <el-input v-model="ruleForm.fileName" auto-complete="off"
+                      @change="ruleForm.fileName = strTrim(ruleForm.fileName)" clearable style="width:465px"
+                      :disabled="disabledFlag">
+            </el-input>
+          </el-form-item>
 				</el-col>
 			</el-row>
 			<el-row>
@@ -72,7 +74,6 @@
 		},
 		data() {
 			return {
-
 				ruleForm: {
 					businessScope: '',
 					orderId: '',
@@ -130,6 +131,9 @@
 		inject: ['queryOrderFiles'],
 		created() {
 			this.ruleForm.orderId = this.frow.orderId
+			this.ruleForm.orderCode=this.frow.orderCode;
+			this.ruleForm.orderUuid=this.frow.orderUuid;
+			this.ruleForm.pageName=this.frow.pageName;
 			this.ruleForm.businessScope = this.frow.businessScope
 			this.$axios.get('/hrs/org/getUpToken')
 				.then(function(response) {
@@ -191,23 +195,17 @@
 				} else {}
 			},
 			beforeAvatarUpload3(file) {
-				let now = new Date()
-				let year = now.getFullYear()
-				let month = now.getMonth() + 1
-				if (month < 10) {
-					month = '0' + month
-				}
-				this.uptoken.key = "Order_attachment_" + year.toString().substring(2) + month + "_" + this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
-				const isLt10M = file.size < 10 * 1024 * 1024;
-				if (!isLt10M) {
-					this.$message.error('上传模板大小不能超过 10MB!');
-				}
-				if (isLt10M) {
+        this.uptoken.key = this.buildUploadFileKey(file);
+        const isLt10M = file.size < 10 * 1024 * 1024;
+        if (!isLt10M) {
+          this.$message.error('上传模板大小不能超过 10MB!');
+        }
+        if (isLt10M) {
 
-					this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
-					this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
-				}
-				return isLt10M;
+          this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
+          this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+        }
+        return isLt10M;
 			},
 			handleSuccessChange3(response, file, fileList) { //上传成功后在图片框显示图片
 				this.$message.success('上传成功')
@@ -219,26 +217,20 @@
 				this.formData3.smallModelPhoto = filelists;
 			},
 			uploadChange(file, fileList) {
-				let now = new Date()
-				let year = now.getFullYear()
-				let month = now.getMonth() + 1
-				if (month < 10) {
-					month = '0' + month
-				}
-				this.uptoken.key = "Order_attachment_" + year.toString().substring(2) + month + "_" + this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
-				this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
-				if (this.ruleForm.fileName == null || this.ruleForm.fileName == '') {
-					this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
-				}
+        this.uptoken.key = this.buildUploadFileKey(file);
+        this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
+        if (this.ruleForm.fileName == null || this.ruleForm.fileName == '') {
+          this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+        }
 
-				/*if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP/JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
-				} else {
-					this.openError("附件格式有误")
+        /*if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP/JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
+        } else {
+          this.openError("附件格式有误")
           this.ruleForm.fileName = ''
           this.ruleForm.fileUrl = ''
-					return
-				}
-				if(this.ruleForm.fileType == '照片'){
+          return
+        }
+        if(this.ruleForm.fileType == '照片'){
             if("JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
 
             } else {
@@ -249,14 +241,14 @@
             }
         }else{
         }
-				if(file.size > 10 * 1024) {
+        if(file.size > 10 * 1024) {
             this.ruleForm.fileType = ''
             this.openError("上传模板大小不能超过 10MB")
             //return false
-				} else {
+        } else {
 
             this.$message.success('选择成功')
-				}*/
+        }*/
 
 			},
 			submitForm1(formName) { //上传成功后在图片框显示图片
@@ -495,16 +487,20 @@
 				return output
 			},
 
-			str2rstrUTF8(input) {
-				return unescape(encodeURIComponent(input))
-			},
+      str2rstrUTF8(input) {
+        return unescape(encodeURIComponent(input))
+      },
 
-			hexMD5(s) {
-				return this.rstr2hex(this.rawMD5(s))
-			},
-			rawMD5(s) {
-				return this.rstrMD5(this.str2rstrUTF8(s))
-			}
-		}
+      hexMD5(s) {
+        return this.rstr2hex(this.rawMD5(s))
+      },
+      rawMD5(s) {
+        return this.rstrMD5(this.str2rstrUTF8(s))
+      },
+      buildUploadFileKey(file) {
+        let orgUuid = localStorage.getItem("orgUuid");
+        return 'org/' + new Date().format("yyMM") + '/' + orgUuid + "/order_attachment_" + this.hexMD5(new Date().format("ddhhmmss")) + file.name.substring(file.name.lastIndexOf('.'));
+      }
+    }
 	}
 </script>

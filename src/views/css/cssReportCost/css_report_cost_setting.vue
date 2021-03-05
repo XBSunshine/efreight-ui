@@ -69,15 +69,18 @@
 					if (this.frow.businessScope.endsWith('E') && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "开航日期";
 					}
-					if (this.frow.businessScope.endsWith('I') && tableColumns[i].prop === 'flightDate') {
+					if ((this.frow.businessScope == 'AI' || this.frow.businessScope == 'SI') && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "到港日期";
 					}
 					if (this.frow.businessScope.endsWith('C') && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "用车日期";
 					}
-					if (this.frow.businessScope.startsWith('T') && tableColumns[i].prop === 'flightDate') {
+					if (this.frow.businessScope == 'TE' && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "发车日期";
 					}
+          if (this.frow.businessScope == 'TI' && tableColumns[i].prop === 'flightDate') {
+              tableColumns[i].label = "到达日期";
+          }
 					if (this.frow.businessScope == 'IO' && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "业务日期";
 					}

@@ -144,6 +144,9 @@
 		inject: ['queryOrderFiles'],
 		created() {
 			this.ruleForm.orderId = this.frow.orderId
+      this.ruleForm.orderCode=this.frow.orderCode;
+      this.ruleForm.orderUuid=this.frow.orderUuid;
+      this.ruleForm.pageName=this.frow.pageName;
 			this.ruleForm.businessScope = this.frow.businessScope
 			this.$axios.get('/hrs/org/getUpToken')
 				.then(function(response) {
@@ -163,7 +166,7 @@
       beforeAvatarUpload3(file,fileList) {
           if(this.noExecute) {
               this.noExecute = false
-              return
+              return false
           }
           if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP/JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
 
@@ -171,7 +174,7 @@
               this.openError("附件格式有误")
               this.ruleForm.fileName = ''
               this.ruleForm.fileUrl = ''
-              return
+            return false
           }
           if(this.ruleForm.fileType == '照片'){
               if("JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
@@ -180,7 +183,7 @@
                   this.openError("只可选择图片类型(JPG/JPEG/BMP/PNG)")
                   this.ruleForm.fileName = ''
                   this.ruleForm.fileUrl = ''
-                  return
+                return false
               }
           }else{
               /*if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP/JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
@@ -206,18 +209,11 @@
               return false;
           }else{*/
               if(file.size > 10 * 1024 * 1024) {
-                  this.ruleForm.fileType = ''
                   this.openError("上传模板大小不能超过 10MB")
-                  return
+                return false;
               } else {
-                  let now = new Date()
-                  let year = now.getFullYear()
-                  let month = now.getMonth() + 1
-                  if(month < 10) {
-                      month = '0' + month
-                  }
-                  this.uptoken.key = "Order_attachment_" + year.toString().substring(2) + month + "_" + this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
-                  this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
+                  this.uptoken.key = this.buildUploadFileKey(file);
+                this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
                   this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'))
                   /*if(this.ruleForm.fileName == null || this.ruleForm.fileName == '') {
                       this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
@@ -332,17 +328,17 @@
       },
 			uploadChange(file, fileList) {
 				if(this.noExecute) {
-					this.noExecute = false
-					return
-				}
+          this.noExecute = false
+          return false
+        }
 				if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP/JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
 
 				} else {
-					this.openError("附件格式有误")
+          this.openError("附件格式有误")
           this.ruleForm.fileName = ''
           this.ruleForm.fileUrl = ''
-					return
-				}
+          return false
+        }
 				if(this.ruleForm.fileType == '照片'){
             if("JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
 
@@ -350,7 +346,7 @@
                 this.openError("只可选择图片类型(JPG/JPEG/BMP/PNG)")
                 this.ruleForm.fileName = ''
                 this.ruleForm.fileUrl = ''
-                return
+              return false
             }
         }else{
             /*if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
@@ -363,22 +359,16 @@
             }*/
         }
 				if(file.size > 10 * 1024 * 1024) {
-					this.ruleForm.fileType = ''
-					this.openError("上传模板大小不能超过 10MB")
-					return
-				} else {
-					let now = new Date()
-					let year = now.getFullYear()
-					let month = now.getMonth() + 1
-					if(month < 10) {
-						month = '0' + month
-					}
-					this.uptoken.key = "Order_attachment_" + year.toString().substring(2) + month + "_" + this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
-					this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
-					if(this.ruleForm.fileName == null || this.ruleForm.fileName == '') {
-						this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
-					}
-				}
+          this.ruleForm.fileType = ''
+          this.openError("上传模板大小不能超过 10MB")
+          return false
+        } else {
+          this.uptoken.key = this.buildUploadFileKey(file);
+          this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
+          if (this.ruleForm.fileName == null || this.ruleForm.fileName == '') {
+            this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+          }
+        }
 				this.$message.success('选择成功')
 			},
 			handleSuccessChange(response, file, fileList) { //上传成功后在图片框显示图片
@@ -584,17 +574,21 @@
 				return output
 			},
 
-			str2rstrUTF8(input) {
-				return unescape(encodeURIComponent(input))
-			},
+      str2rstrUTF8(input) {
+        return unescape(encodeURIComponent(input))
+      },
 
-			hexMD5(s) {
-				return this.rstr2hex(this.rawMD5(s))
-			},
-			rawMD5(s) {
-				return this.rstrMD5(this.str2rstrUTF8(s))
-			}
-		}
+      hexMD5(s) {
+        return this.rstr2hex(this.rawMD5(s))
+      },
+      rawMD5(s) {
+        return this.rstrMD5(this.str2rstrUTF8(s))
+      },
+      buildUploadFileKey(file) {
+        let orgUuid = localStorage.getItem("orgUuid");
+        return 'org/' + new Date().format("yyMM") + '/' + orgUuid + "/order_attachment_" + new Date().format("ddhhmmss") + "_" + new Date().getTime() + file.name.substring(file.name.lastIndexOf('.'));
+      }
+    }
 	}
 </script>
 <style type="text/css">

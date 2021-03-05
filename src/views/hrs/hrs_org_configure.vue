@@ -143,7 +143,7 @@
           </el-row>
           <el-row v-if="bankAccountSettings" :style="is1360? '': 'width:1366px'">
             <el-row class="header-color">
-              <div class="icon_subtract" style="display: none">
+              <div class="icon_subtract">
                 <i class="iconfont el-icon-myyuanquanjiahao" @click="addRow"
                    style="cursor: pointer;size: b5;color: #409EFF;"></i>
               </div>
@@ -171,7 +171,7 @@
                   </el-col>
                   <el-col :span="4">
                     <el-button type="primary" size="mini" class="upload-btn"
-                               @click="showImageCropper(400, 100, 'org_logo', -1)">上传LOGO
+                               @click="showImageCropper(400, 100, 'logo', -1)">上传LOGO
                     </el-button>
                     <el-button type="success" size="mini" class="view-btn"
                                :disabled="ruleForm.orgLogo == null || ruleForm.orgLogo == ''"
@@ -181,16 +181,16 @@
                 </el-row>
                 <el-row :gutter="6" class="bank-account-row">
                   <el-col :span="10">
-                    <el-input v-model="ruleForm.orgBankInfoCn" type="textarea" :rows="2" show-word-limit maxlength="200"
+                    <el-input v-model="ruleForm.orgBankInfoCn" type="textarea" :rows="2" show-word-limit maxlength="300"
                               placeholder="银行账号(中文)"/>
                   </el-col>
                   <el-col :span="10">
-                    <el-input v-model="ruleForm.orgBankInfoEn" type="textarea" :rows="2" show-word-limit maxlength="200"
+                    <el-input v-model="ruleForm.orgBankInfoEn" type="textarea" :rows="2" show-word-limit maxlength="300"
                               placeholder="银行账号(英中文)"/>
                   </el-col>
                   <el-col :span="4">
                     <el-button type="primary" size="mini" class="upload-btn"
-                               @click="showImageCropper(300, 300, 'org_seal', -1)">上传印章
+                               @click="showImageCropper(300, 300, 'seal', -1)">上传印章
                     </el-button>
                     <el-button type="success" size="mini" class="view-btn"
                                :disabled="ruleForm.orgSeal == null || ruleForm.orgSeal == ''"
@@ -201,11 +201,11 @@
                 <el-row :gutter="6" class="bank-account-row">
                   <el-col :span="10">
                     <el-input v-model="ruleForm.orgAddressInfoCn" type="textarea" :rows="2" show-word-limit
-                              maxlength="200" placeholder="地址(中文)"/>
+                              maxlength="300" placeholder="地址(中文)"/>
                   </el-col>
                   <el-col :span="10">
                     <el-input v-model="ruleForm.orgAddressInfoEn" type="textarea" :rows="2" show-word-limit
-                              maxlength="200" placeholder="地址(英文)"/>
+                              maxlength="300" placeholder="地址(英文)"/>
                   </el-col>
                 </el-row>
                 <el-row>
@@ -227,7 +227,7 @@
                     </el-col>
                     <el-col :span="4">
                       <el-button type="primary" size="mini" class="upload-btn"
-                                 @click="showImageCropper(400, 100, 'org_logo', index)">上传LOGO
+                                 @click="showImageCropper(400, 100, 'logo', index)">上传LOGO
                       </el-button>
                       <el-button type="success" size="mini" class="view-btn" :disabled="item.logoUrl == null"
                                  @click="viewPic(item.logoUrl)">查看LOGO
@@ -236,16 +236,16 @@
                   </el-row>
                   <el-row :gutter="6" class="bank-account-row">
                     <el-col :span="10">
-                      <el-input v-model="item.bankInfoCn" type="textarea" :rows="2" show-word-limit maxlength="200"
+                      <el-input v-model="item.bankInfoCn" type="textarea" :rows="2" show-word-limit maxlength="300"
                                 placeholder="银行账号(中文)"/>
                     </el-col>
                     <el-col :span="10">
-                      <el-input v-model="item.bankInfoEn" type="textarea" :rows="2" show-word-limit maxlength="200"
+                      <el-input v-model="item.bankInfoEn" type="textarea" :rows="2" show-word-limit maxlength="300"
                                 placeholder="银行账号(英文)"/>
                     </el-col>
                     <el-col :span="4">
                       <el-button type="primary" size="mini" class="upload-btn"
-                                 @click="showImageCropper(300, 300, 'org_seal', index)">上传印章
+                                 @click="showImageCropper(300, 300, 'seal', index)">上传印章
                       </el-button>
                       <el-button type="success" size="mini" class="view-btn" :disabled="item.sealUrl == null"
                                  @click="viewPic(item.sealUrl)">查看印章
@@ -254,11 +254,11 @@
                   </el-row>
                   <el-row :gutter="6" class="bank-account-row">
                     <el-col :span="10">
-                      <el-input v-model="item.addressInfoCn" type="textarea" :rows="2" show-word-limit maxlength="200"
+                      <el-input v-model="item.addressInfoCn" type="textarea" :rows="2" show-word-limit maxlength="300"
                                 placeholder="地址(中文)"/>
                     </el-col>
                     <el-col :span="10">
-                      <el-input v-model="item.addressInfoEn" type="textarea" :rows="2" show-word-limit maxlength="200"
+                      <el-input v-model="item.addressInfoEn" type="textarea" :rows="2" show-word-limit maxlength="300"
                                 placeholder="地址(英文)"/>
                     </el-col>
                   </el-row>
@@ -297,7 +297,18 @@
                  </el-form-item>
                </el-col>
                <el-col class="elementWidth">
-                 <el-form-item label-width="40px">
+                 <el-form-item label-width="28px">
+                   <el-input style="width:200px;">
+                     <template slot="prepend">预配是否暂存</template>
+                     <el-select slot="suffix" v-model="orderConfig.AE.fields.mft2201Save" placeholder="" style="width:78px; margin-right: -5px;">
+                       <el-option label="是" :value="true"></el-option>
+                       <el-option label="否"  :value="false"></el-option>
+                     </el-select>
+                   </el-input>
+                 </el-form-item>
+               </el-col>
+               <el-col class="elementWidth">
+                 <el-form-item label-width="27px">
                    <el-input style="width:240px;">
                      <template slot="prepend">默认货物类型</template>
                      <el-select slot="suffix" clearable  v-model="orderConfig.AE.fields.goodsType" placeholder="" style="width:115px; margin-right: -5px;">
@@ -307,7 +318,7 @@
                  </el-form-item>
                </el-col>
                <el-col class="elementWidth">
-                 <el-form-item label-width="40px">
+                 <el-form-item label-width="20px">
                    <el-input style="width:240px;">
                      <template slot="prepend">默认服务产品</template>
                      <el-select slot="suffix" clearable  v-model="orderConfig.AE.fields.businessProduct" placeholder="" style="width:115px; margin-right: -5px;">
@@ -316,16 +327,7 @@
                    </el-input>
                  </el-form-item>
                </el-col>
-               <el-col class="elementWidth">
-                 <el-form-item label-width="40px">
-                   <el-input style="width:240px;">
-                     <template slot="prepend">默认电池情况</template>
-                     <el-select slot="suffix" clearable  v-model="orderConfig.AE.fields.batteryType" placeholder="" style="width:115px; margin-right: -5px;">
-                       <el-option  v-for="item in remoteData.AE.batteryType" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                     </el-select>
-                   </el-input>
-                 </el-form-item>
-               </el-col>
+
               </el-row>
               <el-row v-show="orderConfig.AE.showFlag">
                 <el-col class="elementWidth">
@@ -346,12 +348,16 @@
                  </el-form-item>
                </el-col>
                <el-col class="elementWidth">
-                 <el-form-item  prop="iataCodeAe" label-width="20px">
-                   <el-input v-model="orderConfig.AE.fields.cataCertifiedSalesAgents" auto-complete="off" style="width: 323px" class="widthIataCode" clearable maxlength="20">
-                     <template slot="prepend">航协铜牌代码</template>
+                 <el-form-item label-width="20px">
+                   <el-input style="width:240px;">
+                     <template slot="prepend">默认电池情况</template>
+                     <el-select slot="suffix" clearable  v-model="orderConfig.AE.fields.batteryType" placeholder="" style="width:115px; margin-right: -5px;">
+                       <el-option  v-for="item in remoteData.AE.batteryType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                     </el-select>
                    </el-input>
                  </el-form-item>
                </el-col>
+
              </el-row>
              <el-row v-show="orderConfig.AE.showFlag">
                 <el-col class="elementWidth">
@@ -362,6 +368,13 @@
                        <el-option v-for="item in aeProductList" :key="item.value" :label="item.label" :value="item.value">
                        </el-option>
                      </el-select>
+                   </el-input>
+                 </el-form-item>
+               </el-col>
+               <el-col class="elementWidth">
+                 <el-form-item  prop="iataCodeAe" label-width="20px">
+                   <el-input v-model="orderConfig.AE.fields.cataCertifiedSalesAgents" auto-complete="off" style="width: 242px" class="widthIataCode" clearable maxlength="20">
+                     <template slot="prepend">航协铜牌代码</template>
                    </el-input>
                  </el-form-item>
                </el-col>
@@ -563,6 +576,50 @@
                  </el-form-item>
                </el-col>
              </el-row>
+             <el-row>
+               <el-col class="elementWidth">
+                 <el-form-item label="TI订单配置"></el-form-item>
+               </el-col>
+               <el-col class="elementWidth">
+                 <el-form-item label="" label-width="0px">
+                   <el-button type="text" size="small" v-if="orderConfig.TI.showFlag" v-on:click="showFlagSearch('TI')">收起<i class="el-icon-arrow-down"></i></el-button>
+                   <el-button type="text" size="small" v-if="!orderConfig.TI.showFlag" v-on:click="showFlagSearch('TI')">展开<i class="el-icon-arrow-up"></i></el-button>
+                 </el-form-item>
+               </el-col>
+             </el-row>
+             <el-row v-show="orderConfig.TI.showFlag">
+               <el-col class="elementWidth">
+                 <el-form-item label-width="40px">
+                   <el-input style="width:200px;">
+                     <template slot="prepend">锁账是否可见</template>
+                     <el-select slot="suffix" clearable v-model="orderConfig.TI.fields.financeLockView" placeholder="" style="width:78px; margin-right: -5px;">
+                       <el-option label="是" :value="true"></el-option>
+                       <el-option label="否"  :value="false"></el-option>
+                     </el-select>
+                   </el-input>
+                 </el-form-item>
+               </el-col>
+               <el-col class="elementWidth">
+                 <el-form-item label-width="40px">
+                   <el-input style="width:240px;">
+                     <template slot="prepend">默认货物类型</template>
+                     <el-select slot="suffix" clearable v-model="orderConfig.TI.fields.goodsType" placeholder="" style="width:115px; margin-right: -5px;">
+                       <el-option  v-for="(item, index) in remoteData.TI.goodsType" :key="index" :label="item.paramText" :value="item.paramText"></el-option>
+                     </el-select>
+                   </el-input>
+                 </el-form-item>
+               </el-col>
+               <el-col class="elementWidth">
+                 <el-form-item label-width="40px">
+                   <el-input style="width:240px;">
+                     <template slot="prepend">默认装箱方式</template>
+                     <el-select slot="suffix" clearable v-model="orderConfig.TI.fields.containerMethod" placeholder="" style="width:115px; margin-right: -5px;">
+                       <el-option  v-for="(item, index) in remoteData.TI.containerMethod" :key="index" :label="item.paramText" :value="item.paramText"></el-option>
+                     </el-select>
+                   </el-input>
+                 </el-form-item>
+               </el-col>
+             </el-row>
 
              <el-row>
                <el-col class="elementWidth">
@@ -688,15 +745,10 @@ export default {
         shortLogo: true,
         orgSeal: true,
       },
-      dic: {
-        "org_log_bg": "orgLogo",
-        "org_log_sm": "shortLogo",
-        "org_seal": "orgSeal",
-      },
       cropperOption: {
         autoCropWidth: 400,
         autoCropHeight: 100,
-        businessIdentity: 'org_log_bg',
+        businessIdentity: 'logo',
       },
       imageCropperVisible: false,
       imageCropperDataIndex: null,
@@ -744,7 +796,8 @@ export default {
             iataCode: '',
             cataCertifiedSalesAgents: null,
             rountingSignBusinessProduct: '',
-            rountingSign: 0
+            rountingSign: 0,
+            mft2201Save:false
           }
         },
         AI: {
@@ -774,6 +827,14 @@ export default {
           }
         },
         TE: {
+          showFlag: false,
+          fields: {
+            financeLockView: true,
+            goodsType: null,
+            containerMethod: null,
+          }
+        },
+        TI: {
           showFlag: false,
           fields: {
             financeLockView: true,
@@ -826,32 +887,32 @@ export default {
         orgBankInfoCn: [
           {
             min: 1,
-            max: 200,
-            message: '长度不超过 200',
+            max: 300,
+            message: '长度不超过 300',
             trigger: ['blur']
           }
         ],
         orgBankInfoEn: [
           {
             min: 1,
-            max: 200,
-            message: '长度不超过 200',
+            max: 300,
+            message: '长度不超过 300',
             trigger: ['blur']
           }
         ],
         orgAddressInfoCn: [
           {
             min: 1,
-            max: 200,
-            message: '长度不超过 200',
+            max: 300,
+            message: '长度不超过 300',
             trigger: ['blur']
           }
         ],
         orgAddressInfoEn: [
           {
             min: 1,
-            max: 200,
-            message: '长度不超过 200',
+            max: 300,
+            message: '长度不超过 300',
             trigger: ['blur']
           }
         ],
@@ -884,6 +945,10 @@ export default {
           containerMethod: [], //装箱方式
         },
         TE: {
+          goodsType: [],//货物类型
+          containerMethod: [], //装箱方式
+        },
+        TI: {
           goodsType: [],//货物类型
           containerMethod: [], //装箱方式
         },
@@ -936,7 +1001,12 @@ export default {
         } else {
           that.ruleForm.orderFinanceLockView = response.data.data.orderFinanceLockView;
         }
-
+       // debugger;
+        if(!response.data.data.orderConfig.mft2201Save){
+          that.ruleForm.orderConfig.mft2201Save = false;
+        }else{
+           that.ruleForm.orderConfig.mft2201Save = response.data.data.orderConfig.mft2201Save;
+        }
         that.backFillOrderConfig(response.data.data.orderConfig);
         that.buildAdditionalService(response.data.data.serviceMealConfigList || []);
         that.processStopDate(response.data.data.stopDate);
@@ -1086,6 +1156,7 @@ export default {
       loadRailwayGoodsType() {
         this.$axios.get('/sc/vScCategory/货物类型').then(function(response){
           this.remoteData.TE.goodsType = response.data.data;
+          this.remoteData.TI.goodsType = response.data.data;
         }.bind(this))
       },
       /**
@@ -1133,6 +1204,7 @@ export default {
       loadRailwayContainerMethod(){
         this.$axios.get('/sc/tcCategory/装箱方式').then(function(response){
           this.remoteData.TE.containerMethod = response.data.data;
+          this.remoteData.TI.containerMethod = response.data.data;
         }.bind(this))
       },
       loadShippingMethod(){
@@ -1154,6 +1226,7 @@ export default {
             // }
           }
           item.financeLockView = fields.financeLockView;
+          item.mft2201Save = fields.mft2201Save;
           orderConfig.push(item);
         }
         return orderConfig;
@@ -1226,10 +1299,10 @@ export default {
     imageCropperUploadSuccess(url) {
       if (this.imageCropperDataIndex == -1) {
         switch (this.cropperOption.businessIdentity) {
-          case "org_logo":
+          case "logo":
             this.ruleForm.orgLogo = url;
             break;
-          case "org_seal":
+          case "seal":
             this.ruleForm.orgSeal = url;
             break;
           default:
@@ -1239,10 +1312,10 @@ export default {
       if (this.imageCropperDataIndex > -1) {
         let data = this.ruleForm.orgBankConfigList[this.imageCropperDataIndex];
         switch (this.cropperOption.businessIdentity) {
-          case "org_logo":
+          case "logo":
             data.logoUrl = url;
             break;
-          case "org_seal":
+          case "seal":
             data.sealUrl = url;
             break;
           default:

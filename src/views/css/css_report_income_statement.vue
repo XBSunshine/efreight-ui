@@ -136,12 +136,20 @@
 				let theDate = new Date()
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
-				if (_month < 10) {
-					_month = "0" + _month;
-				}
+
 				if (flag == 0) {
+          if (_month === 0) {
+              _year = parseInt(_year) - 1;
+              _month = 12;
+          }
+          if (_month < 10) {
+              _month = "0" + _month;
+          }
 					return _year + "-" + _month + "-01"
 				} else if (flag == 1) {
+          if (_month < 10) {
+              _month = "0" + _month;
+          }
 					let oneDay = 24 * 60 * 60 * 1000
 					let lastDate = new Date(new Date(_year, _month, 1).getTime() - oneDay)
 					_month = lastDate.getMonth() + 1

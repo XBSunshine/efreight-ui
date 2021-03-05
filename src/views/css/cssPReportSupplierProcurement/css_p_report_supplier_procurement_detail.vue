@@ -175,6 +175,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="ffrow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="ffrow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="ffrow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="ffrow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="ffrow"></viewVisibleTagLC>
 		<viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="ffrow"></viewVisibleTagIO>
 		<setColumnTag ref="addMission" v-if="setColumnFlag" :visible.sync="setColumnFlag" :frow="ffrow"></setColumnTag>
@@ -187,6 +188,7 @@
 	import viewVisibleVueSE from '../../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '../../sc/si/order/main/order_view.vue'
 	import viewVisibleVueTE from '../../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '../../tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLC from '../../lc/order/main/order_view.vue'
 	import viewVisibleVueIO from '../../io/order/main/order_view.vue'
 	import setColumnVue from './css_p_report_supplier_procurement_detail_setting.vue'
@@ -211,6 +213,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
 				viewVisibleIO: false,
 				containerMethodFlag: 1,
@@ -241,6 +244,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
 			'viewVisibleTagIO': viewVisibleVueIO,
 			'setColumnTag': setColumnVue
@@ -423,7 +427,9 @@
 								column.label = "到港日期"
 							} else if (this.frow.businessScope == 'TE') {
 								column.label = "发车日期"
-							} else if (this.frow.businessScope == 'LC') {
+							} else if (this.frow.businessScope == 'TI') {
+                column.label = "到达日期"
+              } else if (this.frow.businessScope == 'LC') {
 								column.label = "用车日期"
 							} else if (this.frow.businessScope == 'IO') {
 								column.label = "业务日期"
@@ -433,7 +439,7 @@
 						if (column.prop == 'awbFrom') {
 							if (this.frow.businessScope == 'AE') {
 								column.label = "运单来源"
-							} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'SE') {
+							} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI' || this.frow.businessScope == 'SE') {
 								column.label = "订舱代理"
 							} else {
 								indexDelete.push(index)
@@ -441,7 +447,7 @@
 						}
 						//航线
 						if (column.prop == 'routingName') {
-							if (this.frow.businessScope == "TE" || this.frow.businessScope == "LC" || this.frow.businessScope == "IO") {
+							if (this.frow.businessScope == "TE" || this.frow.businessScope == 'TI' || this.frow.businessScope == "LC" || this.frow.businessScope == "IO") {
 								indexDelete.push(index)
 							}
 						}
@@ -453,7 +459,7 @@
 						}
 						//货物类型
 						if (column.prop == 'goodsType') {
-							if (!(this.frow.businessScope.startsWith('S') || this.frow.businessScope == 'TE')) {
+							if (!(this.frow.businessScope.startsWith('S') || this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI')) {
 								indexDelete.push(index)
 							}
 						}
@@ -614,6 +620,23 @@
 							}
 						})
 				}
+        if (row.businessScope === 'TI') {
+            this.$axios.get('/sc/tcOrder/' + row.orderId)
+                .then((response) => {
+                    this.ffrow.incomeRecorded = response.data.data.incomeRecorded
+                    this.ffrow.incomeStatus = response.data.data.incomeStatus
+                    this.ffrow.costRecorded = response.data.data.costRecorded
+                    this.ffrow.costStatus = response.data.data.costStatus
+                    this.ffrow.activeName = "first";
+                    if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                        this.ffrow.ifFullscreen = true
+                        this.jumpToNewPage('view', this.ffrow, '/ti_order')
+                    } else {
+                        this.ffrow.ifFullscreen = false
+                        this.viewVisibleTI = true;
+                    }
+                })
+        }
 				if (row.businessScope === 'LC') {
 					this.$axios.get('/sc/lcOrder/' + row.orderId)
 						.then((response) => {

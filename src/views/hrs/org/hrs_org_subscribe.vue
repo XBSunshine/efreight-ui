@@ -127,7 +127,11 @@ export default {
       for (let i = 0; i < 2; i++) {
         let timeInterval = i * 30 * 24 * 60 * 60 * 1000;
         let date = new Date(new Date().getTime() - timeInterval);
-        let item = date.getFullYear() + "-" + (date.getMonth() + 1);
+        let month = date.getMonth() + 1;
+        if (month < 10) {
+          month = "0" + month;
+        }
+        let item = date.getFullYear() + "-" + (month);
         this.dateOptions.push({label: item, value: item});
       }
     },

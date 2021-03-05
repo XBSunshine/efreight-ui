@@ -437,7 +437,7 @@
         }).then(function(response) {
         	this.serviceOptions = response.data.data;
         }.bind(this)).catch(function(error) {});
-        
+
         this.$axios.get2('/afbase/service/queryList', {
         	businessScope: this.frow.businessScope
         }).then(function(response) {
@@ -1005,7 +1005,7 @@
 						this.openError("请选择应收服务");
 						return;
 					}
-					if (this.data1[i].customerId) {
+					if (this.data1[i].customerId && this.data1[i].customerId != -1) {
 						try {
 							this.data2.forEach((row) => {
 								if (row.customerId == this.data1[i].customerId) {
@@ -1046,6 +1046,10 @@
           	this.openError("请录入应收金额");
           	return;
           }
+          if(this.data1[i].incomeAmount==0){
+            this.openError("应收金额不能为0");
+            return;
+          }
 					if (this.data1[i].incomeCurrency) {
 
 					} else {
@@ -1067,9 +1071,7 @@
 						this.openError("请选择应付服务");
 						return;
 					}
-					if (this.data2[i].customerId) {
-
-					} else {
+					if (!this.data2[i].customerId || this.data2[i].customerId == -1) {
 						this.openError("请选择付款对象");
 						return;
 					}
@@ -1095,6 +1097,10 @@
           if (!this.data2[i].costAmount) {
           	this.openError("请录入应付金额");
           	return;
+          }
+          if(this.data2[i].costAmount==0){
+            this.openError("应付金额不能为0");
+            return;
           }
 					if (this.data2[i].costCurrency) {
 

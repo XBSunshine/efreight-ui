@@ -8,6 +8,7 @@
 					<component :is="editTab" keep-alive :frow="ffrow"></component>
 				</el-tab-pane>
 				<el-tab-pane label="鉴定证书" name="identifyTab" v-if="identifyButtonFlag">
+					<!--<child1 v-if="isChildUpdate1"><component :is="identifyTab" keep-alive :frow="ffrow"></component></child1>-->
 					<component :is="identifyTab" keep-alive :frow="ffrow"></component>
 				</el-tab-pane>
 				<el-tab-pane label="安检货物品名清单" name="goodsTab">
@@ -20,10 +21,12 @@
 					<component :is="serviceTab" keep-alive :frow="ffrow"></component>
 				</el-tab-pane> -->
 				<el-tab-pane label="电子单证" name="fileTab" v-if="fileButtonFlag">
-					<component :is="fileTab" keep-alive :frow="ffrow"></component>
+					<component :is="fileTab" keep-alive :frow="ffrow" v-if="fileTabState" key="fileTabStates"></component>
+					<component :is="fileTab" keep-alive :frow="ffrow" v-if="fileTabState1"></component>
 				</el-tab-pane>
 				<el-tab-pane label="操作日志" name="logTab" v-if="logButtonFlag">
-					<component :is="logTab" keep-alive :frow="ffrow"></component>
+					<component :is="logTab" keep-alive :frow="ffrow" v-if="logTabState" key="logTabStates"></component>
+					<component :is="logTab" keep-alive :frow="ffrow" v-if="logTabState1"></component>
 				</el-tab-pane>
 			</el-tabs>
 		</div>
@@ -37,7 +40,6 @@
 	const fileTab = resolve => require(['@/views/af/ai_order/file_tab.vue'], resolve)
 	const serviceTab = resolve => require(['@/views/af/ai_order/service_tab.vue'], resolve)
 	const logTab = resolve => require(['@/views/af/ai_order/log_tab.vue'], resolve)
-
 	export default {
 		props: {
 			visible: {
@@ -70,7 +72,13 @@
 				identifyTab:'',
 				logTab: '',
 				ifFullscreen: false,
-				style:{}
+				style:{},
+				fileTabState:false,
+				fileTabStates:0,
+				fileTabState1:false,
+				logTabState:false,
+				logTabStates:0,
+				logTabState1:false,
 			};
 		},
 		inject: ['findByPage'],
@@ -80,6 +88,9 @@
 			}
 		},
 		created() {
+			this.$axios.get('/afbase/afoporder/selectOrderStatus?node_name=财务锁账&order_uuid=' + this.frow.orderUuid).then(function(response) {
+				this.frow.finishFlag=!response.data.data	
+			}.bind(this));
 			this.ifFullscreen = this.frow.ifFullscreen
 			if(this.ifFullscreen){
 				this.style.top = '0px'
@@ -139,6 +150,8 @@
 			if (buttonInfo.indexOf('af-oporder-weighttag') > -1) {
 				this.weightButtonFlag = true;
 			}
+			this.$set(this.frow,'updateState',false);
+			this.$set(this.frow,'updateLogTab',false);
 
 		},
 		methods: {
@@ -173,18 +186,51 @@
 						break
 					case 'identifyTab':
 						this.ffrow = this.frow
+						this.ffrow.pageName='操作订单'
 						this.identifyTab = identifyTab
 						this.helpDocumentUrl = ''
+						if(!this.frow.updateState){
+							this.fileTabState1=true
+							this.fileTabStat=false
+						}else{
+							this.fileTabStates+=1;
+							this.fileTabStat1=false
+						}
+						if(!this.frow.updateLogTab){
+							this.logTabState1=true
+							this.logTabState=false
+						}else{
+							this.logTabStates+=1
+							this.logTabState1=false
+						}
 						break
 					case 'goodsTab':
 						this.ffrow = this.frow
+						this.ffrow.pageName='操作订单'
 						this.goodsTab = goodsTab
 						this.helpDocumentUrl = ''
+						if(!this.frow.updateLogTab){
+							this.logTabState1=true
+							this.logTabState=false
+						}else{
+							this.logTabStates+=1
+							this.logTabState1=false
+						}
 						break
 					case 'fileTab':
 						this.ffrow = this.frow
+						this.ffrow.pageName='操作订单'
 						this.fileTab = fileTab
 						this.helpDocumentUrl = this.helpUrl2
+						if(this.frow.updateState){
+							this.fileTabStates+=1;
+							this.fileTabState=true
+							this.fileTabState1=false
+						}else{
+							this.fileTabStates+=1;
+							this.fileTabState=false
+							this.fileTabState1=true
+						}
 						break
 					case 'serviceTab':
 						this.ffrow = this.frow
@@ -195,11 +241,28 @@
 						this.ffrow = this.frow
 						this.logTab = logTab
 						this.helpDocumentUrl = this.helpUrl4
+						if(this.frow.updateLogTab){
+							this.logTabStates+=1
+							this.logTabState=true
+							this.logTabState1=false
+						}else{
+							this.logTabStates+=1;
+							this.logTabState=false
+							this.logTabState1=true
+						}
 						break
 					case 'weightTab':
 						this.ffrow = this.frow
+						this.ffrow.pageName='操作订单'
 						this.weightTab = weightTab
 						this.helpDocumentUrl = this.helpUrl5
+						if(!this.frow.updateLogTab){
+							this.logTabState1=true
+							this.logTabState=false
+						}else{
+							this.logTabStates+=1
+							this.logTabState1=false
+						}
 						break
 				}
 			}

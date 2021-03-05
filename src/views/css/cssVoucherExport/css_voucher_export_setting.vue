@@ -50,12 +50,6 @@
 			}
 		},
 		inject: ['findByPage'],
-		provide() {
-			return {
-				handleClose: this.handleClose,
-			}
-		},
-
 		methods: {
 			openError(info) {
 				this.$notify({
@@ -152,47 +146,35 @@
 				try {
 					tableColumns.forEach((column, index) => {
 						if (this.frow.activeName == 'income') {
-							if (column.prop == 'awbNumber' && (this.frow.businessScope == 'TE' || this.frow.businessScope == 'LC' || this.frow.businessScope == 'IO')) {
-								indexDelete.push(index)
-							}
-							if (column.prop == 'coopName') {
-								column.label = '客户名称'
-							}
 							if (column.prop == 'customerName') {
 								column.label = '收款客户'
 							}
-							if (column.prop == 'costFunctionalAmount' || column.prop == 'writeoffNumber' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'currency' || column.prop == 'invoiceDate' || column.prop == 'invoiceNumber' || column.prop == 'invoiceTitle' || column.prop == 'invoiceRemark' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount' || column.prop == 'bankFinancialAccount') {
+							if (column.prop == 'writeoffNum' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount' || column.prop == 'bankFinancialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.frow.activeName == 'cost') {
-							if (column.prop == 'awbNumber' && (this.frow.businessScope == 'TE' || this.frow.businessScope == 'LC' || this.frow.businessScope == 'IO')) {
-								indexDelete.push(index)
-							}
-							if (column.prop == 'coopName') {
-								column.label = '客户名称'
-							}
 							if (column.prop == 'customerName') {
 								column.label = '供应商'
 							}
-							if (column.prop == 'incomeFunctionalAmount' || column.prop == 'writeoffNumber' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'currency' || column.prop == 'invoiceDate' || column.prop == 'invoiceNumber' || column.prop == 'invoiceTitle' || column.prop == 'invoiceRemark' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount' || column.prop == 'bankFinancialAccount') {
+							if (column.prop == 'invoiceTitle' || column.prop == 'writeoffNum' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount' || column.prop == 'bankFinancialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.frow.activeName == 'incomeWriteoff') {
-							if (column.prop == 'coopName') {
+							if (column.prop == 'customerName') {
 								column.label = '收款客户'
 							}
-							if (column.prop == 'customerName' || column.prop == 'orderCode' || column.prop == 'awbNumber' || column.prop == 'customerNumber' || column.prop == 'coopCode' || column.prop == 'lockDate' || column.prop == 'incomeFunctionalAmount' || column.prop == 'costFunctionalAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount') {
+							if (column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.frow.activeName == 'costWriteoff') {
-							if (column.prop == 'coopName') {
+							if (column.prop == 'customerName') {
 								column.label = '供应商'
 							}
-							if (column.prop == 'customerName' || column.prop == 'orderCode' || column.prop == 'awbNumber' || column.prop == 'customerNumber' || column.prop == 'coopCode' || column.prop == 'lockDate' || column.prop == 'incomeFunctionalAmount' || column.prop == 'costFunctionalAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount') {
+							if (column.prop == 'invoiceTitle' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.frow.activeName == 'feeWriteoff') {
-							if (column.prop == 'customerName' || column.prop == 'writeoffNumber' || column.prop == 'writeoffDate' || column.prop == 'coopName' || column.prop == 'writeoffAmount' || column.prop == 'currency' || column.prop == 'invoiceDate' || column.prop == 'invoiceNumber' || column.prop == 'invoiceTitle' || column.prop == 'invoiceRemark' || column.prop == 'orderCode' || column.prop == 'awbNumber' || column.prop == 'customerNumber' || column.prop == 'coopCode' || column.prop == 'lockDate' || column.prop == 'incomeFunctionalAmount' || column.prop == 'costFunctionalAmount') {
+							if (column.prop == 'customerName' || column.prop == 'writeoffNum' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'invoiceDate' || column.prop == 'invoiceNum' || column.prop == 'invoiceTitle' || column.prop == 'amount' || column.prop == 'invoiceType') {
 								indexDelete.push(index)
 							}
 						}

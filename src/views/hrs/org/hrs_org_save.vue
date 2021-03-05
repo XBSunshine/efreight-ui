@@ -1401,7 +1401,7 @@
 			//
 			//chBillTemplate
 			beforeAvatarUpload3(file) {
-				this.uptoken.key = "BillTemplate_ch_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1421,7 +1421,7 @@
 				this.ruleForm.chBillTemplate = "http://doc.yctop.com/" + response.key;
 			},
       beforeAvatarUploadExcelChAE(file) {
-      	this.uptoken.key = "BillTemplate_excel_ch_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
       	const isLt3M = file.size < 3 * 1024 * 1024;
       	if (!isLt3M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1443,7 +1443,7 @@
 			//
 			//enBillTemplate
 			beforeAvatarUpload4(file) {
-				this.uptoken.key = "BillTemplate_en_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1464,7 +1464,7 @@
 			},
       //AE EN EXCEL
       beforeAvatarUploadExcelEnAE(file) {
-      	this.uptoken.key = "BillTemplate_excel_en_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
       	const isLt3M = file.size < 3 * 1024 * 1024;
       	if (!isLt3M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1531,7 +1531,7 @@
 
 
 			beforeAvatarUploadChAi(file) {
-				this.uptoken.key = "BillTemplate_ch_ai_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1552,7 +1552,7 @@
 			},
       //AI CH EXCEL
       beforeAvatarUploadExcelChAi(file) {
-      	this.uptoken.key = "BillTemplate_excel_ch_ai_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1573,7 +1573,7 @@
       },
 
 			beforeAvatarUploadEnAi(file) {
-				this.uptoken.key = "BillTemplate_en_ai_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1594,7 +1594,7 @@
 			},
       //AI EN EXCEL
       beforeAvatarUploadExcelEnAi(file) {
-      	this.uptoken.key = "BillTemplate_excel_en_ai_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1616,7 +1616,7 @@
 
 
 			beforeAvatarUploadChSe(file) {
-				this.uptoken.key = "BillTemplate_ch_se_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1637,7 +1637,7 @@
 			},
       //SE CH EXCEL
       beforeAvatarUploadExcelChSe(file) {
-      	this.uptoken.key = "BillTemplate_excel_ch_se_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1658,7 +1658,7 @@
       },
 
 			beforeAvatarUploadEnSe(file) {
-				this.uptoken.key = "BillTemplate_en_se_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1680,7 +1680,7 @@
 
       //SE EN EXCEL
       beforeAvatarUploadExcelEnSe(file) {
-      	this.uptoken.key = "BillTemplate_excel_en_se_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1702,7 +1702,7 @@
 
 
 			beforeAvatarUploadChSi(file) {
-				this.uptoken.key = "BillTemplate_ch_si_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1723,7 +1723,7 @@
 			},
       //SI CH EXCEL
       beforeAvatarUploadExcelChSi(file) {
-      	this.uptoken.key = "BillTemplate_excel_ch_si_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1744,7 +1744,7 @@
       },
 
 			beforeAvatarUploadEnSi(file) {
-				this.uptoken.key = "BillTemplate_en_si_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1765,7 +1765,7 @@
 			},
       //SI EN EXCEL
       beforeAvatarUploadExcelEnSi(file) {
-      	this.uptoken.key = "BillTemplate_excel_en_si_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1786,7 +1786,7 @@
       },
 
 			beforeAvatarUploadChTe(file) {
-				this.uptoken.key = "BillTemplate_ch_te_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1807,7 +1807,7 @@
 			},
       //TE CH EXCEL
       beforeAvatarUploadExcelChTe(file) {
-      	this.uptoken.key = "BillTemplate_excel_ch_te_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1828,7 +1828,7 @@
       },
 
 			beforeAvatarUploadEnTe(file) {
-				this.uptoken.key = "BillTemplate_en_te_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1849,7 +1849,7 @@
 			},
       //TE EN EXCEL
       beforeAvatarUploadExcelEnTe(file) {
-      	this.uptoken.key = "BillTemplate_excel_en_te_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1871,7 +1871,7 @@
 
 
 			beforeAvatarUploadChTi(file) {
-				this.uptoken.key = "BillTemplate_ch_ti_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1892,7 +1892,7 @@
 			},
       //TI CH EXCEL
       beforeAvatarUploadExcelChTi(file) {
-      	this.uptoken.key = "BillTemplate_excel_ch_ti_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1913,7 +1913,7 @@
       },
 
 			beforeAvatarUploadEnTi(file) {
-				this.uptoken.key = "BillTemplate_en_ti_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
 				const isLt10M = file.size < 3 * 1024 * 1024;
 				if (!isLt10M) {
 					this.$message.error('上传模板大小不能超过 3MB!');
@@ -1934,7 +1934,7 @@
 			},
       //TI EN EXCEL
       beforeAvatarUploadExcelEnTi(file) {
-      	this.uptoken.key = "BillTemplate_excel_en_ti_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
       	const isLt10M = file.size < 3 * 1024 * 1024;
       	if (!isLt10M) {
       		this.$message.error('上传模板大小不能超过 3MB!');
@@ -1956,7 +1956,7 @@
 
       //LC Ch PDF
       beforeAvatarUploadChLc(file) {
-          this.uptoken.key = "BillTemplate_ch_lc_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
           const isLt10M = file.size < 3 * 1024 * 1024;
           if (!isLt10M) {
               this.$message.error('上传模板大小不能超过 3MB!');
@@ -1977,15 +1977,15 @@
       },
       //LC EN PDF
       beforeAvatarUploadEnLc(file) {
-          this.uptoken.key = "BillTemplate_en_lc_" + new Date().getTime() + "_" + file.name;
-          const isLt10M = file.size < 3 * 1024 * 1024;
-          if (!isLt10M) {
-              this.$message.error('上传模板大小不能超过 3MB!');
-          }
-          if (isLt10M) {
-              this.ruleForm.enBillTemplateLc = "http://doc.yctop.com/" + this.uptoken.key
-          }
-          return isLt10M;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
+        const isLt10M = file.size < 3 * 1024 * 1024;
+        if (!isLt10M) {
+          this.$message.error('上传模板大小不能超过 3MB!');
+        }
+        if (isLt10M) {
+          this.ruleForm.enBillTemplateLc = "http://doc.yctop.com/" + this.uptoken.key
+        }
+        return isLt10M;
       },
       handleRemoveChangeEnLc(file, fileList) {
           var filelists = [];
@@ -1998,7 +1998,7 @@
       },
       //LC CH EXCEL
       beforeAvatarUploadExcelChLc(file) {
-          this.uptoken.key = "BillTemplate_excel_ch_lc_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
           const isLt10M = file.size < 3 * 1024 * 1024;
           if (!isLt10M) {
               this.$message.error('上传模板大小不能超过 3MB!');
@@ -2019,7 +2019,7 @@
       },
       //LC EN EXCEL
       beforeAvatarUploadExcelEnLc(file) {
-          this.uptoken.key = "BillTemplate_excel_en_lc_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
           const isLt10M = file.size < 3 * 1024 * 1024;
           if (!isLt10M) {
               this.$message.error('上传模板大小不能超过 3MB!');
@@ -2040,15 +2040,15 @@
       },
       //AE CH St Excel
       beforeAvatarUploadExcelChAeSt(file) {
-          this.uptoken.key = "BillTemplate_excel_ch_ae_st_" + new Date().getTime() + "_" + file.name;
-          const isLt3M = file.size < 3 * 1024 * 1024;
-          if (!isLt3M) {
-              this.$message.error('上传模板大小不能超过 3MB!');
-          }
-          if (isLt3M) {
-              this.ruleForm.statementTemplateAeExcelCn = "http://doc.yctop.com/" + this.uptoken.key
-          }
-          return isLt3M;
+        this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
+        const isLt3M = file.size < 3 * 1024 * 1024;
+        if (!isLt3M) {
+          this.$message.error('上传模板大小不能超过 3MB!');
+        }
+        if (isLt3M) {
+          this.ruleForm.statementTemplateAeExcelCn = "http://doc.yctop.com/" + this.uptoken.key
+        }
+        return isLt3M;
       },
       handleRemoveChangeExcelChAeSt(file, fileList) {
           var filelists = [];
@@ -2061,15 +2061,15 @@
       },
       //AE EN St Excel
       beforeAvatarUploadExcelEnAeSt(file) {
-          this.uptoken.key = "BillTemplate_excel_en_ae_st_" + new Date().getTime() + "_" + file.name;
-          const isLt3M = file.size < 3 * 1024 * 1024;
-          if (!isLt3M) {
-              this.$message.error('上传模板大小不能超过 3MB!');
-          }
-          if (isLt3M) {
-              this.ruleForm.statementTemplateAeExcelEn = "http://doc.yctop.com/" + this.uptoken.key
-          }
-          return isLt3M;
+        this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
+        const isLt3M = file.size < 3 * 1024 * 1024;
+        if (!isLt3M) {
+          this.$message.error('上传模板大小不能超过 3MB!');
+        }
+        if (isLt3M) {
+          this.ruleForm.statementTemplateAeExcelEn = "http://doc.yctop.com/" + this.uptoken.key
+        }
+        return isLt3M;
       },
       handleRemoveChangeExcelEnAeSt(file, fileList) {
           var filelists = [];
@@ -2082,15 +2082,15 @@
       },
       //AI CH St Excel
       beforeAvatarUploadExcelChAiSt(file) {
-          this.uptoken.key = "BillTemplate_excel_ch_ai_st_" + new Date().getTime() + "_" + file.name;
-          const isLt3M = file.size < 3 * 1024 * 1024;
-          if (!isLt3M) {
-              this.$message.error('上传模板大小不能超过 3MB!');
-          }
-          if (isLt3M) {
-              this.ruleForm.statementTemplateAiExcelCn = "http://doc.yctop.com/" + this.uptoken.key
-          }
-          return isLt3M;
+        this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
+        const isLt3M = file.size < 3 * 1024 * 1024;
+        if (!isLt3M) {
+          this.$message.error('上传模板大小不能超过 3MB!');
+        }
+        if (isLt3M) {
+          this.ruleForm.statementTemplateAiExcelCn = "http://doc.yctop.com/" + this.uptoken.key
+        }
+        return isLt3M;
       },
       handleRemoveChangeExcelChAiSt(file, fileList) {
           var filelists = [];
@@ -2103,7 +2103,7 @@
       },
       //Ai EN St Excel
       beforeAvatarUploadExcelEnAiSt(file) {
-          this.uptoken.key = "BillTemplate_excel_en_ai_st_" + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
           const isLt3M = file.size < 3 * 1024 * 1024;
           if (!isLt3M) {
               this.$message.error('上传模板大小不能超过 3MB!');
@@ -2124,7 +2124,7 @@
       },
         //SE CH St Excel
         beforeAvatarUploadExcelChSeSt(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_se_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2145,7 +2145,7 @@
         },
         //SE EN St Excel
         beforeAvatarUploadExcelEnSeSt(file) {
-            this.uptoken.key = "BillTemplate_excel_en_se_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2166,7 +2166,7 @@
         },
         //SI CH St Excel
         beforeAvatarUploadExcelChSiSt(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_si_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2187,7 +2187,7 @@
         },
         //SI EN St Excel
         beforeAvatarUploadExcelEnSiSt(file) {
-            this.uptoken.key = "BillTemplate_excel_en_si_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2208,7 +2208,7 @@
         },
         //TE CH St Excel
         beforeAvatarUploadExcelChTeSt(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_te_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2229,7 +2229,7 @@
         },
         //TE EN St Excel
         beforeAvatarUploadExcelEnTeSt(file) {
-            this.uptoken.key = "BillTemplate_excel_en_te_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2250,7 +2250,7 @@
         },
         //TI CH St Excel
         beforeAvatarUploadExcelChTiSt(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_ti_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2271,7 +2271,7 @@
         },
         //TI EN St Excel
         beforeAvatarUploadExcelEnTiSt(file) {
-            this.uptoken.key = "BillTemplate_excel_en_ti_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2292,7 +2292,7 @@
         },
         //LC CH St Excel
         beforeAvatarUploadExcelChLcSt(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_lc_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2313,7 +2313,7 @@
         },
         //LC EN St Excel
         beforeAvatarUploadExcelEnLcSt(file) {
-            this.uptoken.key = "BillTemplate_excel_en_lc_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2335,7 +2335,7 @@
 
         //IO Ch PDF
         beforeAvatarUploadChIo(file) {
-            this.uptoken.key = "BillTemplate_ch_io_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'ch');
             const isLt10M = file.size < 3 * 1024 * 1024;
             if (!isLt10M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2356,7 +2356,7 @@
         },
         //IO EN PDF
         beforeAvatarUploadEnIo(file) {
-            this.uptoken.key = "BillTemplate_en_io_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'pdf', 'en');
             const isLt10M = file.size < 3 * 1024 * 1024;
             if (!isLt10M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2377,7 +2377,7 @@
         },
         //IO CH EXCEL
         beforeAvatarUploadExcelChIo(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_io_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'ch');
             const isLt10M = file.size < 3 * 1024 * 1024;
             if (!isLt10M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2398,7 +2398,7 @@
         },
         //IO EN EXCEL
         beforeAvatarUploadExcelEnIo(file) {
-            this.uptoken.key = "BillTemplate_excel_en_io_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "debit_note", 'excel', 'en');
             const isLt10M = file.size < 3 * 1024 * 1024;
             if (!isLt10M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2419,7 +2419,7 @@
         },
         //IO CH St Excel
         beforeAvatarUploadExcelChIoSt(file) {
-            this.uptoken.key = "BillTemplate_excel_ch_io_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'ch');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2440,7 +2440,7 @@
         },
         //IO EN St Excel
         beforeAvatarUploadExcelEnIoSt(file) {
-            this.uptoken.key = "BillTemplate_excel_en_io_st_" + new Date().getTime() + "_" + file.name;
+          this.uptoken.key = this.buildUploadFileKey(file, "statement", 'excel', 'en');
             const isLt3M = file.size < 3 * 1024 * 1024;
             if (!isLt3M) {
                 this.$message.error('上传模板大小不能超过 3MB!');
@@ -2597,18 +2597,22 @@
 			clickshortLogo() {
 				if (this.ruleForm.shortLogo != null && this.ruleForm.shortLogo !== '') {
 					this.$message.error('只能上传一个文件')
-				}
-			},
-			clickorgSeal() {
-				if (this.ruleForm.orgSeal != null && this.ruleForm.orgSeal !== '') {
-					this.$message.error('只能上传一个文件')
-				}
-			},
-			// 关闭
-			handleClose() {
-				this.$emit('update:visible', false);
-			}
-		}
+        }
+      },
+      clickorgSeal() {
+        if (this.ruleForm.orgSeal != null && this.ruleForm.orgSeal !== '') {
+          this.$message.error('只能上传一个文件')
+        }
+      },
+      // 关闭
+      handleClose() {
+        this.$emit('update:visible', false);
+      },
+      buildUploadFileKey(file, business, fileType, lang) {
+        let orgUuid = localStorage.getItem("orgUuid");
+        return 'org/config/' + orgUuid + "/template_" + business + "_" + fileType + "_" + lang + "_" + new Date().format("yyMMddhhmmss") + file.name.substring(file.name.lastIndexOf('.'));
+      }
+    }
 	}
 </script>
 <style scoped>

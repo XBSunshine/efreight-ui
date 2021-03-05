@@ -458,6 +458,9 @@
         if (_month < 10) {
           _month = "0" + _month;
         }
+        if (_day < 10) {
+            _day = "0" + _day;
+        }
         return _year + "-" + _month +"-"+ _day+" 00:00:00";
       },
 			handleDelete(id) {

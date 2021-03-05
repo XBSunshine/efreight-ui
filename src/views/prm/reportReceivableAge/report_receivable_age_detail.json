@@ -1,0 +1,184 @@
+{
+  "info": [
+    {
+      "label": "序号",
+      "prop": "no",
+      "flag": "true",
+      "index": 1,
+      "width": 80,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "账单名称",
+      "prop": "statementName",
+      "flag": "true",
+      "index": 2,
+      "width": 200,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "状态",
+      "prop": "statementStatus",
+      "flag": "true",
+      "index": 3,
+      "width": 120,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "账单月份",
+      "prop": "statementDate",
+      "flag": "true",
+      "index": 4,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "账单金额",
+      "prop": "amountReceivable",
+      "flag": "true",
+      "index": 5,
+      "width": 120,
+      "align": "right",
+      "sortable": false
+    },
+    {
+      "label": "已核销金额",
+      "prop": "invoiceWriteoffAmount",
+      "flag": "true",
+      "index": 6,
+      "width": 160,
+      "align": "right",
+      "sortable": false
+    },
+    {
+      "label": "未核销金额",
+      "prop": "unverifiedAmount",
+      "flag": "true",
+      "index": 7,
+      "width": 160,
+      "align": "right",
+      "sortable": false
+    },
+    {
+      "label": "业务区域",
+      "prop": "billTemplate",
+      "flag": "true",
+      "index": 8,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "销售确认人",
+      "prop": "confirmSalerName",
+      "flag": "true",
+      "index": 9,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "客户确认时间",
+      "prop": "confirmCustomerTime",
+      "flag": "true",
+      "index": 10,
+      "width": 150,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "开票客户名称",
+      "prop": "invoiceTitle",
+      "flag": "true",
+      "index": 11,
+      "width": 260,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "发票类型",
+      "prop": "invoiceType",
+      "flag": "true",
+      "index": 12,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "发票号",
+      "prop": "invoiceNumber",
+      "flag": "true",
+      "index": 13,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "开票人",
+      "prop": "invoiceUserName",
+      "flag": "true",
+      "index": 14,
+      "width": 80,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "开票日期",
+      "prop": "invoiceDate",
+      "flag": "true",
+      "index": 15,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "核销人",
+      "prop": "invoiceWriteoffUserName",
+      "flag": "true",
+      "index": 16,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "核销日期",
+      "prop": "invoiceWriteoffDate",
+      "flag": "true",
+      "index": 17,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "快递号",
+      "prop": "expressNumber",
+      "flag": "true",
+      "index": 18,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "发送账单",
+      "prop": "sendBill",
+      "flag": "true",
+      "index": 19,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "电子发票接收邮箱",
+      "prop": "invoiceMailTo",
+      "flag": "true",
+      "index": 20,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    }
+  ]
+}

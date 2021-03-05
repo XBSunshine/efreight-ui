@@ -7,20 +7,19 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node --max-old-space-size=4096 build/build.js"
+    "build": "node build/build.js"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "clipboard": "^2.0.4",
     "default-passive-events": "^1.0.10",
-    "echarts": "^4.2.1",
+    "echarts": "^4.9.0",
     "el-tree-transfer": "^2.2.0",
     "element-ui": "^2.10.1",
     "intro.js": "^2.9.3",
     "js-base64": "^2.5.1",
     "layui-laydate": "^5.0.9",
-    "qrcode-svg": "^1.1.0",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.22",
     "vue-cropper": "^0.5.5",

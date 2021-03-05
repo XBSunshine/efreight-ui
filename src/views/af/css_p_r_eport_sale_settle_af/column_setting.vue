@@ -197,7 +197,7 @@
 				tableColumns.forEach((column, index) => {
 					//主单号
 					if (column.prop == 'awbNumber') {
-						if (this.frow.businessScope == 'TE') {
+						if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI') {
 							column.label = "运单号码";
 						} else if (this.frow.businessScope == 'LC' || this.frow.businessScope == 'IO') {
 							column.label = "客户单号";
@@ -212,7 +212,7 @@
 					if (column.prop == 'businessProduct') {
 						if (this.frow.businessScope.startsWith('S') || this.frow.businessScope == 'AI') {
 							indexDelete.push(index);
-						} else if (this.frow.businessScope == 'TE') {
+						} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI') {
 							column.label = "产品类型";
 						} else if (this.frow.businessScope == 'LC') {
 							column.label = "运输方式";
@@ -226,7 +226,7 @@
 					if (column.prop == 'departureStation') {
 						if (this.frow.businessScope.startsWith('S') || this.frow.businessScope.startsWith('A')) {
 							column.label = "始发港";
-						} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'IO') {
+						} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI' || this.frow.businessScope == 'IO') {
 							column.label = "起运地";
 						} else if (this.frow.businessScope == 'LC') {
 							column.label = "始发城市";
@@ -236,7 +236,7 @@
 					if (column.prop == 'arrivalStation') {
 						if (this.frow.businessScope.startsWith('S') || this.frow.businessScope.startsWith('A')) {
 							column.label = "目的港";
-						} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'IO') {
+						} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI' || this.frow.businessScope == 'IO') {
 							column.label = "目的地";
 						} else if (this.frow.businessScope == 'LC') {
 							column.label = "目的城市";
@@ -262,7 +262,7 @@
 					}
 					//航线
 					if (column.prop == 'routingName') {
-						if (this.frow.businessScope == "TE" || this.frow.businessScope == "LC" || this.frow.businessScope == 'IO') {
+						if (this.frow.businessScope == "TE" || this.frow.businessScope == 'TI' || this.frow.businessScope == "LC" || this.frow.businessScope == 'IO') {
 							indexDelete.push(index);
 						}
 					}
@@ -282,7 +282,9 @@
 							}
 						} else if (this.frow.businessScope == 'TE') {
 							column.label = "发车日期";
-						} else if (this.frow.businessScope == 'LC') {
+						} else if (this.frow.businessScope == 'TI') {
+              column.label = "到达日期";
+            } else if (this.frow.businessScope == 'LC') {
 							column.label = "用车日期";
 						} else if (this.frow.businessScope == 'IO') {
 							column.label = "业务日期";
@@ -292,7 +294,7 @@
 					if (column.prop == 'supplierCode') {
 						if (this.frow.businessScope == "SI" || this.frow.businessScope == "LC" || this.frow.businessScope == 'IO') {
 							indexDelete.push(index);
-						} else if (this.frow.businessScope == "TE" || this.frow.businessScope == "SE") {
+						} else if (this.frow.businessScope == "TE" || this.frow.businessScope == 'TI' || this.frow.businessScope == "SE") {
 							column.label = "订舱代理编码";
 						} else if (this.frow.businessScope.startsWith('A')) {
 							column.label = "供应商代码";
@@ -303,7 +305,7 @@
 					if (column.prop == 'awbFrom') {
 						if (this.frow.businessScope == 'AE') {
 							column.label = "运单来源";
-						} else if (this.frow.businessScope == 'SE' || this.frow.businessScope == 'TE') {
+						} else if (this.frow.businessScope == 'SE' || this.frow.businessScope == 'TI' || this.frow.businessScope == 'TE') {
 							column.label = "订舱代理";
 						} else {
 							indexDelete.push(index);

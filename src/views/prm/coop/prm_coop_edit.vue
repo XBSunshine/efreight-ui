@@ -559,7 +559,7 @@
             <el-row>
               <el-col class="elementWidth">
                 <el-form-item prop="serial_number">
-                  <el-input v-model="agreements.params.serial_number" class="elinputDiv" auto-complete="off" clearable>
+                  <el-input v-model="agreements.params.serial_number" class="inputDiv" auto-complete="off" clearable>
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>合同编号</span>
@@ -569,7 +569,7 @@
               </el-col>
               <el-col class="elementWidth">
                 <el-form-item prop="begin_date">
-                  <el-input class="elinputDiv">
+                  <el-input class="inputDiv">
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>生效日期</span>
@@ -582,19 +582,19 @@
               </el-col>
               <el-col class="elementWidth">
                 <el-form-item prop="end_date">
-                  <el-input class="elinputDiv">
+                  <el-input style="width:238px;margin-left: 15px">
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>失效日期</span>
                     </template>
-                    <el-date-picker slot="suffix" class="elInputChild" v-model="agreements.params.end_date" clearable type="date" value-format="yyyy-MM-dd 23:59:59"
+                    <el-date-picker style="width:159px;margin-right: -5px" slot="suffix" v-model="agreements.params.end_date" clearable type="date" value-format="yyyy-MM-dd 23:59:59"
                                     placeholder="选择日期">
                     </el-date-picker>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col class="elementWidth">
-                <el-form-item style="margin-left: 68px;">
+                <el-form-item style="margin-left: 10px;">
                   <el-button size="mini" type="primary" @click="saveAgreement()" :disabled="disabledFlag6">提交</el-button>
                 </el-form-item>
               </el-col>
@@ -602,7 +602,7 @@
             <el-row>
               <el-col class="elementWidth">
                 <el-form-item prop="agreement_type">
-                  <el-input class="elinputDiv">
+                  <el-input class="inputDiv">
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>合同类型</span>
@@ -618,7 +618,7 @@
               </el-col>
               <el-col class="elementWidth">
                 <el-form-item prop="template">
-                  <el-input class="elinputDiv">
+                  <el-input class="inputDiv">
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>合同模板</span>
@@ -631,7 +631,7 @@
               </el-col>
               <el-col class="elementWidth">
                   <el-form-item prop="incharge_id">
-                    <el-input class="elinputDiv fileUrlInput">
+                    <el-input class="inputDiv fileUrlInput">
                       <template slot="prepend">
                         <font style="color: red;">*</font>
                         <span>经办人</span>
@@ -649,7 +649,7 @@
             <el-row>
               <el-col class="elementWidth">
                 <el-form-item prop="settlement_period">
-                  <el-input class="elinputDiv">
+                  <el-input class="inputDiv">
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>结算周期</span>
@@ -662,7 +662,7 @@
               </el-col>
               <el-col class="elementWidth">
                 <el-form-item prop="payment_period">
-                  <el-input v-model="agreements.params.payment_period" @change="agreements.params.payment_period=strTrim(agreements.params.payment_period)" class="elinputDiv"  @input="formatToFloat('payment_period')" suffix-icon="iconfont el-icon-mytian">
+                  <el-input v-model="agreements.params.payment_period" @change="agreements.params.payment_period=strTrim(agreements.params.payment_period)" class="inputDiv"  @input="formatToFloat('payment_period')" suffix-icon="iconfont el-icon-mytian">
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>合同账期</span>
@@ -672,7 +672,7 @@
               </el-col>
               <el-col class="elementWidth">
                 <el-form-item prop="total_amount">
-                  <el-input v-model="agreements.params.total_amount" class="elinputDiv" auto-complete="off" @input="formatToFloat('total_amount')" suffix-icon="iconfont el-icon-myzonghenengyuan_wanyuan" >
+                  <el-input v-model="agreements.params.total_amount" class="inputDiv" auto-complete="off" @input="formatToFloat('total_amount')" suffix-icon="iconfont el-icon-myzonghenengyuan_wanyuan" >
                     <template slot="prepend">
                       <font style="color: red;">*</font>
                       <span>合同额度</span>
@@ -684,7 +684,7 @@
             <el-row>
               <el-col class="elementWidth">
                 <el-form-item prop="file_url">
-                  <el-input class="fileUrlInput" v-model="fileForm.fileName" disabled style="width:810px">
+                  <el-input class="fileUrlInput" v-model="fileForm.fileName" disabled style="width:810px;margin-left: 15px">
                     <template slot="prepend">
                       <span>附件</span>
                     </template>
@@ -694,7 +694,7 @@
 
               </el-col>
              <el-col class="elementWidth">
-                <el-form-item style="margin-left: 20px;margin-top:-2px">
+                <el-form-item style="margin-left: 18px;margin-top:-2px">
                   <el-upload :action="actionPath" :accept="accept" :data="uptoken" :before-upload="beforeAvatarUpload"
                                   :on-remove="handleRemoveChange" :on-success="handleSuccessChange" ref="upload"
                              :show-file-list="false" :auto-upload="true">
@@ -702,7 +702,7 @@
                   </el-upload>
                 </el-form-item>
               </el-col>
-              <el-col class="elementWidth"style="margin-left: 4px;">
+              <el-col class="elementWidth" style="margin-left: 4px;">
                 <el-button size="mini" type="primary" @click="clearFile()">清空</el-button>
               </el-col>
             </el-row>
@@ -714,7 +714,7 @@
             <el-row>
               <el-col class="elementWidth">
                 <el-form-item prop="agreement_remark">
-                  <el-input v-model="agreements.params.agreement_remark" @change="agreements.params.agreement_remark=strTrim(agreements.params.agreement_remark)" auto-complete="off" style="width: 810px;">
+                  <el-input v-model="agreements.params.agreement_remark" @change="agreements.params.agreement_remark=strTrim(agreements.params.agreement_remark)" auto-complete="off" style="width: 949px;margin-left: 15px">
                     <template slot="prepend">
                       <span>合同备注</span>
                     </template>
@@ -725,7 +725,7 @@
           </el-form>
         </el-row>
         <el-row>
-          <el-table ref="multipleTable" :data="agreements.data" style="width: 100%"  row-key="agreements_id" border max-height="500px">
+          <el-table ref="multipleTable" :data="agreements.data" style="width: 97%;margin-left: 15px"  row-key="agreements_id" border max-height="500px">
             <el-table-column fixed="left" label="操作" width="60" align="center">
               <template slot-scope="scope">
                 <el-dropdown trigger="click" @command="handleTabsCommand" @visible-change="handleTabsChange(scope.row)">
@@ -1677,7 +1677,7 @@
         result.push(data)
         return result
       },
-      downloadShow(row){debugger
+      downloadShow(row){
         window.open(row.file_url);
       },
       setCoopEname(val) {
@@ -2203,7 +2203,7 @@
       },
 
       //合同相关----------------------------------------------
-      saveAgreement() {debugger
+      saveAgreement() {
         this.$refs['agreementsform'].validate((valid) => {
           if(valid) {
             let params = this.agreements.params;
@@ -2283,13 +2283,7 @@
         this.agreements.params.agreement_type = this.agreementTypes[0].paramText;
       },
       beforeAvatarUpload(file) {
-        let now = new Date()
-        let year = now.getFullYear()
-        let month = now.getMonth() + 1
-        if (month < 10) {
-          month = '0' + month
-        }
-        this.uptoken.key = "Order_attachment_" + year.toString().substring(2) + month + "_" + this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
+        this.uptoken.key = this.buildUploadFileKey(file);
         const isLt10M = file.size < 10 * 1024 * 1024;
         if (!isLt10M) {
           this.$message.error('上传模板大小不能超过 10MB!');
@@ -2538,8 +2532,12 @@
       },
       rawMD5(s) {
         return this.rstrMD5(this.str2rstrUTF8(s))
+      },
+      buildUploadFileKey(file) {
+        let orgUuid = localStorage.getItem("orgUuid");
+        return 'org/prm/' + orgUuid + "/agreement_" + new Date().format("yyMM") + this.hexMD5(new Date().format("ddhhmmss")) + file.name.substring(file.name.lastIndexOf('.'));
       }
-		}
+    }
 	}
 </script>
 <style type="text/css">
@@ -2583,12 +2581,12 @@
   .orderListPage .widthEQ .el-input-group__prepend {
     padding: 0 22px;
   }
-  .elinputDiv{
-    width: 260px !important;
-    margin-right: 15px;
+  .inputDiv{
+    width: 306px !important;
+    margin-left: 15px;
   }
-  .elinputDiv .elInputChild {
-    width: 181px !important;
+  .inputDiv .elInputChild {
+    width: 227px !important;
     margin-right: -5px;
   }
   .fileUrlInput .el-input-group__prepend {

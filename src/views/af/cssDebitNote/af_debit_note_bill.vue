@@ -25,8 +25,10 @@
 						<el-form-item label-width="10px">
 							<el-input style="width:210px;">
 								<template slot="prepend">
-									<span v-if="query.businessScope.endsWith('E')">开航日期</span>
-									<span v-if="query.businessScope.endsWith('I')">到港日期</span>
+									<span v-if="query.businessScope.endsWith('E')&&query.businessScope.startsWith('T')">发车日期</span>
+                  <span v-if="query.businessScope.endsWith('E')&&!query.businessScope.startsWith('T')">发车日期</span>
+									<span v-if="query.businessScope.endsWith('I')&&query.businessScope.startsWith('T')">到达日期</span>
+                  <span v-if="query.businessScope.endsWith('I')&&!query.businessScope.startsWith('T')">到港日期</span>
 									<span v-if="query.businessScope.endsWith('C')">用车日期</span>
                   <span v-if="query.businessScope.endsWith('O')">业务日期</span>
 								</template>
@@ -43,7 +45,7 @@
 							<el-button type="text" size="small" v-if=showFlag v-on:click="showFlagSearch">收起</el-button>
 							<el-button type="text" size="small" v-if=!showFlag v-on:click="showFlagSearch">展开</el-button>
 							<el-button type="primary" size="small" v-on:click="queryList" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">查询</el-button>
-							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;" type="primary" size="small" v-on:click="makeList">制作清单</el-button>
+							<el-button v-if="makeListFlag" style="margin-left: 4px;padding-left: 8px;padding-right: 8px;" type="primary" size="small" v-on:click="makeList">制作清单</el-button>
 
 						</el-form-item>
 					</el-col>
@@ -88,7 +90,10 @@
 					<el-col class="elementWidth" v-if="awbNumberFlag">
 						<el-form-item label-width="10px">
 							<el-input class="widthWithThree" v-model="query.awbNumber" auto-complete="off" clearable style="width:280px;">
-								<template slot="prepend">主单号</template>
+								<template slot="prepend">
+                  <span v-if="query.businessScope!='TE' && query.businessScope!='TI'">主单号</span>
+                  <span v-if="query.businessScope.startsWith('T')">运单号</span>
+                </template>
 							</el-input>
 						</el-form-item>
 					</el-col>
@@ -126,26 +131,29 @@
 
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input v-model="query.invoiceTitle" auto-complete="off" clearable style="width:300px;">
+							<!-- <el-input v-model="query.invoiceTitle" auto-complete="off" clearable style="width:300px;">
 								<template slot="prepend">发票抬头</template>
-							</el-input>
+							</el-input> -->
+              <el-input v-model="query.invoiceCreatorName" auto-complete="off" clearable style="width:300px;">
+              	<template slot="prepend">申请人</template>
+              </el-input>
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
 							<el-input style="width:255px;">
-								<template slot="prepend">发票日期</template>
-								<el-date-picker slot="suffix" v-model="query.invoiceDateStart" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始日期" style="width: 186px;margin-right: -5px;">
+								<template slot="prepend">申请日期</template>
+								<el-date-picker slot="suffix" v-model="query.invoiceCreateTimeStart" clearable type="date" value-format="yyyy-MM-dd 00:00:00" placeholder="开始日期" style="width: 186px;margin-right: -5px;">
 								</el-date-picker>
 							</el-input>
 							<span>-</span>
-							<el-date-picker v-model="query.invoiceDateEnd" clearable type="date" value-format="yyyy-MM-dd" placeholder="结束日期" style="width: 185px;">
+							<el-date-picker v-model="query.invoiceCreateTimeEnd" clearable type="date" value-format="yyyy-MM-dd 23:59:59" placeholder="结束日期" style="width: 185px;">
 							</el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row v-show="showFlag">
-					<el-col class="elementWidth" v-if="query.businessScope!='TE' && query.businessScope!='LC' && query.businessScope!='IO'">
+					<el-col class="elementWidth" v-if="query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC' && query.businessScope!='IO'">
 						<el-form-item class="widthWithThree" label-width="10px">
 							<el-input v-model="query.flightNo" auto-complete="off" clearable style="width:201px;" @input="query.flightNo=query.flightNo.toUpperCase()">
 								<template slot="prepend">
@@ -161,6 +169,9 @@
 								<template slot="prepend">账单状态</template>
 								<el-select slot="suffix" v-model="billStatus" style="width:310px;margin-right: -5px;" multiple>
 									<el-option label="已制账单" value="已制账单"></el-option>
+                  <el-option label="待开票" value="待开票"></el-option>
+                  <el-option label="部分开票" value="部分开票"></el-option>
+                  <el-option label="开票完毕" value="开票完毕"></el-option>
 									<el-option label="已制清单" value="已制清单"></el-option>
 									<el-option label="部分核销" value="部分核销"></el-option>
 									<el-option label="核销完毕" value="核销完毕"></el-option>
@@ -185,6 +196,14 @@
 				</el-row>
 			</div>
 		</el-form>
+    <div style="margin: 1px 1px 1px 10px;" >
+         <el-row  :gutter="2">
+             <el-col :span="1" align="left"><span>勾选合计:</span></el-col>
+             <el-col v-for="(item,index) in mapInfo" :key="index" :span="2">
+               <span :class="{currencyRedColor:item[0]!='CNY'}">{{amountFormat(item[1],item[0])}}</span>
+             </el-col>
+         </el-row>
+    </div>
 		<div>
 			<div style="position: relative;left: 21px;top: 30px;z-index: 10;">
 				<el-checkbox v-model="allCheck" @change="changeAllCheck"></el-checkbox>
@@ -200,9 +219,12 @@
 						<el-dropdown trigger="click" @command="handleCommand" @visible-change="handleChange(scope.row)">
 							<i class="el-icon-s-operation"></i>
 							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="writeoff" v-if="billButtonFlag">核销</el-dropdown-item>
+								<!-- <el-dropdown-item command="writeoff" v-if="billButtonFlag">核销</el-dropdown-item> -->
 								<el-dropdown-item command="print">预览</el-dropdown-item>
-								<el-dropdown-item command="remark" v-if="!scope.row.statementId">发票信息</el-dropdown-item>
+								<!-- <el-dropdown-item command="remark" v-if="!scope.row.statementId">发票信息</el-dropdown-item> -->
+                <el-dropdown-item v-if="openInvoiceFlag" command="openInvoice" >开票申请</el-dropdown-item>
+                <el-dropdown-item command="invoiceAutoWriteoff" v-if="invoiceAutoWriteoffFlag" >核销</el-dropdown-item>
+                <el-dropdown-item v-if="cancelInvoiceFlag" command="cancelInvoice" >撤销发票申请</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
 					</template>
@@ -219,7 +241,7 @@
 					</el-table-column>
 					<el-table-column v-if="item.label=='账单日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 					</el-table-column>
-					<el-table-column v-if="item.label=='主单号'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+					<el-table-column v-if="item.prop=='awbNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 					</el-table-column>
 					<el-table-column v-if="item.label=='订单号'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 					</el-table-column>
@@ -258,20 +280,33 @@
 					<el-table-column v-if="item.label=='核销单号'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 						<template slot-scope="scope" v-if="scope.row.writeoffNum">
 							<p v-for="(item,index) in scope.row.writeoffNum.split('  ')" :key="index">
-								<a href="javascript:void(0)" @click="doView2(item.split(' ')[0],scope.row.debitNoteNum,scope.row.statementNum)" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a>
+                <span>{{item.split(' ')[1]}}</span>
+								<!-- <a href="javascript:void(0)" @click="doView2(item.split(' ')[0],scope.row.debitNoteNum,scope.row.statementNum)" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a> -->
 							</p>
 						</template>
 					</el-table-column>
 					<el-table-column v-if="item.label=='账单备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 					</el-table-column>
-					<el-table-column v-if="item.label=='发票日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceDate">
+					<!-- <el-table-column v-if="item.label=='发票日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceDate">
+					</el-table-column> -->
+					<el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+					   <template slot-scope="scope" v-if="scope.row.invoiceNum">
+					   	<p v-for="(item,index) in scope.row.invoiceNum.split('  ')" :key="index">
+					        <span>{{item.split(' ')[1]}}</span>
+					   	</p>
+					   </template>
 					</el-table-column>
-					<el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceNum">
-					</el-table-column>
-					<el-table-column v-if="item.label=='发票抬头'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceTitle" header-align="center">
-					</el-table-column>
-					<el-table-column v-if="item.label=='发票备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterNumber8" header-align="center">
-					</el-table-column>
+          <el-table-column v-if="item.label=='开票申请备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+          </el-table-column>
+				<!-- 	<el-table-column v-if="item.label=='发票抬头'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceTitle" header-align="center">
+					</el-table-column> -->
+					<!-- <el-table-column v-if="item.label=='发票备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterNumber8" header-align="center">
+					</el-table-column> -->
+          <el-table-column v-if="item.label=='开票申请人'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_creatorName_invoice">
+          </el-table-column>
+
+          <el-table-column v-if="item.label=='开票申请时间'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+          </el-table-column>
 					<el-table-column v-if="item.label=='制单人'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_creatorName">
 					</el-table-column>
 
@@ -342,6 +377,8 @@
 		<saveVisibleTag ref="addMission" v-if="saveVisible" :visible.sync="saveVisible" :frow="frow"></saveVisibleTag>
 		<writeoffVisibleTag ref="addMission" v-if="writeoffVisible" :visible.sync="writeoffVisible" :frow="frow"></writeoffVisibleTag>
 		<remarkVisible ref="addMission" v-if="remarkVisible" :visible.sync="remarkVisible" :frow="frow"></remarkVisible>
+    <invoiceVisibleTag ref="addMission" v-if="invoiceVisible" :visible.sync="invoiceVisible" :frow="frow"></invoiceVisibleTag>
+    <invoiceAutoTag ref="addMission" v-if="invoiceAutoVisible" :visible.sync="invoiceAutoVisible" :frow="frow"></invoiceAutoTag>
 	</div>
 </template>
 <script>
@@ -353,18 +390,26 @@
 	import writeoffVisibleVue from './af_debit_note_bill_writeoff'
 	import remarkVisible from './af_debit_note_bill_remark'
 	import columns from './af_debit_note_bill_column.json'
+  import invoice from '../invoice/openInvoice.vue'
+  import invoiceAuto from '../invoice/invoice_auto.vue'
 	export default {
 		data() {
 			return {
 				tableHeight: '800px',
 				loading: false,
 				billButtonFlag: false,
+        makeListFlag:false,
+        openInvoiceFlag:false,
+        cancelInvoiceFlag:false,
+        invoiceAutoVisible:false,
+        invoiceAutoWriteoffFlag:false,
 				data: [],
 				tableColumns: [],
 				serviceIds: [],
 				expandRowKeys: [],
 				serviceOptions: [],
 				allCheck: false,
+        mapInfo:null,
 				pageConf: {
 					//设置一些初始值(会被覆盖)
 					pageCode: 1, //当前页
@@ -380,6 +425,7 @@
 				remarkVisible: false,
 				writeoffVisible: false,
 				awbNumberFlag: true,
+        invoiceVisible:false,
         excelColumns:'',
 				frow: {},
 				query: {
@@ -401,6 +447,9 @@
 					invoiceTitle: '',
 					invoiceDateStart: '',
 					invoiceDateEnd: '',
+          invoiceCreatorName:'',
+          invoiceCreateTimeStart:'',
+          invoiceCreateTimeEnd:''
 				},
 				businessCodes: [],
 				selectionData: [],
@@ -425,14 +474,28 @@
 		created: function() {
       this.excelColumns = JSON.stringify(columns.info);
 			let buttonInfo = window.localStorage.getItem('buttonInfo');
-			if (buttonInfo.indexOf('af-writeoff-bill') > -1) {
-				this.billButtonFlag = true;
+			if (buttonInfo.indexOf('af-make-statemen') > -1) {
+				this.makeListFlag = true;
 			}
+      if (buttonInfo.indexOf('af-debit-open-invoice') > -1) {
+      	this.openInvoiceFlag = true;
+      }
+      if (buttonInfo.indexOf('af-debit-cancel-invoice') > -1) {
+      	this.cancelInvoiceFlag = true;
+      }
+      if(buttonInfo.indexOf('af-debit-invoice-writeoff') > -1){
+        this.invoiceAutoWriteoffFlag = true;
+      }
 			//查询业务范畴
 			this.$axios.get2('/afbase/category/paramsNew', {
 				categoryName: "业务范畴"
 			}).then(function(response) {
-				this.businessCodes = response.data.data;
+        if(response.data.data){
+          // this.businessCodes = response.data.data.filter(item=>{
+          //   return item.paramText!='TI';
+          // });
+          this.businessCodes = response.data.data;
+        }
 			}.bind(this)).catch(function(error) {
 				console.log(error);
 			})
@@ -477,9 +540,72 @@
 			'saveVisibleTag': saveVisibleVue,
 			'remarkVisible': remarkVisible,
 			'writeoffVisibleTag': writeoffVisibleVue,
-			'print': Print
+			'print': Print,
+      'invoiceVisibleTag':invoice,
+      'invoiceAutoTag':invoiceAuto
 		},
 		methods: {
+
+       //cancelInvoice
+       cancelInvoice(row){
+         if(row.invoiceStatus==-1){
+            this.$confirm('请确认 是否撤销开票申请？', '提示', {
+            	confirmButtonText: '是',
+            	cancelButtonText: '否',
+            	type: 'warning',
+            	center: true
+            }).then(() => {
+            	this.$axios.deletes('/afbase/cssIncomeInvoice/debitNoteId/' + row.debitNoteId+'/'+row.rowUuid).then((response) => {
+            		if (response.data.code == '0') {
+            			this.openSuccess("撤销成功！")
+            			this.queryList();
+            		} else {
+            			this.openError("撤销失败：" + response.data.messageInfo)
+            		}
+            	}).catch((error) => {
+            		this.openError("撤销失败：" + error.response.data.messageInfo)
+            	});
+            }).catch(() => {
+            	this.$message({
+            		type: 'info',
+            		message: '已取消撤销'
+            	});
+            });
+         }else{
+            this.openError("您好，未开发票的账单 才可 撤销开票申请。");
+            this.queryList();
+         }
+       },
+
+      //invoice
+      openInvoice(){
+         this.$axios.get2('/afbase/debitNote/selectCheckDebit', {
+         	debitNoteIds: this.frow.debitNoteId
+         }).then(function(response) {
+            let checkFlag = true;
+         	if (response.data.data && response.data.data.length > 0) {
+         		response.data.data.forEach((debitNote) => {
+               if(debitNote.invoiceId){
+                 this.openError("您好，账单号" + debitNote.debitNoteNum + "已做 开票申请 或 已开票 ，不能重复申请！");
+                 checkFlag = false;
+                 return false;
+               }else if(debitNote.statementId){
+                 this.openError("您好，账单号" + debitNote.debitNoteNum + "已制清单，请在清单页面进行开票申请。");
+                 checkFlag = false;
+                 return false;
+               }
+         		});
+         	}else{
+             checkFlag = false;
+             this.openError("账单不是最新数据，请刷新页面再操作");
+          }
+         	if (checkFlag) {
+            this.frow.invoiceType = 'debitNote';
+         		this.invoiceVisible = true;
+         	}
+         }.bind(this));
+      },
+
 			cellWidth(newWidth, oldWidth, column, event) {
 				let strColumn = JSON.stringify(this.tableColumns);
 				let userId = window.localStorage.getItem('userId');
@@ -556,9 +682,45 @@
 					this.doWriteoff()
 				} else if (command == 'remark') {
 					this.showRemark()
-				}
-
+				}else if(command == 'openInvoice'){
+          this.openInvoice();
+        }else if(command == 'cancelInvoice'){
+          this.cancelInvoice(this.frow);
+        }else if(command == 'invoiceAutoWriteoff'){
+           this.invoiceAuto();
+        }
 			},
+      invoiceAuto(){
+        if(this.frow.currency.indexOf(",")>0){
+          this.openError("您好，账单页面只支持单币种的账单进行核销，请开票后再进行核销。");
+          return false
+        }
+        this.$axios.get2('/afbase/debitNote/selectCheckDebit', {
+        	debitNoteIds: this.frow.debitNoteId
+        }).then(function(response) {
+           let checkFlag = true;
+        	if (response.data.data && response.data.data.length > 0) {
+        		response.data.data.forEach((debitNote) => {
+              if(debitNote.invoiceId){
+                this.openError("您好，账单号" + debitNote.debitNoteNum + "已申请开票或已开票，请在发票页面进行核销。");
+                checkFlag = false;
+                return false;
+              }else if(debitNote.statementId){
+                this.openError("您好，账单号" + debitNote.debitNoteNum + "已制清单，请到清单页面进行核销。");
+                checkFlag = false;
+                return false;
+              }
+        		});
+        	}else{
+            checkFlag = false;
+            this.openError("账单不是最新数据，请刷新页面再操作");
+         }
+        	if (checkFlag) {
+            this.frow.titleName="账单";
+            this.invoiceAutoVisible = true;
+        	}
+        }.bind(this));
+      },
 			handleChange(command) {
 				this.frow = command
 			},
@@ -722,11 +884,18 @@
 							//	this.openError("编号" + dMessage + "已开发票");
 							//	return;
 							//}
-							if (debitNote.writeoffComplete) {
+							if (debitNote.writeoffComplete === 0 || debitNote.writeoffComplete === 1) {
 								this.openError("编号" + debitNote.debitNoteNum + "已核销");
 								checkFlag = false;
 								return false;
 							}
+
+              if(debitNote.invoiceId){
+                this.openError("您好，账单号" + debitNote.debitNoteNum + "已做 开票申请 或 已开票 ，不允许制作清单！");
+                checkFlag = false;
+                return false;
+              }
+
 						});
 					}
 					if (checkFlag) {
@@ -885,6 +1054,7 @@
 									}
 								})
 								this.selectionData = []
+                this.sumAmountDobit();
 								this.allCheck = false
 								this.loading = false
 							}
@@ -916,6 +1086,7 @@
 						}
 					})
 					this.selectionData = []
+          this.sumAmountDobit();
 					this.allCheck = false
 					this.loading = false
 				}).catch((error) => {
@@ -1005,6 +1176,11 @@
 					return row.creatorName.split(' ')[0];
 				}
 			},
+      formatter_creatorName_invoice(row, column) {
+      	if (row.invoiceCreatorName) {
+      		return row.invoiceCreatorName.split(' ')[0];
+      	}
+      },
 			getNumber(data) {
 				return data.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
 			},
@@ -1056,8 +1232,20 @@
 					} else {
 						row.checkBox = false
 					}
-					this.changeRowCheck(row)
+					// this.changeRowCheck(row)
+            if (row.isParent) {
+                row.children.forEach((child) => {
+                  if (row.checkBox) {
+                    child.checkBox = true
+                  } else {
+                    child.checkBox = false
+                  }
+                })
+            }
 				})
+        this.fillSelectionData()
+        //勾选合计
+
 			},
 			changeRowCheck(row) {
 				if (row.isParent) {
@@ -1069,8 +1257,40 @@
 						}
 					})
 				}
-				this.fillSelectionData()
+				this.fillSelectionData();
 			},
+      sumAmountDobit(){
+        let val = this.selectionData;
+        let  map = new Map();
+        if(val&&val.length>0){
+            val.forEach(function(item, index) {
+              if(item.mapAmountOne){
+                let mapTran =eval("("+item.mapAmountOne+")")
+                for(let p in mapTran){
+                     if(map&&map.size>0){
+                        if(map.has(p)){
+                            map.set(p,map.get(p)+mapTran[p]);
+                        }else{
+                          map.set(p,mapTran[p]);
+                        }
+                     }else{
+                       map.set(p,mapTran[p]);
+                     }
+                 }
+              }
+　　　　　 });
+          this.mapInfo = map;
+        }else{
+          this.mapInfo = null
+        }
+     },
+     amountFormat(amount,currency){
+       if(amount){
+          return this.getNumber(amount)+"("+currency+")";
+       }else{
+         return "";
+       }
+     },
 			getDateTime1(theDate) {
 				// theDate.setDate(theDate.getDate()-30);
 				var _year = theDate.getFullYear();
@@ -1089,6 +1309,10 @@
 				var _year = theDate.getFullYear();
 				var _month = theDate.getMonth();
 				var _date = theDate.getDate();
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}
@@ -1105,13 +1329,18 @@
 					arr = arr.concat(row.children.filter(item => item.checkBox))
 				})
 				this.selectionData = arr
+        this.sumAmountDobit();
 			},
 			setLabel(tableColumns) {
 				let indexDelete = [];
 				tableColumns.forEach((column, index) => {
-					if (column.prop == 'flightDate' && this.query.businessScope.endsWith('I')) {
+					if (column.prop == 'flightDate' && this.query.businessScope.endsWith('I') && this.query.businessScope!='TI') {
 						column.label = '到港日期'
-					} else if (column.prop == 'flightDate' && this.query.businessScope.endsWith('E')) {
+					} else if (column.prop == 'flightDate' && this.query.businessScope=='TE') {
+						column.label = '发车日期'
+					}else if (column.prop == 'flightDate' && this.query.businessScope=='TI') {
+						column.label = '到达日期'
+					} else if (column.prop == 'flightDate' && this.query.businessScope.endsWith('E') && this.query.businessScope!='TE') {
 						column.label = '开航日期'
 					} else if (column.prop == 'flightDate' && this.query.businessScope.endsWith('C')) {
 						column.label = '用车日期'
@@ -1135,7 +1364,11 @@
 					if (column.prop == 'awbNumber') {
 						if (this.query.businessScope == 'LC' || this.query.businessScope == 'IO') {
 							indexDelete.push(index);
-						}
+						}else if(this.query.businessScope.startsWith('T')){
+              column.label = '运单号'
+            }else{
+              column.label = '主单号'
+            }
 					}
 				})
 				if (indexDelete.length > 0) {
@@ -1167,4 +1400,7 @@
 	.orderListPage .widthWithThree .el-input-group__prepend {
 		padding: 0 13px !important;
 	}
+  .currencyRedColor{
+  	color: red !important;
+  }
 </style>

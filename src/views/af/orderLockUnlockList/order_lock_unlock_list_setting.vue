@@ -178,7 +178,11 @@
 							indexDelete.push(index);
 						}
 						if (column.prop == 'flightDate' && this.frow.businessScope.endsWith('I')) {
-							column.label = '到港日期'
+              if (this.frow.businessScope == 'TI') {
+                  column.label = '到达日期'
+              } else {
+                  column.label = '到港日期'
+              }
 						} else if (column.prop == 'flightDate' && this.frow.businessScope.endsWith('E')) {
 							if (this.frow.businessScope == 'TE') {
 								column.label = '发车日期'

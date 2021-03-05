@@ -310,7 +310,8 @@
 									localStorage.setItem('orgType', this.data1[0].orgType);
 									localStorage.setItem('userEmail', this.data1[0].userEmail);
                   localStorage.setItem('stopDate', this.data1[0].stopDate);
-									localStorage.setItem('adminRole', "unAdmin");
+                  localStorage.setItem('orgUuid', this.data1[0].orgUuid);
+                  localStorage.setItem('adminRole', "unAdmin");
 									localStorage.setItem('username', response.data.userName);
 									localStorage.setItem('nickname', response.data.userCname);
 									localStorage.setItem('phoneNumber', response.data.phoneNumber);
@@ -409,7 +410,8 @@
 									localStorage.setItem('orgType', this.data1[0].orgType);
 									localStorage.setItem('userEmail', this.data1[0].userEmail);
                   localStorage.setItem('stopDate', this.data1[0].stopDate);
-									localStorage.setItem('adminRole', "unAdmin");
+                  localStorage.setItem('orgUuid', this.data1[0].orgUuid);
+                  localStorage.setItem('adminRole', "unAdmin");
 									localStorage.setItem('username', response.data.userName);
 									localStorage.setItem('nickname', response.data.userCname);
 									localStorage.setItem('phoneNumber', response.data.phoneNumber);
@@ -501,7 +503,8 @@
 									localStorage.setItem('userEmail', this.data1[0].userEmail);
                   localStorage.setItem('stopDate', this.data1[0].stopDate);
 									localStorage.setItem('adminRole', this.data1[0].adminRole); //标记是超级管理员还是签约公司管理员
-									localStorage.setItem('username', response.data.userName);
+                  localStorage.setItem('orgUuid', this.data1[0].orgUuid);
+                  localStorage.setItem('username', response.data.userName);
 									localStorage.setItem('nickname', response.data.userCname);
 									localStorage.setItem('phoneNumber', response.data.phoneNumber);
 									localStorage.setItem('access_token', response.data.access_token);

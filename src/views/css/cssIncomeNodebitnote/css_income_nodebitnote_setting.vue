@@ -30,7 +30,7 @@
          </el-table-column>
          <el-table-column align="center" prop="sortable" width="120" label="允许排序">
            <template slot-scope="scope">
-              <el-checkbox v-if="scope.row.prop=='constitute'" disabled name="sort" v-model="scope.row.sortable"></el-checkbox>
+              <el-checkbox v-if="scope.row.prop=='constitute' || scope.row.prop=='incomeAmountStr'" disabled name="sort" v-model="scope.row.sortable"></el-checkbox>
               <el-checkbox v-else name="sort" v-model="scope.row.sortable"></el-checkbox>
            </template>
          </el-table-column>

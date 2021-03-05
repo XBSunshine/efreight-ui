@@ -212,26 +212,40 @@
 					<el-form-item>
 						<el-input maxlength="12" class="widthWithTwoWithXing" v-model="ruleForm.planChargeWeight" auto-complete="off" style="width:295px;">
 							<template slot="prepend">
-								<font style="color: red;">*</font>
-								<span>计重</span>
-							</template>
-							<template slot="append">
-								<span>KG</span>
-							</template>
-						</el-input>
-					</el-form-item>
-				</el-col>
-			</el-row>
-			<el-row>
-				<el-col class="elementWidth">
-					<el-form-item>
-						<el-input class="showWordLimit" v-model="ruleForm.orderRemark" auto-complete="off" style="width:1253px;" show-word-limit maxlength="300">
-							<template slot="prepend">
-								<span>订单备注</span>
-							</template>
-						</el-input>
-					</el-form-item>
-				</el-col>
+                <font style="color: red;">*</font>
+                <span>计重</span>
+              </template>
+              <template slot="append">
+                <span>KG</span>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col class="elementWidth">
+          <el-form-item>
+            <el-input v-model="ruleForm.containerList" auto-complete="off" style="width:1253px;margin-right: 15px;"
+                      readOnly>
+              <template slot="prepend">
+                <span>集装箱量</span>
+              </template>
+              <el-button slot="append" disabled icon="el-icon-edit"></el-button>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col class="elementWidth">
+          <el-form-item>
+            <el-input class="showWordLimit" v-model="ruleForm.orderRemark" auto-complete="off" style="width:1253px;"
+                      show-word-limit maxlength="300">
+              <template slot="prepend">
+                <span>订单备注</span>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col>
 			</el-row>
 			<div style="padding:0px 0px 10px 0px">
 				<HR color="#eee" size="5">
@@ -304,16 +318,17 @@
 				vLoad: false,
 
 				ruleForm: {
-					orderCode: '',
-					coopName: '',
-					coopId: '',
-					customerNumber: '',
-					orderCodeAssociated: '',
-					salesId: '',
-					salesName: '',
-					servicerId: '',
-					servicerName: '',
-					businessMethod: '',
+          containerList: '',
+          orderCode: '',
+          coopName: '',
+          coopId: '',
+          customerNumber: '',
+          orderCodeAssociated: '',
+          salesId: '',
+          salesName: '',
+          servicerId: '',
+          servicerName: '',
+          businessMethod: '',
 					businessDate: '',
 					departureStation: '',
 					arrivalStation: '',

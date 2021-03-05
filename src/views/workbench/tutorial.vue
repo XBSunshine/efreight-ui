@@ -74,21 +74,66 @@
               id: 1,
               title: '组织结构管理',
               videos: [
+                  {id: 14, title:'公司配置', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1597110241835_025.mp4'},
                   {id: 11, title:'部门管理', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652524168_016.mp4'},
                   {id: 12, title:'角色管理', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652544617_017.mp4'},
                   {id: 13, title:'用户管理', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652570494_018.mp4'},
-                  {id: 14, title:'公司配置', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1597110241835_025.mp4'},
+                  {id: 16, title:'工作组管理', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210301114439.mp4'},
+                  {id: 17, title:'日志管理', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210301114825.mp4'},
                   {id: 15, title:'个人信息配置', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1597110012645_022-200801.mp4'},
               ]
           },
           {
+              id: 6,
+              title: '客商资料管理',
+              videos: [
+                  {id: 61, title:'客商资料', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210303141422.mp4'},
+                  {id: 62, title:'发货人', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210303141507.mp4'},
+                  {id: 63, title:'询盘代理', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210303141522.mp4'},
+                  {id: 64, title:'协作公司', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210303141535.mp4'},
+              ]
+          },
+          {
               id: 2,
-              title: '基础数据维护',
+              title: '基础数据维护-公共信息',
               videos: [
                   {id: 21, title:'币种汇率', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652608702_019.mp4'},
                   {id: 22, title:'服务类别', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652627927_020.mp4'},
-                  {id: 23, title:'主单号管理', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652650046_021.mp4'},
-                  {id: 24, title:'货站仓库', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1588929987175_023.mp4'},
+                  {id: 25, title:'科目维护', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302093230.mp4'},
+              ]
+          },
+          {
+              id: 7,
+              title: '基础数据维护-空运信息',
+              videos: [
+                  {id: 71, title:'主单号管理', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1585652650046_021.mp4'},
+                  {id: 72, title:'货站仓库', cover: video_cover, url: 'http://doc.yctop.com/BillTemplate_ch_1588929987175_023.mp4'},
+                  {id: 73, title:'附加费', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302093801.mp4'},
+                  {id: 74, title:'TACT', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302093832.mp4'},
+                  {id: 75, title:'公布价', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302133953.mp4'},
+              ]
+          },
+          {
+              id: 8,
+              title: '基础数据维护-海运信息',
+              videos: [
+                  {id: 81, title:'船名信息', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302143158.mp4'},
+                  {id: 82, title:'堆场仓库', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302143001.mp4'},
+              ]
+          },
+          {
+              id: 9,
+              title: '基础数据维护-铁路信息',
+              videos: [
+                  {id: 91, title:'铁路产品', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302143440.mp4'},
+                  {id: 92, title:'堆场仓库', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302143918.mp4'},
+              ]
+          },
+          {
+              id: 10,
+              title: '基础数据维护-陆运信息',
+              videos: [
+                  {id: 101, title:'车辆信息', cover: video_cover, url: 'http://doc.yctop.com/org/config/cfd5b05a-d54e-11ea-9d24-00163e307fbb/template_debit_note_pdf_ch_210302144057.mp4'},
               ]
           },
           {

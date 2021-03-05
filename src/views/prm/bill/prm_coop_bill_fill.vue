@@ -319,7 +319,7 @@
 		      beforeAvatarUpload3(file) {
             //let fileHashcode=this.hashCode(file.name);Date.now().toString(36)
 		        //this.uptoken.key = window.localStorage.getItem("orgCode")+"_fillUrl_"+fileHashcode+file.name.substring(file.name.indexOf("."),file.name.length);
-              this.uptoken.key = window.localStorage.getItem("orgCode")+"_fillUrl_"+Date.now().toString(36)+file.name.substring(file.name.indexOf("."),file.name.length);
+              this.uptoken.key = this.buildUploadFileKey(file);
 		        const isLt10M = file.size < 2 * 1024 * 1024;
 		        const isJPG = file.type === 'image/jpeg';
 		        const isXLSX = file.type ==='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -522,19 +522,22 @@
 						var blob = new Blob([response.data], {
 							type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
 						});
-						var downloadElement = document.createElement('a');
-						var href = window.URL.createObjectURL(blob); // 创建下载的链接
-						downloadElement.href = href;
-						downloadElement.download = 'feeModel' + '.xls'; // 下载后文件名
-						document.body.appendChild(downloadElement);
-						downloadElement.click(); // 点击下载
-						document.body.removeChild(downloadElement); // 下载完成移除元素
-						window.URL.revokeObjectURL(href); // 释放掉blob对象
-					}.bind(this));
+            var downloadElement = document.createElement('a');
+            var href = window.URL.createObjectURL(blob); // 创建下载的链接
+            downloadElement.href = href;
+            downloadElement.download = 'feeModel' + '.xls'; // 下载后文件名
+            document.body.appendChild(downloadElement);
+            downloadElement.click(); // 点击下载
+            document.body.removeChild(downloadElement); // 下载完成移除元素
+            window.URL.revokeObjectURL(href); // 释放掉blob对象
+          }.bind(this));
 
-			}
+      },
+      buildUploadFileKey(file) {
+        return 'efreight/debit/' + new Date().format("yyMM") + "/debit_note_attachment_" + new Date().format("ddhhmmss") + file.name.substring(file.name.lastIndexOf('.'));
+      }
 
-		}
+    }
 	}
 </script>
 <style scoped>

@@ -645,10 +645,11 @@
 
             this.inbound.data[0].rountingSign = localStorage.getItem("rountingSign")
             this.inbound.data[0].rountingSignBusinessProduct = localStorage.getItem("rountingSignBusinessProduct")
+						this.inbound.data[0].pageName=this.frow.pageName
 						let params = {
 							data: this.inbound.data
 						};
-
+						
 						this.$axios.post2('/afbase/inbound/saveInbound', params)
 							.then(function(respo) {
 								if (respo.data.code == 0) {
@@ -744,7 +745,7 @@
 					//							this.openError(errorinfo);
 					//						}.bind(this))
 					//					} else {
-					this.$axios.deletes('/afbase/inbound/' + this.frow.orderUuid + '/order')
+					this.$axios.deletes('/afbase/inbound/' + this.frow.orderUuid + '/order/'+this.frow.pageName)
 						.then(function(response) {
 							if (response.data.code == 0) {
 								this.openSuccess();
@@ -854,8 +855,9 @@
 					inboundChargeWeight: this.inbound.data[0].inboundChargeWeight,
 					orderDimensions: this.inbound.data[0].orderDimensions,
 					inboundId: this.inbound.data[0].inboundId,
-          rountingSign: localStorage.getItem("rountingSign"),
-          rountingSignBusinessProduct: localStorage.getItem("rountingSignBusinessProduct"),
+          			rountingSign: localStorage.getItem("rountingSign"),
+          			rountingSignBusinessProduct: localStorage.getItem("rountingSignBusinessProduct"),
+          			pageName:this.frow.pageName
 				};
 				this.$axios.post2('/afbase/inbound/modifyInbound', params).then(function(response) {
 					if (response.data.code == 0) {
@@ -865,6 +867,7 @@
 						this.inbound.inboundButtonFlag = true;
 						this.queryInboundList();
 						this.findByPage();
+						this.frow.updateLogTab=true;
 					} else {
 						this.openError(response.data.messageInfo);
 					}
@@ -1092,7 +1095,9 @@
 
 		},
 		created() {
-
+			if (!this.frow.pageName) {
+				this.frow.pageName='AE订单';
+			}
 			//按钮权限开始
 			let buttonInfo = window.localStorage.getItem('buttonInfo')
 

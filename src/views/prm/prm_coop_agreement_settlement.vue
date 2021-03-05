@@ -62,26 +62,35 @@
             </el-form-item>
           </el-col>
           <el-col class="elementWidth">
-            <el-form-item label="数据填充人" label-width="135px">
-              <el-input  v-model="quantityConfirmName" clearable style="width: 115px;">
+            <el-form-item label="自动发送" label-width="85px">
+              <el-select v-model="isSendMailAuto" style="width: 85px;">
+                <el-option label="全部" value=""></el-option>
+                <el-option label="是" value="1"></el-option>
+                <el-option label="否" value="0"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth">
+            <el-form-item label="数据填充人" label-width="93px">
+              <el-input  v-model="quantityConfirmName" clearable style="width: 100px;">
               </el-input>
             </el-form-item>
           </el-col>
           <el-col class="elementWidth">
-            <el-form-item label="销售确认人" label-width="105px">
-              <el-input  v-model="billConfirmName" clearable style="width: 105px;">
+            <el-form-item label="账单确认人" label-width="93px">
+              <el-input  v-model="billConfirmName" clearable style="width: 100px;">
               </el-input>
             </el-form-item>
           </el-col>
           <el-col class="elementWidth">
             <el-form-item label="总部确认人" label-width="93px">
-              <el-input  v-model="headOfficeConfirmName" clearable style="width: 115px;">
+              <el-input  v-model="headOfficeConfirmName" clearable style="width: 100px;">
               </el-input>
             </el-form-item>
           </el-col>
           <el-col class="elementWidth">
-            <el-form-item label="账单责任人" label-width="95px">
-              <el-input  v-model="userName" clearable style="width: 115px;">
+            <el-form-item label="销售负责人" label-width="95px">
+              <el-input  v-model="userName" clearable style="width: 100px;">
               </el-input>
             </el-form-item>
           </el-col>
@@ -129,9 +138,14 @@
             <div style="color:red" v-if="scope.row.settlementState=='待审核'">{{ formatter33(scope.row) }}</div>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop="needEmail" label="自动发送" width="70">
+          <template slot-scope="scope">
+            <i class="iconfont el-icon-myduihao" style="color: red;" v-show="scope.row.isSendMailAuto"></i>
+          </template>
+        </el-table-column>
 				<el-table-column align="center" prop="quantityConfirmName" label="数据填充人" width="85">
 				</el-table-column>
-				<el-table-column align="center" prop="billConfirmName" label="销售确认人" width="85">
+				<el-table-column align="center" prop="billConfirmName" label="账单确认人" width="85">
 				</el-table-column>
 	  		<el-table-column align="center" prop="headOfficeConfirmName" label="总部确认人" width="85">
 				</el-table-column>
@@ -179,6 +193,7 @@
 				coopName: '',
         settlementModName: '',
 				needEmail: '',
+        isSendMailAuto: '',
         quantityConfirmName: '',
         billConfirmName: '',
         headOfficeConfirmName: '',
@@ -551,7 +566,8 @@
           billTemplate: this.billTemplate,
           userName: this.userName,
 					currentPage: this.currentPage,
-					pageSize: this.pageSize
+					pageSize: this.pageSize,
+          isSendMailAuto: this.isSendMailAuto
 				}, {
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded'
@@ -681,6 +697,7 @@
             "settlementState": this.settlementState,
             "billTemplate": this.billTemplate,
             "userName": this.userName,
+            "isSendMailAuto": this.isSendMailAuto
         }
         this.$axios.post3('/prm/coopAgreementSettlement/exportExcel', params)
             .then(function(response) {

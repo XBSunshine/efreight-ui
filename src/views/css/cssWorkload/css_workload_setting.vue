@@ -158,10 +158,10 @@
         if ((this.frow.businessScope === 'AE' || this.frow.businessScope === 'AI' || this.frow.businessScope === 'LC' || this.frow.businessScope === 'IO') && this.tableColumns[i].prop === 'chargeWeight') {
         	this.tableColumns[i].label = "计费重量";
         }
-        if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE') && this.tableColumns[i].prop === 'chargeWeight') {
+        if ((this.frow.businessScope === 'SE' || this.frow.businessScope === 'SI' || this.frow.businessScope === 'TE' || this.frow.businessScope === 'TI') && this.tableColumns[i].prop === 'chargeWeight') {
         	this.tableColumns[i].label = "计费吨";
         }
-        if ((this.frow.businessScope != 'SE' && this.frow.businessScope != 'SI' && this.frow.businessScope != 'TE') && this.tableColumns[i].prop === 'containerNumber') {
+        if ((this.frow.businessScope != 'SE' && this.frow.businessScope != 'SI' && this.frow.businessScope != 'TE' && this.frow.businessScope != 'TI') && this.tableColumns[i].prop === 'containerNumber') {
         	this.$delete(this.tableColumns, i);
         }
       }

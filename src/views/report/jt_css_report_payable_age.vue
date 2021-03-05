@@ -66,6 +66,13 @@
           		</el-input>
           	</el-form-item>
           </el-col>
+          <el-col class="elementWidth">
+            <el-form-item label-width="10px">
+              <el-input style="width: 260px;" v-model="query.salesName" auto-complete="off" clearable>
+                <template slot="prepend">责任销售</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
         </el-row>
 			</div>
 		</el-form>
@@ -143,7 +150,8 @@
 					customerName: '',
 					countRanges: '',
 					orgEditionName: '',
-          otherOrg:-1
+          otherOrg:-1,
+          salesName: '',
 				},
 				countRanges: '15;30;60;90',
 				customerType: '0',
@@ -192,7 +200,7 @@
 			let orgVersion = window.localStorage.getItem('orgVersion')
 			if (orgVersion) {
 				this.query.orgEditionName = orgVersion;
-				if (orgVersion.indexOf("专业版") >= 0 || orgVersion.indexOf("旗舰版")>-1) {
+				if (orgVersion.indexOf("专业版") >= 0 || orgVersion.indexOf("旗舰版")>-1 || orgVersion.indexOf("标准版")>-1) {
 					this.columnFlag = true;
 				}
 			}
@@ -211,7 +219,7 @@
 						//      class:'cell'
 						//    },
 						domProps: {
-							innerHTML: column.label + "<span style='color: red;'>(此功能仅限专业版和旗舰版使用)</span>"
+							innerHTML: column.label + "<span style='color: red;'>(此功能仅限标准版,专业版和旗舰版使用)</span>"
 						}
 					})
 				])
@@ -257,6 +265,7 @@
 				this.frow.customerType = row.coop_type
 				this.frow.businessScope = row.business_scope
         this.frow.otherOrg = this.query.otherOrg;
+        this.frow.salesName = this.query.salesName
         this.frow.otherOrgFlag = true;
 				this.detailVisible = true;
 			},

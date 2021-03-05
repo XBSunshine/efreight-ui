@@ -368,6 +368,7 @@
 					expectDepartureStart: this.getDateTimeNow(),
 					customerNumber: '',
 					coopName: '',
+          businessScope:'TE',
 					containerMethod: '整箱',
 					expectDepartureEnd: '',
 					orderCode: '',

@@ -154,7 +154,11 @@
           let indexDelete = [];
 					tableColumns.forEach(column => {
 						if (column.prop == 'flightDate' && this.frow.businessScope.endsWith('I')) {
-							column.label = '到港日期'
+              if(this.frow.businessScope.startsWith('T')){
+                column.label = '到达日期'
+              }else{
+                 column.label = '到港日期'
+              }
 						} else if (column.prop == 'flightDate' && this.frow.businessScope.endsWith('E')) {
               if(this.frow.businessScope.startsWith('T')){
                 column.label = '发车日期'
@@ -176,7 +180,11 @@
 						if(column.prop == 'awbNumber'){
 						   if(this.frow.businessScope=='LC'||this.frow.businessScope=='IO'){
 						     indexDelete.push(index);
-						   }
+						   }else if(this.frow.businessScope.startsWith('T')){
+                 column.label = '运单号'
+               }else{
+                 column.label = '主单号'
+               }
 						}
 					})
           if(indexDelete.length>0){

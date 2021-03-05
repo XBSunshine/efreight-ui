@@ -1554,6 +1554,19 @@
 				if (buttonInfo.indexOf('te-order-services-cost-find') > -1) {
 					this.costFindServicePermissionButton = true
 				}
+			} else if (this.frow.businessScope == 'TI') {
+				if (buttonInfo.indexOf('"ti_order_service_income"') > -1) {
+					this.incomeServicePermissionButton = true
+				}
+				if (buttonInfo.indexOf('"ti_order_service_cost"') > -1) {
+					this.costServicePermissionButton = true
+				}
+				if (buttonInfo.indexOf('ti-order-services-income-find') > -1) {
+					this.incomeFindServicePermissionButton = true
+				}
+				if (buttonInfo.indexOf('ti-order-services-cost-find') > -1) {
+					this.costFindServicePermissionButton = true
+				}
 			} else if (this.frow.businessScope == 'LC') {
 				if (buttonInfo.indexOf('"lc_order_service_income"') > -1) {
 					this.incomeServicePermissionButton = true

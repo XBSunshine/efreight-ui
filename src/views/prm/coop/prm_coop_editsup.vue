@@ -696,7 +696,7 @@
 					coop_id: this.coop_id,
           tabType: tabType
 				}
-				this.$axios.post('/prm/coop/queryCoopTabsList', params).then((response) => {debugger
+				this.$axios.post('/prm/coop/queryCoopTabsList', params).then((response) => {
 					let code = response.data.code;
 					if(tabType=='address'){
             this.address.data = response.data.data.dataList;

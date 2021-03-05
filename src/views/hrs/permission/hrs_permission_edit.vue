@@ -256,7 +256,7 @@
         this.ruleForm.helpDocumentName=file.name;
       },*/
       beforeAvatarUpload3(file) {
-          this.uptoken.key = window.localStorage.getItem("orgCode")+"_helpDocumentUrl_"+file.name;
+          this.uptoken.key = this.buildUploadFileKey(file);
           const isLt10M = file.size < 10 * 1024 * 1024;
           if(!isLt10M) {
               this.$message.error('上传模板大小不能超过 10MB!');
@@ -315,15 +315,19 @@
         });
       },
       resetForm(formName) {
-        this.checkedCities=[];
+        this.checkedCities = [];
         this.$refs[formName].resetFields();
-        this.ruleForm.helpDocumentName='';
-        this.ruleForm.helpDocumentUrl='';
+        this.ruleForm.helpDocumentName = '';
+        this.ruleForm.helpDocumentUrl = '';
       },
       // 关闭
       handleClose() {
         this.$emit('update:visible', false);
+      },
+      buildUploadFileKey(file) {
+        return 'public/help/help_document_' + new Date().format("yyMMddhhmmss") + "_" + file.name;
       }
+
     },
     created(){
       this.$axios.get('/hrs/permission/'+this.frow.id)

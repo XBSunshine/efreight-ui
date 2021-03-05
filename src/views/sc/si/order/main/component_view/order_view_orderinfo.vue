@@ -879,6 +879,7 @@
 			editContainerList() {
 				this.containerVisible = true
 				this.ffrow.containerList = this.ruleForm.containerList
+        this.ffrow.businessScope = 'SI'
 			},
 			containerCallback(row) {
 				this.ruleForm.containerList = row.val

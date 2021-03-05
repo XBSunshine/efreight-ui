@@ -69,27 +69,48 @@
 		"flag": "true",
 		"index": 9,
 		"width": 100,
-		"align": "center",
-		"sortable": false
-	}, {
-		"label": "货物类型",
-		"prop": "goodsType",
-		"flag": "true",
-		"index": 10,
-		"width": 80,
-		"align": "center",
-		"sortable": false
-	}, {
-		"label": "件数",
-		"prop": "planPieces",
-		"flag": "true",
-		"index": 12,
-		"width": 110,
-		"align": "center",
-		"sortable": false
-	},{
-		"label": "毛重(KG)",
-		"prop": "planWeight",
+    "align": "center",
+    "sortable": false
+  },
+    {
+      "label": "货物类型",
+      "prop": "goodsType",
+      "flag": "true",
+      "index": 10,
+      "width": 80,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "集装箱量",
+      "prop": "containerList",
+      "flag": "true",
+      "index": 11,
+      "width": 110,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "箱号/铅封号",
+      "prop": "containerNumberAndContainerSealNo",
+      "flag": "true",
+      "index": 12,
+      "width": 200,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "件数",
+      "prop": "planPieces",
+      "flag": "true",
+      "index": 12,
+      "width": 110,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "毛重(KG)",
+      "prop": "planWeight",
 		"flag": "true",
 		"index": 14,
 		"width": 110,

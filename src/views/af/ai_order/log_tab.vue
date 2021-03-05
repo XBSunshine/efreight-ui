@@ -191,6 +191,9 @@
 			this.queryLogList();
 			//日志结束
 
+			if(this.frow.updateLogTab){
+				this.frow.updateLogTab=false
+			}
 		}
 	}
 </script>

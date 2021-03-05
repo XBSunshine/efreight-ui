@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="报关单制作 - 出口 - 新增" fullscreen :visible.sync="visible" :close-on-press-escape="false" :close-on-click-modal="false" :show-close="false">
+	<el-dialog :title="'报关单制作 - ' + titleName + ' - ' + manageType" fullscreen :visible.sync="visible" :close-on-press-escape="false" :close-on-click-modal="false" :show-close="false">
 		<!-- width="1310px"  style="top: -80px;" -->
 		<div style="width: 1310px;margin: 0 auto;">
 			<el-button :loading="buttonLoading" type="primary" size="mini" @click="submitForm('ruleForm')">保存</el-button>
@@ -33,14 +33,14 @@
 				</el-row>
 				<el-row>
 					<el-col class="elementWidth table_col_top table_col_left">
-						<el-form-item label="境内发货人" label-width="105px" style="margin-top: 10px;">
+						<el-form-item :label="sender" label-width="105px" style="margin-top: 10px;">
 							<el-input v-model="ruleForm.shipperName" auto-complete="off" clearable style="width:150px;" disabled>
 							</el-input>
 							<el-button type="primary" size="mini" @click="gotoShipperConsigneePage(0)">选择</el-button>
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth table_col_top">
-						<el-form-item label="出境关别" style="margin-top: 10px;">
+						<el-form-item :label="outerType" style="margin-top: 10px;">
 							<el-select v-model="ruleForm.ciqQreaCode" filterable remote placeholder="请输入关键词" @visible-change="ciqQreaCodeVisibleChange" :remote-method="ciqQreaCodeRemoteMethod" :loading="ciqQreaCodeLoading" style="width:150px;" clearable>
 								<el-option v-for="item in ciqQreaCodesTemp" :key="item.ediCode1" :label="item.paramText" :value="item.ediCode1">
 									<span style="float: left;">{{item.ediCode1}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -50,7 +50,7 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth table_col_top">
-						<el-form-item label="出口日期" style="margin-top: 10px;">
+						<el-form-item :label="eventDateLabel" style="margin-top: 10px;">
 							<el-date-picker v-model="ruleForm.exportImportDate" clearable type="date" value-format="yyyy-MM-dd" placeholder="选择出口日期" style="width: 150px;">
 							</el-date-picker>
 						</el-form-item>
@@ -70,7 +70,7 @@
 				</el-row>
 				<el-row style="margin-top: 0px;">
 					<el-col class="elementWidth table_col_top table_col_left">
-						<el-form-item label="境外收货人" label-width="105px" style="margin-top: 10px;">
+						<el-form-item :label="receiver" label-width="105px" style="margin-top: 10px;">
 							<el-input v-model="ruleForm.consigneeName" auto-complete="off" clearable style="width:150px;" disabled>
 							</el-input>
 							<el-button type="primary" size="mini" @click="gotoShipperConsigneePage(1)">选择</el-button>
@@ -97,6 +97,7 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
+
 				<el-row style="margin-top: 0px;">
 					<el-col class="elementWidth table_col_top table_col_left">
 						<el-form-item label="生产销售单位" label-width="105px" style="margin-top: 10px;">
@@ -121,12 +122,28 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth table_col_top table_col_right" style="width: 482px;">
+					<el-col class="elementWidth table_col_top" v-if="isLoading">
 						<el-form-item label="许可证号" style="margin-top: 10px;">
 							<el-input v-model="ruleForm.licenseNumber" auto-complete="off" clearable style="width:150px;" maxlength="20">
 							</el-input>
 						</el-form-item>
 					</el-col>
+					<el-col class="elementWidth table_col_top table_col_right" v-else style="width: 482px;">
+						<el-form-item label="许可证号" style="margin-top: 10px;">
+							<el-input v-model="ruleForm.licenseNumber" auto-complete="off" clearable style="width:150px;" maxlength="20">
+							</el-input>
+						</el-form-item>
+					</el-col>
+          <el-col class="elementWidth table_col_top table_col_right" style="margin-left: -7px;" v-if="isLoading">
+            <el-form-item label="货物存放地点" label-width="96px" style="margin-top: 10px;">
+              <el-select style="width:150px;margin-left: -9px" v-model="ruleForm.warehouseId" filterable remote placeholder="请输入关键词" @visible-change="warehouseVisibleChange" :remote-method="warehouseRemoteMethod" :loading="warehouseLoading" clearable>
+                <el-option v-for="item in warehousesTemp" :key="item.warehouseId" :label="item.warehouseNameCn" :value="item.warehouseId">
+                  <span style="float: left;">{{item.warehouseCode}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span style="float: right;">{{item.warehouseNameCn}}  {{item.apCode}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
 				</el-row>
 				<el-row style="margin-top: 0px;">
 					<el-col class="elementWidth table_col_top table_col_left">
@@ -146,7 +163,7 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth table_col_top">
-						<el-form-item label="运抵国" style="margin-top: 10px;">
+						<el-form-item :label="arriverCountry" style="margin-top: 10px;">
 							<el-select v-model="ruleForm.countryDepartureArrival" filterable remote placeholder="请输入关键词" @visible-change="countryDepartureArrivalVisibleChange" :remote-method="countryDepartureArrivalRemoteMethod" :loading="countryDepartureArrivalLoading" style="width:150px;" clearable>
 								<el-option v-for="item in countryDepartureArrivalsTemp" :key="item.nationCodeThree" :label="item.nationNameCn" :value="item.nationCodeThree">
 									<span style="float: left;">{{item.nationCodeThree}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -156,7 +173,7 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth table_col_top">
-						<el-form-item label="指运港" style="margin-top: 10px;">
+						<el-form-item :label="transPort" style="margin-top: 10px;">
 							<el-select v-model="ruleForm.countryDepartureArrival1" filterable remote placeholder="请输入关键词" @visible-change="countryDepartureArrival1VisibleChange" :remote-method="countryDepartureArrival1RemoteMethod" :loading="countryDepartureArrival1Loading" style="width:150px;" clearable>
 								<el-option v-for="item in countryDepartureArrival1sTemp" :key="item.nationCodeThree" :label="item.nationNameCn" :value="item.nationCodeThree">
 									<span style="float: left;">{{item.nationCodeThree}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -166,7 +183,7 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth table_col_top table_col_right">
-						<el-form-item label="离境口岸" style="margin-top: 10px;">
+						<el-form-item :label="departPortLabel" style="margin-top: 10px;">
 							<el-select v-model="ruleForm.exportImportPort" filterable remote placeholder="请输入关键词" @visible-change="exportImportPortVisibleChange" :remote-method="exportImportPortRemoteMethod" :loading="exportImportPortLoading" style="width:150px;" clearable>
 								<el-option v-for="item in exportImportPortsTemp" :key="item.ediCode1" :label="item.paramText" :value="item.ediCode1">
 									<span style="float: left;">{{item.ediCode1}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -418,6 +435,16 @@
 		},
 		data() {
 			return {
+        isLoading: false,
+        titleName: '出口',
+        sender: '境内发货人',
+        receiver: '境外收货人',
+        outerType: '出境关别',
+        arriverCountry: '运抵国',
+        transPort: '指运港',
+        departPortLabel: '离境口岸',
+        eventDateLabel: '出口日期',
+        manageType: '新增',
 				data: [],
 				ciqQreaCodes: [],
 				ciqQreaCodesTemp: [],
@@ -425,6 +452,8 @@
 				tradeModes: [],
 				tradeModesTemp: [],
 				cutModeDetails: [],
+        warehouses: [],
+        warehousesTemp: [],
 				cutModes: [],
 				cutModesTemp: [],
 				countrys: [],
@@ -446,6 +475,7 @@
 				ciqQreaCodeLoading: false,
 				tradeModeLoading: false,
 				cutModeLoading: false,
+				warehouseLoading: false,
 				countryTradeLoading: false,
 				exportImportPortLoading: false,
 				countryDepartureArrival1Loading: false,
@@ -455,6 +485,8 @@
 				buttonLoading: false,
 				ffrow: {},
 				ruleForm: {
+          customsDeclarationId: '',
+					businessScope: 'AE',
 					awbNumber: '',
 					hawbNumber: '',
 					customsNumberPreEntry: '',
@@ -473,6 +505,7 @@
 					salesConsumptionName: '',
 					tradeMode: '',
 					cutMode: '',
+          warehouseId: '',
 					licenseNumber: '',
 					contractNumber: '',
 					countryTrade: '',
@@ -622,7 +655,8 @@
 					countryDestinations: [],
 					districtCode: '',
 					districtCodes: [],
-					cutMode: ''
+					cutMode: '',
+          warehouseId: ''
 				})
 			},
 			deleteDetail(index, row) {
@@ -739,11 +773,34 @@
 					this.cutModesTemp = this.cutModes.slice(0, 10)
 				}
 			},
+			warehouseRemoteMethod(query) {
+				if (query) {
+					this.warehouseLoading = true;
+					setTimeout(() => {
+						this.warehouseLoading = false;
+						this.warehousesTemp = this.warehouses.filter(item => {
+							return item.warehouseNameCn.toLowerCase().indexOf(query.toLowerCase()) > -1
+                || item.warehouseCode.toLowerCase().indexOf(query.toLowerCase()) > -1
+                || item.apCode.toLowerCase().indexOf(query.toLowerCase()) > -1
+						}).slice(0, 10)
+					}, 200)
+				} else {
+					this.warehousesTemp = this.warehouses.slice(0, 10)
+				}
+			},
 			cutModeVisibleChange(flag) {
 				if (flag) {
 					this.cutModesTemp = this.cutModes.slice(0, 10)
 					if (this.ruleForm.cutMode && !this.cutModesTemp.some(item => item.ediCode1 == this.ruleForm.cutMode)) {
 						this.cutModesTemp = this.cutModesTemp.concat(this.cutModes.filter(item => item.ediCode1 == this.ruleForm.cutMode))
+					}
+				}
+			},
+			warehouseVisibleChange(flag) {
+				if (flag) {
+					this.warehousesTemp = this.warehouses.slice(0, 10)
+					if (this.ruleForm.warehouseId && !this.warehousesTemp.some(item => item.warehouseId == this.ruleForm.warehouseId)) {
+						this.warehousesTemp = this.warehousesTemp.concat(this.warehouses.filter(item => item.warehouseId == this.ruleForm.warehouseId))
 					}
 				}
 			},
@@ -1051,14 +1108,14 @@
 							.then((response) => {
 								if (response.data.code == 0) {
 									this.openSuccess('保存成功，请等待下载...')
-									window.opener.queryList()
-									this.exportExcel(response.data.data)
+									window.opener.queryList();
+									this.exportExcel(response.data.data);
 								} else {
-									this.openError(response.data.messageInfo)
-									this.buttonLoading = false
+									this.openError(response.data.messageInfo);
+									this.buttonLoading = false;
 								}
 							}).catch((error) => {
-								this.buttonLoading = false
+								this.buttonLoading = false;
 								let errorinfo = error.response.data.messageInfo;
 								this.openError(errorinfo);
 							})
@@ -1068,6 +1125,55 @@
 					}
 				})
 			},
+    view(id) {
+      this.pageLoading = true
+      this.$axios.get('/afbase/customsDeclaration/view/' + id)
+        .then((response) => {
+          if (response.data.code == 0) {
+            this.ruleForm = response.data.data
+            if (this.ruleForm.edocCode) {
+              this.edocCodes = this.ruleForm.edocCode.split(',')
+            }
+            this.$axios.get('/afbase/customsDeclarationDetail/' + id)
+              .then((response2) => {
+                this.ruleForm.detailList = response2.data.data
+                this.calculateTotal()
+              })
+            if (this.ciqQreaCodesTemp.length > 0 && this.ruleForm.ciqQreaCode && !this.ciqQreaCodesTemp.some(item => item.ediCode1 == this.ruleForm.ciqQreaCode)) {
+              this.ciqQreaCodesTemp = this.ciqQreaCodesTemp.concat(this.ciqQreaCodes.filter(item => item.ediCode1 == this.ruleForm.ciqQreaCode))
+            }
+            if (this.tradeModesTemp.length > 0 && this.ruleForm.tradeMode && !this.tradeModesTemp.some(item => item.ediCode1 == this.ruleForm.tradeMode)) {
+              this.tradeModesTemp = this.tradeModesTemp.concat(this.tradeModes.filter(item => item.ediCode1 == this.ruleForm.tradeMode))
+            }
+            if (this.warehousesTemp.length > 0 && this.ruleForm.cutMode && !this.warehousesTemp.some(item => item.warehouseId == this.ruleForm.warehouseId)) {
+              this.warehousesTemp = this.warehousesTemp.concat(this.warehouses.filter(item => item.warehouseId == this.ruleForm.warehouseId))
+            }
+            if (this.cutModesTemp.length > 0 && this.ruleForm.cutMode && !this.cutModesTemp.some(item => item.ediCode1 == this.ruleForm.cutMode)) {
+              this.cutModesTemp = this.cutModesTemp.concat(this.cutModes.filter(item => item.ediCode1 == this.ruleForm.cutMode))
+            }
+            if (this.countryTradesTemp.length > 0 && this.ruleForm.countryTrade && !this.countryTradesTemp.some(item => item.nationCodeThree == this.ruleForm.countryTrade)) {
+              this.countryTradesTemp = this.countryTradesTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryTrade))
+            }
+            if (this.countryDepartureArrivalsTemp.length > 0 && this.ruleForm.countryDepartureArrival && !this.countryDepartureArrivalsTemp.some(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival)) {
+              this.countryDepartureArrivalsTemp = this.countryDepartureArrivalsTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival))
+            }
+            if (this.countryDepartureArrival1sTemp.length > 0 && this.ruleForm.countryDepartureArrival1 && !this.countryDepartureArrival1sTemp.some(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival1)) {
+              this.countryDepartureArrival1sTemp = this.countryDepartureArrival1sTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival1))
+            }
+            if (this.exportImportPortsTemp.length > 0 && this.ruleForm.exportImportPort && !this.exportImportPortsTemp.some(item => item.ediCode1 == this.ruleForm.exportImportPort)) {
+              this.exportImportPortsTemp = this.exportImportPortsTemp.concat(this.exportImportPorts.filter(item => item.ediCode1 == this.ruleForm.exportImportPort))
+            }
+          } else {
+            this.openError(response.data.messageInfo);
+          }
+          this.pageLoading = false
+        }).catch((error) => {
+        this.pageLoading = false
+        let errorinfo = error.response.data.messageInfo;
+        this.openError(errorinfo);
+      })
+
+    },
 			getCurrDateAndCurrMonthLastDay() {
 				//获取当前日期
 				let date = new Date();
@@ -1091,7 +1197,7 @@
 						var downloadElement = document.createElement('a');
 						var href = window.URL.createObjectURL(blob); // 创建下载的链接
 						downloadElement.href = href;
-						downloadElement.download = '空运出口报关单_'+this.ruleForm.awbNumber+(this.ruleForm.hawbNumber?('_'+this.ruleForm.hawbNumber):'') + '.xls'; // 下载后文件名
+						downloadElement.download = '空运'+this.titleName+'报关单_'+this.ruleForm.awbNumber+(this.ruleForm.hawbNumber?('_'+this.ruleForm.hawbNumber):'') + '.xls'; // 下载后文件名
 						document.body.appendChild(downloadElement);
 						downloadElement.click(); // 点击下载
 						document.body.removeChild(downloadElement); // 下载完成移除元素
@@ -1121,12 +1227,15 @@
 					.then((response) => {
 						this.ciqQreaCodes = response.data.data
 						this.ciqQreaCodesTemp = this.ciqQreaCodes.slice(0, 10)
+            if (this.ruleForm.customsDeclarationId && this.ruleForm.ciqQreaCode && !this.ciqQreaCodesTemp.some(item => item.ediCode1 == this.ruleForm.ciqQreaCode)) {
+              this.ciqQreaCodesTemp = this.ciqQreaCodesTemp.concat(this.ciqQreaCodes.filter(item => item.ediCode1 == this.ruleForm.ciqQreaCode))
+            }
 					})
 				//运输方式
 				this.$axios.get('/afbase/category/queryCategoryByCategoryType/20')
 					.then((response) => {
 						this.transportModes = response.data.data
-						if (this.transportModes && this.transportModes.length > 0) {
+						if (!this.ruleForm.customsDeclarationId && this.transportModes && this.transportModes.length > 0) {
 							this.ruleForm.transportMode = this.transportModes[0].ediCode1
 						}
 					})
@@ -1135,19 +1244,48 @@
 					.then((response) => {
 						this.tradeModes = response.data.data
 						this.tradeModesTemp = this.tradeModes.slice(0, 10)
-						if (this.tradeModesTemp && this.tradeModesTemp.length > 0) {
-							this.ruleForm.tradeMode = this.tradeModesTemp[0].ediCode1
-						}
+            if(this.ruleForm.customsDeclarationId){
+              if (this.ruleForm.tradeMode && !this.tradeModesTemp.some(item => item.ediCode1 == this.ruleForm.tradeMode)) {
+                this.tradeModesTemp = this.tradeModesTemp.concat(this.tradeModes.filter(item => item.ediCode1 == this.ruleForm.tradeMode))
+              }
+            }else{
+              if (this.tradeModesTemp && this.tradeModesTemp.length > 0) {
+                this.ruleForm.tradeMode = this.tradeModesTemp[0].ediCode1
+              }
+            }
+
 					})
 				//征免性质
 				this.$axios.get('/afbase/category/queryCategoryByCategoryType/22')
 					.then((response) => {
 						this.cutModes = response.data.data
 						this.cutModesTemp = this.cutModes.slice(0, 10)
-						if (this.cutModesTemp && this.cutModesTemp.length > 0) {
-							this.ruleForm.cutMode = this.cutModesTemp[0].ediCode1
-						}
+            if(this.ruleForm.customsDeclarationId){
+              if (this.ruleForm.cutMode && !this.cutModesTemp.some(item => item.ediCode1 == this.ruleForm.cutMode)) {
+                this.cutModesTemp = this.cutModesTemp.concat(this.cutModes.filter(item => item.ediCode1 == this.ruleForm.cutMode))
+              }
+            }else{
+              if (this.cutModesTemp && this.cutModesTemp.length > 0) {
+                this.ruleForm.cutMode = this.cutModesTemp[0].ediCode1
+              }
+            }
+
 					})
+        //货物存放地点
+        this.$axios.get('/afbase/warehouse/getWarehouseListByQuery/'+this.frow.businessScope)
+          .then((response) => {
+            this.warehouses = response.data.data
+            this.warehousesTemp = this.warehouses.slice(0, 10)
+            if(this.ruleForm.customsDeclarationId){
+              if (this.ruleForm.warehouseId && !this.warehousesTemp.some(item => item.warehouseId == this.ruleForm.warehouseId)) {
+                this.warehousesTemp = this.warehousesTemp.concat(this.warehouses.filter(item => item.warehouseId == this.ruleForm.warehouseId))
+              }
+            }else{
+              if (this.warehousesTemp && this.warehousesTemp.length > 0) {
+                this.ruleForm.warehouseId = this.warehousesTemp[0].warehouseId
+              }
+            }
+          })
 				//贸易国
 				//运抵国
 				//指运港
@@ -1157,12 +1295,26 @@
 						this.countryTradesTemp = this.countrys.slice(0, 10)
 						this.countryDepartureArrivalsTemp = this.countrys.slice(0, 10)
 						this.countryDepartureArrival1sTemp = this.countrys.slice(0, 10)
+            if(this.ruleForm.customsDeclarationId){
+              if (this.ruleForm.countryTrade && !this.countryTradesTemp.some(item => item.nationCodeThree == this.ruleForm.countryTrade)) {
+                this.countryTradesTemp = this.countryTradesTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryTrade))
+              }
+              if (this.ruleForm.countryDepartureArrival && !this.countryDepartureArrivalsTemp.some(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival)) {
+                this.countryDepartureArrivalsTemp = this.countryDepartureArrivalsTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival))
+              }
+              if (this.ruleForm.countryDepartureArrival1 && !this.countryDepartureArrival1sTemp.some(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival1)) {
+                this.countryDepartureArrival1sTemp = this.countryDepartureArrival1sTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival1))
+              }
+            }
 					})
 				//离境口岸
 				this.$axios.get('/afbase/category/queryCategoryByCategoryType/23')
 					.then((response) => {
 						this.exportImportPorts = response.data.data
 						this.exportImportPortsTemp = this.exportImportPorts.slice(0, 10)
+            if (this.ruleForm.customsDeclarationId && this.ruleForm.exportImportPort && !this.exportImportPortsTemp.some(item => item.ediCode1 == this.ruleForm.exportImportPort)) {
+              this.exportImportPortsTemp = this.exportImportPortsTemp.concat(this.exportImportPorts.filter(item => item.ediCode1 == this.ruleForm.exportImportPort))
+            }
 					})
 				//包装种类
 				this.$axios.get('/afbase/category/queryCategoryByCategoryType/24')
@@ -1207,7 +1359,23 @@
 			}
 		},
 		created() {
-			this.init()
+			this.init();
+      this.ruleForm.businessScope = this.frow.businessScope;
+			if(this.frow.businessScope=='AI'){
+			  this.isLoading = true;
+        this.titleName = "进口";
+        this.sender = "境外发货人";
+        this.receiver = "境内收货人";
+        this.outerType = "进境关别";
+        this.arriverCountry = "启运国";
+        this.transPort = "经停港";
+        this.departPortLabel = "入境口岸";
+        this.eventDateLabel = "进口日期";
+      }
+			if(this.frow.customsDeclarationId){
+			  this.manageType = '编辑';
+        this.view(this.frow.customsDeclarationId)
+      }
 		}
 	}
 </script>
@@ -1215,7 +1383,6 @@
 	.table_col {
 		border: 2px solid #DCDFE6;
 	}
-
 	.table_col_left {
 		border-left: 2px solid #DCDFE6;
 	}

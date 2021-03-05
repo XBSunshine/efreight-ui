@@ -238,7 +238,7 @@
 									<span class="el-dropdown-link">单证制作<i class="el-icon-arrow-right el-icon--right"></i></span>
 									<el-dropdown-menu slot="dropdown">
 										<el-dropdown-item command="shippingMake" v-if="shippingMakeButtonFlag">舱单制作</el-dropdown-item>
-										<el-dropdown-item command="shippingSend" v-if="shippingSendButtonFlag">发送舱单</el-dropdown-item>
+										<el-dropdown-item command="shippingSend" v-if="shippingSendButtonFlag">舱单申报</el-dropdown-item>
 										<el-dropdown-item command="waybillMake" v-if="waybillMakeButtonFlag">运单制作</el-dropdown-item>
 										<el-dropdown-item command="dgdMake" v-if="dgdMakeButtonFlag">DGD制作</el-dropdown-item>
 									</el-dropdown-menu>
@@ -264,7 +264,7 @@
 									<el-dropdown-menu slot="dropdown">
 										<el-dropdown-item command="copyOrderSave" v-if="copyOrderSaveButtonFlag">复制新增</el-dropdown-item>
 										<el-dropdown-item command="uninstall" v-show="scope.row.awbNumber" v-if="uninstallButtonFlag">卸载主单</el-dropdown-item>
-                    <el-dropdown-item command="concelSign" v-if="afCencelSignFlag">撤销签单</el-dropdown-item>
+										<el-dropdown-item command="concelSign" v-if="afCencelSignFlag">撤销签单</el-dropdown-item>
 										<el-dropdown-item command="forceStop" v-if="forcestopButtonFlag">强制关闭</el-dropdown-item>
 									</el-dropdown-menu>
 								</el-dropdown>
@@ -355,7 +355,7 @@
 	export default {
 		data() {
 			return {
-				rountingSignVisible:false,
+				rountingSignVisible: false,
 				tableHeight: '550px',
 				orderFinanceLockViewFlag: false,
 				orderShareFlag: false,
@@ -385,8 +385,8 @@
 				shippingMakeButtonFlag: false,
 				shippingSendButtonFlag: false,
 				waybillMakeButtonFlag: false,
-        afRountingSignFlag:false,
-        afCencelSignFlag:false,
+				afRountingSignFlag: false,
+				afCencelSignFlag: false,
 				printButtonFlag: false,
 				deliveryButtonFlag: false,
 				documentMakeButtonFlag: false,
@@ -436,8 +436,8 @@
 					coopName: '',
 					creatorName: '',
 					columnStrs: '',
-                    orderPermission: '',
-                    routingName: ''
+					orderPermission: '',
+					routingName: ''
 				},
 				setVisible: false,
 				saveVisible: false,
@@ -492,7 +492,7 @@
 			'selectPrintMethod': SelectPrintMethod,
 			'orderShareQrcodeTab': OrderShareQrcode,
 			'orderShareQrcodeEmailTab': OrderShareQrcodeEmail,
-			'rountingSignTab':rountingSignVisibleVue
+			'rountingSignTab': rountingSignVisibleVue
 		},
 		provide() {
 			return {
@@ -902,7 +902,7 @@
 				} else if (command == 'waybillMake') {
 					this.waybillMake(this.currRow)
 				} else if (command == 'shippingSend') {
-					this.shippingSend(this.currRow)
+					this.Mft2201_Decleare()
 				} else if (command == 'printLetter') {
 					this.printLetter(this.currRow)
 				} else if (command == 'printAirCargoManifest') {
@@ -921,64 +921,64 @@
 					this.deliveryNotice(this.currRow, 'storehouse');
 				} else if (command == "share") {
 					this.share(this.currRow);
-				}else if(command == "rountingSign"){
+				} else if (command == "rountingSign") {
 					this.rountingSign(this.currRow);
-				}else if(command == "concelSign"){
-          this.concelSign(this.currRow);
-        }
+				} else if (command == "concelSign") {
+					this.concelSign(this.currRow);
+				}
 
 			},
-			rountingSign(row){
-        //校验 是否满足条件
-        //签约公司设置了AE 是航线签约
-        //当前订单的服务产品不为空 且 IN （启用签单功能支持的服务产品rounting_sign_business_product）
-        //当前订单 配了主单号 （order表 主单uuid不为NULL）
-        //当前订单 成本完成cost_recorded = 否
-        //当前订单 cost表 服务=‘干线 – 空运费’ 的成本，从未对账 且 从未锁账日期 才可签单
+			rountingSign(row) {
+				//校验 是否满足条件
+				//签约公司设置了AE 是航线签约
+				//当前订单的服务产品不为空 且 IN （启用签单功能支持的服务产品rounting_sign_business_product）
+				//当前订单 配了主单号 （order表 主单uuid不为NULL）
+				//当前订单 成本完成cost_recorded = 否
+				//当前订单 cost表 服务=‘干线 – 空运费’ 的成本，从未对账 且 从未锁账日期 才可签单
 
-        this.$axios.get2('/afbase/rountingsign/check/'+row.orderId).then((response)=> {
-          if(response.data.code==0){
-            this.frow = row;
-            this.rountingSignVisible = true;
-          }else{
-            this.openError1(response.data.messageInfo);
-          }
-        }).catch((error)=> {
-        	this.openError1(response.data.messageInfo);
-        });
+				this.$axios.get2('/afbase/rountingsign/check/' + row.orderId).then((response) => {
+					if (response.data.code == 0) {
+						this.frow = row;
+						this.rountingSignVisible = true;
+					} else {
+						this.openError1(response.data.messageInfo);
+					}
+				}).catch((error) => {
+					this.openError1(response.data.messageInfo);
+				});
 			},
-      concelSign(row){
-        //是否 已经签单
-        this.$axios.get('/afbase/rountingsign/view/' + row.orderId+'/AE')
-        	.then(function(response) {
-            if(response.data.data&&response.data.data.signState==1){
-                //已经签单
-                this.$confirm('是否确认撤销签单?', '提示', {
-                	confirmButtonText: '是',
-                	cancelButtonText: '否',
-                	type: 'warning',
-                	center: true
-                }).then(() => {
-                    //未做成本完成 （订单成本完成=0)
-                    //成本表 cost ，干线-空运费 从未锁账 且 从未对账
-                    this.$axios.get2('/afbase/rountingsign/concelSign/'+row.orderId).then((response)=> {
-                      if(response.data.code==0){
-                           this.openSuccess();
-                           this.findByPage();
-                      }else{
-                        this.openError1(response.data.messageInfo);
-                      }
-                    }).catch((error)=> {
-                    	this.openError1(response.data.messageInfo);
-                    });
-                }).catch(() => {
+			concelSign(row) {
+				//是否 已经签单
+				this.$axios.get('/afbase/rountingsign/view/' + row.orderId + '/AE')
+					.then(function(response) {
+						if (response.data.data && response.data.data.signState == 1) {
+							//已经签单
+							this.$confirm('是否确认撤销签单?', '提示', {
+								confirmButtonText: '是',
+								cancelButtonText: '否',
+								type: 'warning',
+								center: true
+							}).then(() => {
+								//未做成本完成 （订单成本完成=0)
+								//成本表 cost ，干线-空运费 从未锁账 且 从未对账
+								this.$axios.get2('/afbase/rountingsign/concelSign/' + row.orderId).then((response) => {
+									if (response.data.code == 0) {
+										this.openSuccess();
+										this.findByPage();
+									} else {
+										this.openError1(response.data.messageInfo);
+									}
+								}).catch((error) => {
+									this.openError1(response.data.messageInfo);
+								});
+							}).catch(() => {
 
-                });
-            }else{
-               this.openError("订单尚未进行签单");
-            }
-        	}.bind(this));
-      },
+							});
+						} else {
+							this.openError("订单尚未进行签单");
+						}
+					}.bind(this));
+			},
 			share(row) {
 				//分享之前做一次校验
 				// this.$axios.get2('/afbase/afOrderShare/afOrderShareCheckOrder/'+row.orderId).then((response)=> {
@@ -1049,7 +1049,7 @@
 									this.$axios.get('/afbase/operationPlan/printLetters1/' + row.awbUuid).then((response) => {
 										this.frow.awbUuid = row.awbUuid
 										this.frow.pdfUrl = response.data.data
-                    this.frow.awbNumber = row.awbNumber;
+										this.frow.awbNumber = row.awbNumber;
 										this.selectPrintMethodVisible = true;
 										/*window.open(response.data.data)*/
 									}).catch(function(error) {
@@ -1423,31 +1423,31 @@
 				});
 			},
 			findByPage() {
-        let orderPermission = window.localStorage.getItem('orderPermission');//当前用户的订单权限
-        this.query.orderPermission = orderPermission;
+				let orderPermission = window.localStorage.getItem('orderPermission'); //当前用户的订单权限
+				this.query.orderPermission = orderPermission;
 				this.query.columnStrs = '';
 				this.setHeight();
-						if (this.tableColumns.length == 0) {
-							this.tableColumns = this.sortBykey(columns.afInfo, 'index');
+				if (this.tableColumns.length == 0) {
+					this.tableColumns = this.sortBykey(columns.afInfo, 'index');
+				}
+				this.loading = true
+				this.$axios.get2("/afbase/aforder/page?size=" + this.pageConf.pageSize + "&current=" + this.pageConf.pageCode, this.query)
+					.then(function(response) {
+						this.data1 = response.data.data.records;
+						this.pageConf.totalPage = response.data.data.total;
+						if (this.data1.length == 0) {
+							let current = Math.ceil(this.pageConf.totalPage / this.pageConf.pageSize);
+							this.findByPage2(current);
+						} else {
+							this.loading = false
 						}
-						this.loading = true
-						this.$axios.get2("/afbase/aforder/page?size=" + this.pageConf.pageSize + "&current=" + this.pageConf.pageCode, this.query)
-							.then(function(response) {
-								this.data1 = response.data.data.records;
-								this.pageConf.totalPage = response.data.data.total;
-								if (this.data1.length == 0) {
-									let current = Math.ceil(this.pageConf.totalPage / this.pageConf.pageSize);
-									this.findByPage2(current);
-								} else {
-									this.loading = false
-								}
-							}.bind(this));
+					}.bind(this));
 
-						this.$axios.get2("/afbase/aforder/getTatol", this.query)
-							.then(function(response) {
-								this.data2 = response.data.data;
-								this.getSummaries();
-							}.bind(this));
+				this.$axios.get2("/afbase/aforder/getTatol", this.query)
+					.then(function(response) {
+						this.data2 = response.data.data;
+						this.getSummaries();
+					}.bind(this));
 			},
 			findByPage2(current) {
 				this.$axios.get2("/afbase/aforder/page?size=" + this.pageConf.pageSize + "&current=" + current, this.query)
@@ -1457,11 +1457,11 @@
 						this.pageConf.totalPage = response.data.data.total;
 					}.bind(this));
 			},
-			columnSetCallback(){
+			columnSetCallback() {
 				//从数据库查询设置信息
 				let pageName = '订单操作管理/空运出口/AE订单';
 				this.$axios.get2("/hrs/user/getUserPageSet?pageName=" + pageName)
-					.then((response)=> {
+					.then((response) => {
 						let af_list_column = response.data.data;
 						if (af_list_column && af_list_column.length > 0) {
 							this.tableColumns = this.sortBykey(af_list_column, 'index');
@@ -1469,10 +1469,10 @@
 							this.tableColumns = this.sortBykey(columns.afInfo, 'index');
 						}
 						this.findByPage()
-					}).catch((error)=>{
-					this.tableColumns = this.sortBykey(columns.afInfo, 'index')
-					this.findByPage()
-				})
+					}).catch((error) => {
+						this.tableColumns = this.sortBykey(columns.afInfo, 'index')
+						this.findByPage()
+					})
 			},
 			doDelete(row) {
 				this.$axios.get('/afbase/aforder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
@@ -1490,14 +1490,14 @@
 							type: 'warning',
 							center: true
 						}).then(() => {
-              if(row.signState === 1){
-                  let mes = "当前业务已由 " + row.routingPersonName.split(' ')[0] + " 签单，撤销签单后方可卸载主单号。";
-                  this.openError(mes);
-                  return;
-              }
+							if (row.signState === 1) {
+								let mes = "当前业务已由 " + row.routingPersonName.split(' ')[0] + " 签单，撤销签单后方可卸载主单号。";
+								this.openError(mes);
+								return;
+							}
 							this.$axios.get('/afbase/aforder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
 								if (!response.data.data) {
-									let params = '{"orderUuid":"' + row.orderUuid + '","awbId":' + row.awbId + '}';
+									let params = '{"orderUuid":"' + row.orderUuid + '","awbId":' + row.awbId + ',"orderId":' + row.orderId + ',"rowUuid":"' + row.rowUuid + '"}';
 									this.$axios.post2('/afbase/aforder/doUninstall', params)
 										.then(function(response) {
 											if (response.data.code == 0) {
@@ -1506,7 +1506,9 @@
 											} else {
 												this.openError(response.data.messageInfo);
 											}
-										}.bind(this));
+										}.bind(this)).catch(error => {
+											this.openError(error.response.data.messageInfo)
+										});
 								} else {
 									this.openError("订单已财务锁账");
 								}
@@ -1514,14 +1516,14 @@
 
 						}).catch(action => {
 							if (action === 'cancel') {
-               if(row.signState === 1){
-                    let mes = "当前业务已由 " + row.routingPersonName.split(' ')[0] + " 签单，撤销签单后方可卸载主单号。";
-                    this.openError(mes);
-                    return;
-                }
+								if (row.signState === 1) {
+									let mes = "当前业务已由 " + row.routingPersonName.split(' ')[0] + " 签单，撤销签单后方可卸载主单号。";
+									this.openError(mes);
+									return;
+								}
 								this.$axios.get('/afbase/aforder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
 									if (!response.data.data) {
-										let params = '{"orderUuid":"' + row.orderUuid + '","awbId":' + row.awbId + '}';
+										let params = '{"orderUuid":"' + row.orderUuid + '","awbId":' + row.awbId + ',"orderId":' + row.orderId + ',"rowUuid":"' + row.rowUuid + '"}';
 										this.$axios.post2('/afbase/aforder/doStop', params)
 											.then(function(response) {
 												if (response.data.code == 0) {
@@ -1530,7 +1532,9 @@
 												} else {
 													this.openError(response.data.messageInfo);
 												}
-											}.bind(this));
+											}.bind(this)).catch(error => {
+												this.openError(error.response.data.messageInfo)
+											});
 									} else {
 										this.openError("订单已财务锁账");
 									}
@@ -1814,7 +1818,10 @@
 				var _year = theDate.getFullYear();
 				var _month = theDate.getMonth();
 				var _date = theDate.getDate();
-				// _month = _month + 1;
+				if (_month === 0) {
+					_year = parseInt(_year) - 1;
+					_month = 12;
+				}
 				if (_month < 10) {
 					_month = "0" + _month;
 				}
@@ -1945,6 +1952,50 @@
 					this.openError1("未配主单号，不能制作运单");
 				}
 			},
+			Mft2201_Decleare() { //舱单申报20210220
+				if (this.currRow.awbNumber) {
+					this.$confirm('此操作将发送预配, 是否继续?', '注意', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning',
+						center: true
+					}).then(() => {
+						this.$axios.get('/afbase/aforder/view/' + this.currRow.orderId)
+							.then((response) =>{
+								let dataRow = response.data.data;
+								let orderUUID = dataRow.orderUuid;
+								let letterIds = '';
+								for (let i = 0; i < dataRow.shipperLetters.length; i++) {
+									if (letterIds == '') {
+										letterIds = dataRow.shipperLetters[i].slId;
+									} else {
+										letterIds = letterIds + ',' + dataRow.shipperLetters[i].slId;
+									}
+								}
+								this.doMft2201_Decleare(orderUUID, letterIds);
+							});
+					}).catch(() => {});
+				} else {
+					this.openError1("未配主单号，不能发送");
+				}
+			},
+			doMft2201_Decleare(orderUUID, letterIds) {
+				let type = 'mwb';
+				if (letterIds) {
+					type = 'all'
+				}
+				this.$axios.post("/afbase/send/doMft2201_Decleare/" + type + "/" + orderUUID + '/' + letterIds).then((response) =>{
+					if (response.data.code == 0) {
+						if (response.data.data.status == 'success') {
+							this.openSuccess('发送成功');
+						} else {
+							this.openError(response.data.data.message);
+						}
+					} else {
+						this.openError(response.data.messageInfo || "发送失败!");
+					}
+				});
+			},
 			shippingSend() { //发送舱单20200827
 				if (this.currRow.awbNumber) {
 					this.$axios.get('/afbase/aforder/getShippingData/AE_CD_AWB').then(function(response) {
@@ -1959,10 +2010,10 @@
 										extracted.call(this);
 									} else { //已发送过舱单
 										this.$confirm('舱单已经发送，是否将 主单及所有分单 再次发送？', '提示', {
-                      confirmButtonText: '确定',
-                      cancelButtonText: '取消',
-                      type: 'warning',
-                      center: true
+											confirmButtonText: '确定',
+											cancelButtonText: '取消',
+											type: 'warning',
+											center: true
 										}).then(() => {
 											extracted.call(this);
 										}).catch(() => {});
@@ -2018,40 +2069,40 @@
 					}
 				}.bind(this));
 			},
-      checkSendWaybill(orderUUID) {
-        this.$axios.get("/afbase/aforder/shippingBillDataCheck/AE_CD_AWB/all/" + orderUUID).then(function(response) {
-          function extracted() {
-            this.$axios.post("/afbase/aforder/sendShippersData/all/"+orderUUID).then(function (response) {
-              // 调用发送舱单后台接口
-              if (response.data.code == 0) {
-                if(response.data.data.status=='success'){
-                  this.openSuccess('发送成功');
-                }else{
-                  this.openError(response.data.data.message);
-                }
-              } else {
-                this.openError(response.data.messageInfo || "发送舱单失败!");
-              }
-            }.bind(this));
-          }
+			checkSendWaybill(orderUUID) {
+				this.$axios.get("/afbase/aforder/shippingBillDataCheck/AE_CD_AWB/all/" + orderUUID).then(function(response) {
+					function extracted() {
+						this.$axios.post("/afbase/aforder/sendShippersData/all/" + orderUUID).then(function(response) {
+							// 调用发送舱单后台接口
+							if (response.data.code == 0) {
+								if (response.data.data.status == 'success') {
+									this.openSuccess('发送成功');
+								} else {
+									this.openError(response.data.data.message);
+								}
+							} else {
+								this.openError(response.data.messageInfo || "发送舱单失败!");
+							}
+						}.bind(this));
+					}
 
-          if (response.data.code == 0) {
-            if (response.data.data == null) {
-              extracted.call(this);
-            }else{
-              this.$alert(response.data.data, '提示', {
-                dangerouslyUseHTMLString: true,
-                distinguishCancelAndClose: true,
-                showCancelButton:false,
-                showConfirmButton:false,
-                type: 'warning',
-                center: true
-              });
-            }
+					if (response.data.code == 0) {
+						if (response.data.data == null) {
+							extracted.call(this);
+						} else {
+							this.$alert(response.data.data, '提示', {
+								dangerouslyUseHTMLString: true,
+								distinguishCancelAndClose: true,
+								showCancelButton: false,
+								showConfirmButton: false,
+								type: 'warning',
+								center: true
+							});
+						}
 
-          }
-        }.bind(this));
-      },
+					}
+				}.bind(this));
+			},
 
 			sendWaybill(orderUUID) {
 				this.$axios.get("/afbase/aforder/shippingBillDataCheck/AE_DZ_POST_MAWB/all/" + orderUUID).then(function(response) {
@@ -2213,12 +2264,12 @@
 					this.orderShareFlag = true;
 				}
 
-        if(buttonInfo.indexOf('af-cenel-sign') > -1){
-          this.afCencelSignFlag = true;
-        }
-        if(buttonInfo.indexOf('af-rounting-sign') > -1){
-          this.afRountingSignFlag = true;
-        }
+				if (buttonInfo.indexOf('af-cenel-sign') > -1) {
+					this.afCencelSignFlag = true;
+				}
+				if (buttonInfo.indexOf('af-rounting-sign') > -1) {
+					this.afRountingSignFlag = true;
+				}
 				//按钮权限结束
 				this.$axios.get('/afbase/awb/selectCategory?category=出口产品').then(function(response) {
 					this.productOptions = response.data.data;
@@ -2262,7 +2313,7 @@
 				ele['orderUuid'] = orderUUID;
 				ele['awbNumber'] = awbNumber;
 				this.frow.data = [ele];
-        this.frow.pageName = 'AE订单';
+				this.frow.pageName = 'AE订单';
 				this.tagPrintVisible = true;
 			},
 			amountBillPrint(row) {
@@ -2469,14 +2520,14 @@
 			//从数据库查询设置信息
 			let pageName = '订单操作管理/空运出口/AE订单';
 			this.$axios.get2("/hrs/user/getUserPageSet?pageName=" + pageName)
-				.then((response)=> {
+				.then((response) => {
 					let af_list_column = response.data.data;
 					if (af_list_column && af_list_column.length > 0) {
 						this.tableColumns = this.sortBykey(af_list_column, 'index');
 					} else {
 						this.tableColumns = this.sortBykey(columns.afInfo, 'index');
 					}
-				}).catch((error)=>{
+				}).catch((error) => {
 					this.tableColumns = this.sortBykey(columns.afInfo, 'index')
 				})
 
@@ -2484,7 +2535,9 @@
 				this.useroptions2 = response.data.data;
 			}.bind(this))
 
-			this.$axios.get2('/afbase/category/find',{categoryName:'航线'}).then((response)=> {
+			this.$axios.get2('/afbase/category/find', {
+				categoryName: '航线'
+			}).then((response) => {
 				this.routingNames = response.data.data
 			})
 
@@ -2579,5 +2632,4 @@
 	.duihao_icn :before {
 		content: "\E608";
 	}
-
 </style>

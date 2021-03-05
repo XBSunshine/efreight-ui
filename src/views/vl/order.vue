@@ -102,6 +102,7 @@
 							<el-dropdown-item v-if="permissionButtonForView" command="view">查看订单</el-dropdown-item>
 							<el-dropdown-item v-if="permissionButtonForEdit&&scope.row.orderStatus != '强制关闭' && scope.row.orderStatus != '完成订单'" command="edit">编辑订单</el-dropdown-item>
 							<el-dropdown-item v-if="permissionButtonForFile" command="upload">上传附件</el-dropdown-item>
+							<el-dropdown-item  command="intoArea">车辆入区</el-dropdown-item>
 							<el-dropdown-item v-if="permissionButtonForTwoCode" command="twoCode">二维码</el-dropdown-item>
 							<el-dropdown-item v-if="permissionButtonForDocumentPrint">
 								<el-dropdown placement="right-start" @command="handleCommand" @visible-change="handleChange(scope.row)">
@@ -139,6 +140,7 @@
 		<viewDetail ref="addMission" v-if="viewVisible" :visible.sync="viewVisible" :frow="frow"></viewDetail>
 		<finish ref="addMission" v-if="finishVisible" :visible.sync="finishVisible" :frow="frow"></finish>
 		<forceStop ref="addMission" v-if="forceStopVisible" :visible.sync="forceStopVisible" :frow="frow"></forceStop>
+		<intoAreaVisible ref="addMission" v-if="intoAreaVisible" :visible.sync="intoAreaVisible" :frow="frow"></intoAreaVisible>
 	</div>
 </template>
 <script>
@@ -149,6 +151,7 @@
 	import setVisibleVue from './order/main/vl_order_setting.vue'
 	import columns from './order/json/vl_order_column.json'
 	import ForceStop from './order/other/order_force_stop'
+	import intoAreaVisible from './intoArea/intoArea_tabs'
 
 	export default {
 		data() {
@@ -192,6 +195,7 @@
 				editVisible: false,
 				viewVisible: false,
 				finishVisible: false,
+				intoAreaVisible:false,
 				showFlag: false,
 				printAmountBillVisible: false,
 				printAmountBillMoreVisible: false,
@@ -211,6 +215,7 @@
 			'edit': Edit,
 			'viewDetail': View,
 			'finish': Finish,
+			'intoAreaVisible': intoAreaVisible,
 			'forceStop': ForceStop
 		},
 		provide() {
@@ -325,6 +330,8 @@
 					this.showTwoCode(this.currRow)
 				} else if (command == 'finish') {
 					this.finish(this.currRow)
+				} else if (command == 'intoArea') {
+					this.intoArea(this.currRow)
 				}
 			},
 			showsave() {
@@ -390,6 +397,11 @@
 					this.openError(error.response.data.messageInfo)
 				})
 
+			},
+			intoArea(row) {
+				this.frow = row
+				this.frow.jumpToTab = 'first'
+				this.intoAreaVisible = true
 			},
 			showOrderFiles(row) {
 				this.frow = row
@@ -547,7 +559,10 @@
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
 				let _date = theDate.getDate();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

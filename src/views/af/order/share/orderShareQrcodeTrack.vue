@@ -252,6 +252,8 @@
     				<el-col class="elementWidth" style="margin-left: 50px;">
     						<el-row>
     							<el-button type="text" style="margin-left: 20px;" disabled>Handling&nbsp;Info</el-button>
+                  <el-checkbox style="margin-left: 10px;" v-model="orderInfo.isNoSolidWood" disabled>非木</el-checkbox>
+                  <el-checkbox style="margin-left: 10px;" v-model="orderInfo.isCelsiusRequire" disabled>温度要求</el-checkbox>
     						</el-row>
     						<el-input class="showWordLimit" type="textarea" v-model="orderInfo.handlingInfo" auto-complete="off" :rows="3" maxlength="500" style="width: 520px;" show-word-limit disabled></el-input>
     				</el-col>
@@ -344,7 +346,7 @@
     				</el-col>
     			</el-row>
     			<el-row >
-    				<el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;" v-if="checkSharefields('鉴定单位')">
+  <!--  				<el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;" v-if="checkSharefields('鉴定单位')">
               <el-form-item>
     						<el-input class="showWordLimit"  v-model="orderInfo.appraisalCompany" auto-complete="off" style="width:265px;margin-right: 15px;"  show-word-limit disabled>
     							<template slot="prepend">
@@ -352,8 +354,8 @@
     							</template>
     						</el-input>
                 </el-form-item>
-    				</el-col>
-    				<el-col class="elementWidth" v-if="checkSharefields('危品类项')">
+    				</el-col>-->
+    				<el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;" v-if="checkSharefields('危品类项')">
                <el-form-item>
     						<el-input class="showWordLimit" v-model="orderInfo.dangerousType" auto-complete="off" style="width:266px;margin-right: 15px;"  show-word-limit disabled>
     							<template slot="prepend">
@@ -363,7 +365,37 @@
                 </el-form-item>
     				</el-col>
 
-    				<el-col class="elementWidth" v-if="checkSharefields('鉴定号')">
+            <el-col class="elementWidth">
+              <el-form-item prop="specialPackage">
+                <el-input style="width:266px;margin-right: 15px;" v-model="orderInfo.specialPackage" disabled>
+                  <template slot="prepend">
+                    <span>特货包装</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col class="elementWidth">
+              <el-form-item prop="celsiusRequire">
+                <el-input style="width:266px;margin-right: 15px;" v-model="orderInfo.celsiusRequire" disabled>
+                  <template slot="prepend">
+                    <span>温度要求</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col class="elementWidth">
+              <el-form-item>
+                <el-input auto-complete="off" style="width:272px;" class="widthWithThermometer" v-model="orderInfo.thermometer" disabled>
+                  <template slot="prepend">
+                    <span>温度计</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+
+    				<!--<el-col class="elementWidth" v-if="checkSharefields('鉴定号')">
               <el-form-item>
     						<el-input class="widthWithThree showWordLimit" v-model="orderInfo.appraisalNote"  auto-complete="off" style="width:552px;margin-right: 15px;"  show-word-limit disabled>
     							<template slot="prepend">
@@ -371,8 +403,19 @@
     							</template>
     						</el-input>
                 </el-form-item>
-    				</el-col>
+    				</el-col>-->
     			</el-row>
+          <el-row>
+            <el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;">
+              <el-form-item prop="palletMaterial">
+                <el-input style="width:266px;margin-right: 15px;" v-model="orderInfo.palletMaterial" disabled>
+                  <template slot="prepend">
+                    <span>托盘材质</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
     		</div>
         </el-form>
          <shareOrderSave ref="addMission" v-if="shareOrderSaveVisible" :visible.sync="shareOrderSaveVisible" :frow="frow"></shareOrderSave>
@@ -555,6 +598,11 @@
            this.orderInfo.customsStatusCode = this.defInfoOrg.customsStatusCode;
          }
         this.orderInfo.businessProduct= this.defInfoOrg.businessProduct;
+        if (this.orderInfo.thermometer === 0) {
+            this.orderInfo.thermometer = '无';
+        } else if(this.orderInfo.thermometer === 1) {
+            this.orderInfo.thermometer = '有';
+        }
 
       },
       checkSharefields(param){

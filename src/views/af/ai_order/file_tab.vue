@@ -11,7 +11,7 @@
 							<i class="el-icon-s-operation"></i>
 							<el-dropdown-menu slot="dropdown">
 								<el-dropdown-item></el-dropdown-item>
-								<el-dropdown-item command="delete" v-if="">删除</el-dropdown-item>
+								<el-dropdown-item command="delete">删除</el-dropdown-item>
 								<el-dropdown-item command="showFile" v-if="scope.row.isDisplay=='0'">显示</el-dropdown-item>
 								<el-dropdown-item command="unShowFile" v-if="scope.row.isDisplay=='1'">不显示</el-dropdown-item>
 							</el-dropdown-menu>
@@ -268,10 +268,16 @@
 			//订单附件
 			uploadOrderFiles() {
 				this.orderFiles.frow = this.frow
+				this.orderFiles.frow.orderCode=this.frow.orderCode;
+				this.orderFiles.frow.orderUuid=this.frow.orderUuid;
+				this.orderFiles.frow.pageName=this.frow.pageName;
 				this.orderFiles.saveVisible = true
 			},
 			uploadBatchOrderFiles() {
 				this.orderFiles.frow = this.frow
+				this.orderFiles.frow.orderCode=this.frow.orderCode;
+				this.orderFiles.frow.orderUuid=this.frow.orderUuid;
+				this.orderFiles.frow.pageName=this.frow.pageName;
 				this.orderFiles.saveBatchVisible = true
 			},
 			deleteOrderFiles(row) {
@@ -284,7 +290,11 @@
 				}).then(() => {
 					let params = {
 						orderFileId: row.orderFileId,
-						businessScope: row.businessScope
+						businessScope: row.businessScope,
+						orderCode:this.frow.orderCode,
+						orderUuid:this.frow.orderUuid,
+						pageName:this.frow.pageName,
+						fileName:row.fileName
 					}
 					this.$axios.post2('/afbase/orderFiles/doDelete', params).then((response) => {
 						if (response.data.code == '0') {
@@ -307,7 +317,11 @@
 				let params = {
 					orderFileId: row.orderFileId,
 					businessScope: row.businessScope,
-					isDisplay: 1
+					isDisplay: 1,
+					orderCode:this.frow.orderCode,
+					orderUuid:this.frow.orderUuid,
+					pageName:this.frow.pageName,
+					fileName:row.fileName
 				}
 				this.$axios.post2('/afbase/orderFiles/showFile', params).then((response) => {
 					if (response.data.code == '0') {
@@ -325,7 +339,11 @@
 				let params = {
 					orderFileId: row.orderFileId,
 					businessScope: row.businessScope,
-					isDisplay: 0
+					isDisplay: 0,
+					orderCode:this.frow.orderCode,
+					orderUuid:this.frow.orderUuid,
+					pageName:this.frow.pageName,
+					fileName:row.fileName
 				}
 				this.$axios.post2('/afbase/orderFiles/showFile', params).then((response) => {
 					if (response.data.code == '0') {
@@ -363,6 +381,7 @@
 			}
 		},
 		created() {
+			
       //判断是否有协议传输按钮
       if(this.frow.businessScope=='AE'){
         this.$axios.get2('/afbase/afOrderShare/check/'+this.frow.orderId+'/电子单证/null').then((response)=> {
@@ -373,10 +392,15 @@
         	console.log(error);
         });
       }
-
+      		if (!this.frow.pageName) {
+				this.frow.pageName='AE订单';
+			}
 			this.viewFlag = this.frow.viewFlag;
 			//查询订单附件
 			this.queryOrderFiles()
+				if(this.frow.updateState){
+					this.frow.updateState = false;
+				}
 		},
 		mounted: function() {
 			this.$axios.get('/hrs/org/getUpToken')

@@ -216,7 +216,18 @@
 							</el-col>
               <el-col class="elementWidth">
                 <el-form-item label-width="10px">
-                  <el-input v-model="query.routingPersonName" clearable auto-complete="off" style="width:189px;">
+                  <el-input class="widthWithThree" style="width:189px;">
+                    <template slot="prepend">工作组</template>
+                    <el-select slot="suffix" v-model="query.workgroupId" filterable placeholder="请选择" clearable style="width: 120px;margin-right: -5px">
+                      <el-option v-for="item in workgroupIds" :key="item.workgroupId" :label="item.workgroupName" :value="item.workgroupId">
+                      </el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input v-model="query.routingPersonName" clearable auto-complete="off" style="width:245px;">
                     <template slot="prepend">责任航线</template>
                   </el-input>
                 </el-form-item>
@@ -350,6 +361,7 @@
 					<el-table-column v-if="item.prop=='expectDeparture' && flagIO" :key="index" :prop="item.prop" label="业务日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='salesName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='servicerName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+          <el-table-column v-if="item.prop=='workgroupName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
           <el-table-column v-if="item.prop=='routingPersonName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='goodsType' && (flagAE||flagAI||flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" label="货物类型" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='pieces' && (flagAE||flagAI||flagLC||flagIO)" :key="index" :prop="item.prop" label="件数" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortPieces"></el-table-column>
@@ -570,6 +582,7 @@
 				tableColumns: [],
 				shippingMethods: [],
 				businessMethods: [],
+        workgroupIds: [],
 				grossProfitStrs: [{
 						code: '1',
 						label: '全部',
@@ -635,6 +648,7 @@
 					orderCode: "",
 					salesName: "",
 					servicerName: "",
+          workgroupId: "",
           routingPersonName: "",
 					expectFlight: "",
 					shipVoyageNumber: "",
@@ -786,12 +800,19 @@
 			this.$axios.get('/sc/vIoCategory/业务分类').then((response) => {
 				this.businessMethods = response.data.data;
 			})
+      this.queryWorkgroup(this.query.businessScope);
 			this.loadPermission(this.permission);
 		},
 		mounted() {
 			this.setHeight();
 		},
 		methods: {
+      queryWorkgroup(businessScope){
+          //工作组
+          this.$axios.get('/hrs/userWorkgroup/selectWorkgroup?businessScope='+businessScope).then(function(response) {
+              this.workgroupIds = response.data.data;
+          }.bind(this));
+      },
 			sortIncomeFunctionalAmount(a, b) {
 				return a.incomeFunctionalAmount.replace(/,/g, "") - b.incomeFunctionalAmount.replace(/,/g, "")
 			},
@@ -1519,7 +1540,10 @@
 			getDateTime(theDate) {
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

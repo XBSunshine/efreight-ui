@@ -29,7 +29,7 @@
 					</el-col>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input style="width: 260px;" v-model="query.customerName" auto-complete="off" clearable>
+							<el-input style="width: 450px;" v-model="query.customerName" auto-complete="off" clearable>
 								<template slot="prepend">客&emsp;&emsp;户</template>
 							</el-input>
 						</el-form-item>
@@ -73,6 +73,13 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
+          <el-col class="elementWidth">
+            <el-form-item label-width="10px">
+              <el-input style="width: 180px;" v-model="query.salesName" auto-complete="off" clearable>
+                <template slot="prepend">责任销售</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
 							<el-input style="width: 260px;" v-model="countRanges" auto-complete="off" clearable>
@@ -198,7 +205,9 @@
 					countRanges: '',
 					overdueValid: '全部',
 					durationValid: '全部',
-					orgEditionName: ''
+					orgEditionName: '',
+          salesName: '',
+          orderPermission: '',
 				},
 				countRanges: '15;30;60;90',
 				customerType: '1',
@@ -226,7 +235,7 @@
 			let orgVersion = window.localStorage.getItem('orgVersion')
 			if (orgVersion) {
 				this.query.orgEditionName = orgVersion;
-				if (orgVersion.indexOf("专业版") >= 0|| orgVersion.indexOf("旗舰版")>-1) {
+				if (orgVersion.indexOf("专业版") >= 0 || orgVersion.indexOf("旗舰版")>-1 || orgVersion.indexOf("标准版")>-1) {
 					this.columnFlag = true;
 				}
 			}
@@ -245,7 +254,7 @@
 						//      class:'cell'
 						//    },
 						domProps: {
-							innerHTML: column.label + "<span style='color: red;'>(此功能仅限专业版和旗舰版使用)</span>"
+							innerHTML: column.label + "<span style='color: red;'>(此功能仅限标准版,专业版和旗舰版使用)</span>"
 						}
 					})
 				])
@@ -292,6 +301,8 @@
 				this.frow.customerId = row.customer_id
 				this.frow.customerType = this.customerType
 				this.frow.businessScope = row.business_scope
+        this.frow.salesName = this.query.salesName
+        this.frow.orderPermission = this.query.orderPermission
 
 				this.detailVisible = true;
 			},
@@ -312,6 +323,8 @@
 				}
 				this.query.countRanges = this.countRanges.split(';').sort((e1, e2) => parseInt(e1) - parseInt(e2)).join()
 				this.customerType = this.query.customerType
+        let orderPermission = window.localStorage.getItem('orderPermission');//当前用户的订单权限
+        this.query.orderPermission = orderPermission;
 				this.loading = true
 				this.$axios.get2("/afbase/reportReceivableAge", this.query)
 					.then(function(response) {

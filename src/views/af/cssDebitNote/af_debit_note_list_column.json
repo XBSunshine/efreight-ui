@@ -88,15 +88,9 @@
 			"width": 300,
 			"align": "center",
 			"sortable": false
-		}, {
-      "label": "发票日期",
-      "prop": "invoiceDate",
-      "flag": "true",
-      "index": 12,
-      "width": 100,
-      "align": "center",
-      "sortable": false
-    }, {
+		},
+
+    {
       "label": "发票号码",
       "prop": "invoiceNum",
       "flag": "true",
@@ -104,27 +98,39 @@
       "width": 200,
       "align": "center",
       "sortable": false
-    }, {
-      "label": "发票抬头",
-      "prop": "invoiceTitle",
+    },
+    {
+      "label": "开票申请备注",
+      "prop": "applyRemark",
       "flag": "true",
       "index": 14,
       "width": 300,
-      "align": "left",
+      "align": "center",
       "sortable": false
-    }, {
-			"label": "发票备注",
-			"prop": "invoiceRemark",
-			"flag": "true",
-			"index": 15,
-			"width": 300,
-			"align": "left",
-			"sortable": false
-		}, {
+    },
+    {
+      "label": "开票申请人",
+      "prop": "invoiceCreatorName",
+      "flag": "true",
+      "index": 15,
+      "width": 150,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "开票申请时间",
+      "prop": "invoiceCreateTime",
+      "flag": "true",
+      "index": 16,
+      "width": 150,
+      "align": "center",
+      "sortable": false
+    },
+    {
 			"label": "制单人",
 			"prop": "creatorName",
 			"flag": "true",
-			"index": 16,
+			"index": 17,
 			"width": 70,
 			"align": "center",
 			"sortable": false
@@ -132,7 +138,7 @@
 			"label": "清单制作时间",
 			"prop": "createTime",
 			"flag": "true",
-			"index": 17,
+			"index": 18,
 			"width": 150,
 			"align": "center",
 			"sortable": false

@@ -181,6 +181,9 @@
           this.disabledFlag = true;
           for (var i = 0; i < this.data1.length; i++) {
             this.data1[i].orderId=this.frow.orderId
+            this.data1[i].orderCode=this.frow.orderCode;
+            this.data1[i].orderUuid=this.frow.orderUuid;
+            this.data1[i].pageName=this.frow.pageName
           }
           this.$axios.post2('/afbase/goodsName/submitImport', this.data1)
               .then(function(response) {
@@ -196,6 +199,8 @@
                       }
                       this.loading = false;
                       this.disabledFlag1 = false;
+                      //刷新日志tab
+                      this.frow.updateLogTab = true;
                   } else {
                       this.loading = false;
                       this.disabledFlag1 = false;

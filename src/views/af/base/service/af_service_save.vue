@@ -317,13 +317,12 @@
     created() {
       this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
         this.incomeCurrencyOptions = response.data.data;
-        if (this.incomeCurrencyOptions && this.incomeCurrencyOptions[0]) {
-          if ('CNY' != this.incomeCurrencyOptions[0].currency_code) {
-            this.ruleForm.incomeCurrency = this.incomeCurrencyOptions[0].currency_code;
-            this.ruleForm.costCurrency = this.incomeCurrencyOptions[0].currency_code;
-          }
-
-        }
+        // if (this.incomeCurrencyOptions && this.incomeCurrencyOptions[0]) {
+        //   if ('CNY' != this.incomeCurrencyOptions[0].currency_code) {
+        //     this.ruleForm.incomeCurrency = this.incomeCurrencyOptions[0].currency_code;
+        //     this.ruleForm.costCurrency = this.incomeCurrencyOptions[0].currency_code;
+        //   }
+        // }
       }.bind(this));
       this.ruleForm.businessScope = this.frow.businessScope
       this.ruleForm.serviceType = this.frow.serviceNameCn

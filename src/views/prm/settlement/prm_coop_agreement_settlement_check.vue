@@ -172,7 +172,7 @@
           </el-form-item>
         </el-col>
         <el-col class="elementWidth">
-          <el-form-item label="销售确认人" prop="billConfirmId" label-width="115px">
+          <el-form-item label="账单确认人" prop="billConfirmId" label-width="115px">
             <el-select style="width: 125px;" v-model="ruleForm.billConfirmId" filterable disabled>
               <el-option v-for="item in useroptions" :key="item.value" :label="item.label" :value="item.value">
                 <span style="float: left">{{ item.label }}</span>
@@ -249,13 +249,19 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="首次收费月份" label-width="110px" prop="startChargeTime">
-            <el-date-picker v-model="ruleForm.startChargeTime" type="month" value-format="yyyy-MM-dd" placeholder="" style="width: 125px;" disabled>
+            <el-date-picker v-model="ruleForm.startChargeTime" type="month" value-format="yyyy-MM-dd" placeholder=""
+                            style="width: 125px;" disabled>
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col class="elementWidth">
           <el-form-item prop="reviewItNeed" label-width="33px">
             <el-checkbox v-model="ruleForm.reviewItNeed" disabled>需IT审核</el-checkbox>
+          </el-form-item>
+        </el-col>
+        <el-col class="elementWidth">
+          <el-form-item prop="isNewBusiness" label-width="33px">
+            <el-checkbox v-model="ruleForm.isNewBusiness" disabled>新业务</el-checkbox>
           </el-form-item>
         </el-col>
       </el-row>
@@ -342,8 +348,9 @@
           salesCollaborativeId: '',
           regionalHeadId: '',
           reviewItNeed: '',
+          isNewBusiness: '',
           startChargeTime: '',
-				},
+        },
 				rules: {
           settlementModName: [{
               required: true,
@@ -397,7 +404,7 @@
 					],
 					billConfirmId: [{
 							required: true,
-							message: '请录入账单确认责任人',
+							message: '请录入账单确认人',
 							trigger: 'change'
 						},
 						{
@@ -429,17 +436,24 @@
           arrivalStation: [{
               min: 0,
               max: 20,
-              message: '目的港长度不超过 20',
-              trigger: ['blur', 'change']
+            message: '目的港长度不超过 20',
+            trigger: ['blur', 'change']
           }],
           remark: [
-              {
-                  min: 0,
-                  max: 500,
-                  message: '备注长度不超过 500',
-                  trigger: ['blur', 'change']
-              }],
-				},
+            {
+              min: 0,
+              max: 500,
+              message: '备注长度不超过 500',
+              trigger: ['blur', 'change']
+            }],
+          startChargeTime: [
+            {
+              required: true,
+              message: '请输入首次收费月份',
+              trigger: 'change'
+            }
+          ]
+        },
 				typeOptions:[
 					{"label":"按量计费","value":'1'},
 					{"label":"包月计费","value":'0'}
@@ -548,6 +562,7 @@
           this.ruleForm.salesCollaborativeId = response.data.salesCollaborativeId
           this.ruleForm.regionalHeadId = response.data.regionalHeadId
           this.ruleForm.startChargeTime = response.data.startChargeTime
+          this.ruleForm.isNewBusiness = response.data.isNewBusiness
           if(response.data.reviewItNeed1 != null && response.data.reviewItNeed1 == 1){
               this.ruleForm.reviewItNeed = true
           }else{

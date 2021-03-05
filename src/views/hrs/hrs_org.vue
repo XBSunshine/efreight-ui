@@ -386,7 +386,7 @@
        if((row.intendedUser == null || row.intendedUser == '') && row.intendedUser !== 0){
          row.intendedUser = -1;
        }
-       if(row.orgEditionName.indexOf('内部')>0||row.orgEditionName=='标准版' || row.orgEditionName=='专业版'){
+       if(row.orgEditionName.indexOf('内部')>0||row.orgEditionName=='标准版' || row.orgEditionName=='专业版' || row.orgEditionName=='创业版' || row.orgEditionName=='旗舰版'){
           flagUser = false;
        }
        if((row.orgOrderCount>0||row.orgCoopCount>2 || row.intendedUser == 1 || row.subscriptionNum > 0) && row.intendedUser !== 0 && flagUser){
@@ -440,6 +440,10 @@
       getDateTime2(theDate) {
         let _year = theDate.getFullYear();
         let _month = theDate.getMonth();
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
         _month = _month;
         if (_month < 10) {
           _month = "0" + _month;

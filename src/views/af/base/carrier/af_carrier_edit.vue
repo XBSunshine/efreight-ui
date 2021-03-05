@@ -60,18 +60,21 @@
 			</el-row>
 			<el-row>
 				<el-col class="elementWidth">
-					<el-form-item label="主单模板PDF（格打）" prop="carrierMawbModFormat" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-						<el-upload v-if="ruleForm.carrierMawbModFormat==null" :action="actionPath" :accept="accept" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_awbFormat_'+new Date().getTime()+'.pdf'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-							<el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModFormat')">上传模板</el-button>
-						</el-upload>
-						<ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierMawbModFormat!=null">
-							<li class="el-upload-list__item is-success">
-								<a class="el-upload-list__item-name" :href="ruleForm.carrierMawbModFormatUrl" target="_Blank">
-									<i class="el-icon-document"></i> {{ruleForm.carrierMawbModFormatName}}
-								</a>
-								<label class="el-upload-list__item-status-label">
-								<i class="el-icon-upload-success el-icon-circle-check"></i>
-							</label>
+					<el-form-item label="主单模板PDF（格打）" prop="carrierMawbModFormat" label-width="164px" style="margin-left: 4px;"
+                        class="modFormatColor">
+            <el-upload v-if="ruleForm.carrierMawbModFormat==null" :action="actionPath" :accept="accept" :limit=1
+                       :data="{token:token,key:'public/carrier/'+ruleForm.carrierPrefix+'_awbFormat_'+new Date().format('yyMMddhhmmss')+'.pdf'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModFormat')">上传模板</el-button>
+            </el-upload>
+            <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierMawbModFormat!=null">
+              <li class="el-upload-list__item is-success">
+                <a class="el-upload-list__item-name" :href="ruleForm.carrierMawbModFormatUrl" target="_Blank">
+                  <i class="el-icon-document"></i> {{ ruleForm.carrierMawbModFormatName }}
+                </a>
+                <label class="el-upload-list__item-status-label">
+                  <i class="el-icon-upload-success el-icon-circle-check"></i>
+                </label>
 								<i class="el-icon-close" @click="handleRemove('carrierMawbModFormat')"></i>
 							</li>
 						</ul>
@@ -80,18 +83,21 @@
       </el-row>
       <el-row>
         <el-col class="elementWidth">
-					<el-form-item label="主单模板PDF（套打）" prop="carrierMawbModOver" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-						<el-upload v-if="ruleForm.carrierMawbModOver==null" :action="actionPath" :accept="accept" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_awbOver_'+new Date().getTime()+'.pdf'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-							<el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModOver')">上传模板</el-button>
-						</el-upload>
-						<ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierMawbModOver!=null">
-							<li class="el-upload-list__item is-success">
-								<a class="el-upload-list__item-name" :href="ruleForm.carrierMawbModOverUrl" target="_Blank">
-									<i class="el-icon-document"></i> {{ruleForm.carrierMawbModOverName}}
-								</a>
-								<label class="el-upload-list__item-status-label">
-								<i class="el-icon-upload-success el-icon-circle-check"></i>
-							</label>
+          <el-form-item label="主单模板PDF（套打）" prop="carrierMawbModOver" label-width="164px" style="margin-left: 4px;"
+                        class="modFormatColor">
+            <el-upload v-if="ruleForm.carrierMawbModOver==null" :action="actionPath" :accept="accept" :limit=1
+                       :data="{token:token,key:'public/carrier/'+ruleForm.carrierPrefix+'_awbOver_'+new Date().format('yyMMddhhmmss')+'.pdf'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModOver')">上传模板</el-button>
+            </el-upload>
+            <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierMawbModOver!=null">
+              <li class="el-upload-list__item is-success">
+                <a class="el-upload-list__item-name" :href="ruleForm.carrierMawbModOverUrl" target="_Blank">
+                  <i class="el-icon-document"></i> {{ ruleForm.carrierMawbModOverName }}
+                </a>
+                <label class="el-upload-list__item-status-label">
+                  <i class="el-icon-upload-success el-icon-circle-check"></i>
+                </label>
 								<i class="el-icon-close" @click="handleRemove('carrierMawbModOver')"></i>
 							</li>
 						</ul>
@@ -100,18 +106,21 @@
 			</el-row>
 			<el-row>
 				<el-col class="elementWidth">
-					<el-form-item label="分单模板PDF（格打）" prop="carrierHawbModFormat" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-						<el-upload v-if="ruleForm.carrierHawbModFormat==null" :action="actionPath" :accept="accept" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_hawbFormat_'+new Date().getTime()+'.pdf'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-							<el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModFormat')">上传模板</el-button>
-						</el-upload>
-						<ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierHawbModFormat!=null">
-							<li class="el-upload-list__item is-success">
-								<a class="el-upload-list__item-name" :href="ruleForm.carrierHawbModFormatUrl" target="_Blank">
-									<i class="el-icon-document"></i> {{ruleForm.carrierHawbModFormatName}}
-								</a>
-								<label class="el-upload-list__item-status-label">
-								<i class="el-icon-upload-success el-icon-circle-check"></i>
-							</label>
+          <el-form-item label="分单模板PDF（格打）" prop="carrierHawbModFormat" label-width="164px" style="margin-left: 4px;"
+                        class="modFormatColor">
+            <el-upload v-if="ruleForm.carrierHawbModFormat==null" :action="actionPath" :accept="accept" :limit=1
+                       :data="{token:token,key:'public/carrier/'+ruleForm.carrierPrefix+'_hawbFormat_'+new Date().format('yyMMddhhmmss')+'.pdf'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModFormat')">上传模板</el-button>
+            </el-upload>
+            <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierHawbModFormat!=null">
+              <li class="el-upload-list__item is-success">
+                <a class="el-upload-list__item-name" :href="ruleForm.carrierHawbModFormatUrl" target="_Blank">
+                  <i class="el-icon-document"></i> {{ ruleForm.carrierHawbModFormatName }}
+                </a>
+                <label class="el-upload-list__item-status-label">
+                  <i class="el-icon-upload-success el-icon-circle-check"></i>
+                </label>
 								<i class="el-icon-close" @click="handleRemove('carrierHawbModFormat')"></i>
 							</li>
 						</ul>
@@ -120,18 +129,21 @@
       </el-row>
       <el-row>
 				<el-col class="elementWidth">
-					<el-form-item label="分单模板PDF（套打）" prop="carrierHawbModOver" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-						<el-upload v-if="ruleForm.carrierHawbModOver==null" :action="actionPath" :accept="accept" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_hawbOver_'+new Date().getTime()+'.pdf'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-							<el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModOver')">上传模板</el-button>
-						</el-upload>
-						<ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierHawbModOver!=null">
-							<li class="el-upload-list__item is-success">
-								<a class="el-upload-list__item-name" :href="ruleForm.carrierHawbModOverUrl" target="_Blank">
-									<i class="el-icon-document"></i> {{ruleForm.carrierHawbModOverName}}
-								</a>
-								<label class="el-upload-list__item-status-label">
-								<i class="el-icon-upload-success el-icon-circle-check"></i>
-							</label>
+          <el-form-item label="分单模板PDF（套打）" prop="carrierHawbModOver" label-width="164px" style="margin-left: 4px;"
+                        class="modFormatColor">
+            <el-upload v-if="ruleForm.carrierHawbModOver==null" :action="actionPath" :accept="accept" :limit=1
+                       :data="{token:token,key:'public/carrier/'+ruleForm.carrierPrefix+'_hawbOver_'+new Date().format('yyMMddhhmmss')+'.pdf'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModOver')">上传模板</el-button>
+            </el-upload>
+            <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierHawbModOver!=null">
+              <li class="el-upload-list__item is-success">
+                <a class="el-upload-list__item-name" :href="ruleForm.carrierHawbModOverUrl" target="_Blank">
+                  <i class="el-icon-document"></i> {{ ruleForm.carrierHawbModOverName }}
+                </a>
+                <label class="el-upload-list__item-status-label">
+                  <i class="el-icon-upload-success el-icon-circle-check"></i>
+                </label>
 								<i class="el-icon-close" @click="handleRemove('carrierHawbModOver')"></i>
 							</li>
 						</ul>
@@ -142,8 +154,12 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="主单模板Excel（格打）" prop="carrierMawbModFormatExcel" label-width="164px"  style="margin-left: 4px;" class="modFormatColor">
-            <el-upload v-if="ruleForm.carrierMawbModFormatExcel==null" :action="actionPath" :accept="acceptExcel" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_awbFormatExcel_'+new Date().getTime()+'.xlsx'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-              <el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModFormatExcel')">上传模板</el-button>
+            <el-upload v-if="ruleForm.carrierMawbModFormatExcel==null" :action="actionPath" :accept="acceptExcel"
+                       :limit=1
+                       :data="{token:token,key:'public/carrier/'+ruleForm.carrierPrefix+'_awbFormatExcel_'+new Date().format('yyMMddhhmmss')+'.xlsx'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModFormatExcel')">上传模板
+              </el-button>
             </el-upload>
             <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierMawbModFormatExcel!=null">
               <li class="el-upload-list__item is-success">
@@ -162,8 +178,11 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="主单模板Excel（套打）" prop="carrierMawbModOverExcel" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-            <el-upload v-if="ruleForm.carrierMawbModOverExcel==null" :action="actionPath" :accept="acceptExcel" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_awbOverExcel_'+new Date().getTime()+'.xlsx'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-              <el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModOverExcel')">上传模板</el-button>
+            <el-upload v-if="ruleForm.carrierMawbModOverExcel==null" :action="actionPath" :accept="acceptExcel" :limit=1
+                       :data="{token:token,key:'public/carrier/'+ruleForm.carrierPrefix+'_awbOverExcel_'+new Date().format('yyMMddhhmmss')+'.xlsx'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierMawbModOverExcel')">上传模板
+              </el-button>
             </el-upload>
             <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierMawbModOverExcel!=null">
               <li class="el-upload-list__item is-success">
@@ -182,8 +201,12 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="分单模板Excel（格打）" prop="carrierHawbModFormatExcel" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-            <el-upload v-if="ruleForm.carrierHawbModFormatExcel==null" :action="actionPath" :accept="acceptExcel" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_hawbFormatExcel_'+new Date().getTime()+'.xlsx'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-              <el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModFormatExcel')">上传模板</el-button>
+            <el-upload v-if="ruleForm.carrierHawbModFormatExcel==null" :action="actionPath" :accept="acceptExcel"
+                       :limit=1
+                       :data="{token:token,key:'public/carrier/' + ruleForm.carrierPrefix+'_hawbFormatExcel_'+new Date().format('yyMMddhhmmss')+'.xlsx'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModFormatExcel')">上传模板
+              </el-button>
             </el-upload>
             <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierHawbModFormatExcel!=null">
               <li class="el-upload-list__item is-success">
@@ -202,8 +225,11 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="分单模板Excel（套打）" prop="carrierHawbModOverExcel" label-width="164px" style="margin-left: 4px;" class="modFormatColor">
-            <el-upload v-if="ruleForm.carrierHawbModOverExcel==null" :action="actionPath" :accept="acceptExcel" :limit=1 :data="{token:token,key:ruleForm.carrierPrefix+'_hawbOverExcel_'+new Date().getTime()+'.xlsx'}" :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
-              <el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModOverExcel')">上传模板</el-button>
+            <el-upload v-if="ruleForm.carrierHawbModOverExcel==null" :action="actionPath" :accept="acceptExcel" :limit=1
+                       :data="{token:token,key:'public/carrier/' + ruleForm.carrierPrefix+'_hawbOverExcel_'+new Date().format('yyMMddhhmmss')+'.xlsx'}"
+                       :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list=false>
+              <el-button size="mini" type="primary" @click="clickUploadButton('carrierHawbModOverExcel')">上传模板
+              </el-button>
             </el-upload>
             <ul class="el-upload-list el-upload-list--text" v-if="ruleForm.carrierHawbModOverExcel!=null">
               <li class="el-upload-list__item is-success">

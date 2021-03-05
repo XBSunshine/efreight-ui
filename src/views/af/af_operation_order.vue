@@ -19,16 +19,16 @@
 					</el-col>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input v-model="query.arrivalStation" auto-complete="off" clearable style="width:152px;" @input="query.arrivalStation=query.arrivalStation.toUpperCase()">
+							<el-input v-model="query.arrivalStation" auto-complete="off" clearable style="width:154px;" @input="query.arrivalStation=query.arrivalStation.toUpperCase()">
 								<template slot="prepend">目的港</template>
 							</el-input>
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input style="width:210px;">
+							<el-input style="width:208px;">
 								<template slot="prepend">航班日期</template>
-								<el-date-picker slot="suffix" v-model="query.flightDateBegin" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始" style="width: 141px;margin-right: -5px;">
+								<el-date-picker slot="suffix" v-model="query.flightDateBegin" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始" style="width: 139px;margin-right: -5px;">
 								</el-date-picker>
 							</el-input>
 							<span>-</span>
@@ -54,66 +54,19 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
+
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input v-model="query.coopName" auto-complete="off" clearable style="width:220px;">
-								<template slot="prepend">客户</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label-width="10px">
-							<el-input v-model="query.customerNumber" auto-complete="off" clearable style="width:220px;" @input="query.customerNumber=query.customerNumber.toUpperCase()">
-								<template slot="prepend">客户单号</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label-width="10px">
-							<el-input v-model="query.expectFlight" auto-complete="off" clearable style="width:220px;" @input="query.expectFlight=query.expectFlight.toUpperCase()">
+							<el-input v-model="query.expectFlight" auto-complete="off" clearable style="width:152px;" @input="query.expectFlight=query.expectFlight.toUpperCase()">
 								<template slot="prepend">航班号</template>
 							</el-input>
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth">
-						<el-form-item label-width="39px">
-							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting" v-if="setButtonFlag">设置</el-button>
-							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcel" v-if="excelButtonFlag">导出</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row v-show="showFlag">
-					<el-col class="elementWidth">
-						<el-form-item label="" label-width="10px">
-							<el-input style="width:172px;">
-								<template slot="prepend">责任客服</template>
-								<el-select slot="suffix" clearable v-model="query.servicerName" filterable placeholder="请选择" @change="setServicerName" style="width:103px;margin-right: -5px;">
-									<el-option v-for="item in useroptions2" :key="item.value" :label="item.label" :value="item.value">
-										<span style="float: left">{{ item.label }}</span>
-										<span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
-									</el-option>
-								</el-select>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label="" label-width="10px">
-							<el-input style="width:172px;">
-								<template slot="prepend">责任销售</template>
-								<el-select slot="suffix" clearable v-model="query.salesName" filterable placeholder="请选择" @change="setSalesName" style="width:103px;margin-right: -5px;">
-									<el-option v-for="item in useroptions2" :key="item.value" :label="item.label" :value="item.value">
-										<span style="float: left">{{ item.label }}</span>
-										<span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
-									</el-option>
-								</el-select>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input style="width:172px;">
+							<el-input style="width:154px;">
 								<template slot="prepend">责任操作</template>
-								<el-select slot="suffix" clearable v-model="query.creatorName" filterable placeholder="请选择" style="width:103px;margin-right: -5px;">
+								<el-select slot="suffix" clearable v-model="query.creatorName" filterable placeholder="请选择" style="width:89px;margin-right: -5px;">
 									<el-option v-for="item in useroptions2" :key="item.value" :label="item.label" :value="item.label3">
 										<span style="float: left">{{ item.label }}</span>
 										<span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
@@ -134,30 +87,27 @@
 							</el-date-picker>
 						</el-form-item>
 					</el-col>
+					<el-col class="elementWidth">
+						<el-form-item label-width="39px">
+							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting" v-if="setButtonFlag">设置</el-button>
+							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcel" v-if="excelButtonFlag">导出</el-button>
+						</el-form-item>
+					</el-col>
 				</el-row>
 				<el-row v-show="showFlag">
-					<el-col class="elementWidth">
+
+
+				</el-row>
+				<el-row v-show="showFlag">
+					<!-- <el-col class="elementWidth">
 						<el-form-item label-width="10px">
 							<el-input v-model="query.awbFromName" auto-complete="off" clearable style="width:209px;">
 								<template slot="prepend">运单来源</template>
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label-width="10px">
-							<el-input style="width:176px;">
-								<template slot="prepend">服务产品</template>
 
-								<el-select slot="suffix" clearable v-model="query.businessProduct" filterable placeholder="请选择" style="width:107px;margin-right: -5px;">
-									<el-option v-for="item in productOptions" :key="item.value" :label="item.label" :value="item.value">
-										<span style="float: left">{{ item.label }}</span>
-										<span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
-									</el-option>
-								</el-select>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<!-- <el-col class="elementWidth">
+					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
 							<el-input style="width:150px;">
 								<template slot="prepend">收入完成</template>
@@ -180,19 +130,19 @@
 								</el-select>
 							</el-input>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 					<el-col class="elementWidth" v-show="orderFinanceLockViewFlag">
 						<el-form-item label-width="10px">
 							<el-input style="width:176px;">
-								<template slot="prepend">财务锁账</template>
+								<template slot="prepend">操作状态</template>
 
 								<el-select slot="suffix" clearable v-model="query.orderStatus" filterable placeholder="请选择" style="width:107px;margin-right: -5px;">
-									<el-option label=" 已锁账" value="1"></el-option>
-									<el-option label="未锁账" value="0"></el-option>
+									<el-option label="已完成" value="1"></el-option>
+									<el-option label="未完成" value="0"></el-option>
 								</el-select>
 							</el-input>
 						</el-form-item>
-					</el-col> -->
+					</el-col>
 				</el-row>
 			</div>
 		</el-form>
@@ -218,13 +168,14 @@
 									</el-dropdown-menu>
 								</el-dropdown>
 							</el-dropdown-item>
+							<el-dropdown-item command="finish" >操作完成</el-dropdown-item>
 							<el-dropdown-item v-if="twoCodeMakeButtonFlag">
 								<el-dropdown placement="right-start" @command="handleCommand" @visible-change="handleChange(scope.row)">
 									<span class="el-dropdown-link">二维码<i class="el-icon-arrow-right el-icon--right"></i></span>
 									<el-dropdown-menu slot="dropdown">
 										<el-dropdown-item command="checkTwoCode" v-if="checkTwoCodeMakeButtonFlag">订单跟踪码</el-dropdown-item>
-										<el-dropdown-item command="deliveryNotice-storehouse">送货通知码-普货库房</el-dropdown-item>
-										<el-dropdown-item command="deliveryNotice-warehouse">送货通知码-交货货站</el-dropdown-item>
+										<!-- <el-dropdown-item command="deliveryNotice-storehouse">送货通知码-普货库房</el-dropdown-item>
+										<el-dropdown-item command="deliveryNotice-warehouse">送货通知码-交货货站</el-dropdown-item> -->
 										<el-dropdown-item command="share" v-if="orderShareFlag">订单协作</el-dropdown-item>
 									</el-dropdown-menu>
 								</el-dropdown>
@@ -249,7 +200,7 @@
 										<el-dropdown-item command="awbSubmit" v-if="awbsubmitButtonFlag">运单确认件</el-dropdown-item>
 										<el-dropdown-item command="printLetter" v-if="deliveryButtonFlag">交货托书</el-dropdown-item>
 										<el-dropdown-item command="printGoodsName" >打印品名清单</el-dropdown-item>
-										<el-dropdown-item command="exitCard" >退库出门证</el-dropdown-item>										
+										<el-dropdown-item command="exitCard" >退库出门证</el-dropdown-item>
 										<el-dropdown-item command="printAirCargoManifest">货物舱单</el-dropdown-item>
 										<el-dropdown-item command="tagMake" v-if="tagMakeButtonFlag">标签打印</el-dropdown-item>
 										<!-- <el-dropdown-item command="amountBillPrint" v-if="amountBillPrintButtonFlag&&incomeServicePermissionButton">账单预览</el-dropdown-item>
@@ -262,6 +213,7 @@
 									<span class="el-dropdown-link ">特殊处理<i class="el-icon-arrow-right el-icon--right"></i></span>
 									<el-dropdown-menu slot="dropdown">
 										<el-dropdown-item command="deleteESD" >删除预录入</el-dropdown-item>
+                    <el-dropdown-item  @click.native="dialogFormVisible = true" >删除预配</el-dropdown-item>
 										<el-dropdown-item command="copyOrderSave" v-if="copyOrderSaveButtonFlag">复制新增</el-dropdown-item>
 										<el-dropdown-item command="uninstall" v-show="scope.row.awbNumber" v-if="uninstallButtonFlag">卸载主单</el-dropdown-item>
 										<el-dropdown-item command="forceStop" v-if="forcestopButtonFlag">强制关闭</el-dropdown-item>
@@ -287,6 +239,20 @@
 			</template>
 
 		</el-table>
+    <el-dialog title="删除预配" :modal="false" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="操作联系人电话" :label-width="formLabelWidth">
+            <el-input v-model="form.contactTel" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="删除原因" :label-width="formLabelWidth">
+            <el-input type="textarea" v-model="form.deleteReason" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="doMft2201_Delete()">确 定</el-button>
+        </div>
+    </el-dialog>
 		<!-- style=" position: fixed;bottom:0px; height:60px; " -->
 		<div class="pagination" ref="ae_order_footer">
 			<el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageConf.pageCode" :page-sizes="pageConf.pageOption" :page-size.sync="pageConf.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageConf.totalPage">
@@ -455,7 +421,13 @@
 				amountBillSendListVisible: false,
 				deliveryNoticeVisible: false,
 				deliveryNoticeShareVisible: false,
-				cancelButtonClass: 'btn-custom-cancel-hidden'
+				cancelButtonClass: 'btn-custom-cancel-hidden',
+        dialogFormVisible: false,
+        form: {
+          contactTel:'',
+          deleteReason:''
+        },
+        formLabelWidth: '120px'
 			}
 		},
 		components: {
@@ -682,7 +654,12 @@
 					return row.orderCode;
 				}
 				if (column.property === "orderStatus") {
-					return row.orderStatus;
+					if (row.orderStatus=='财务锁账') {
+						return '已完成';
+					}else{
+						return row.orderStatus;
+					}
+
 				}
 				if (column.property === "planPieces") {
 					let planPieces = "-";
@@ -945,8 +922,69 @@
 					this.deliveryNotice(this.currRow, 'storehouse');
 				} else if (command == "share") {
 					this.share(this.currRow);
+				}else if (command == "finish") {
+					this.checkFinish(this.currRow);
 				}
 
+			},
+			checkFinish(row) {
+				let params = {
+					orderUuid: row.orderUuid,
+					businessScope: row.businessScope
+				}
+				this.$axios.post2('/afbase/afoporder/getOrderStatus', params).then((response) => {
+						if(response.data.code == 0) {
+							if (response.data.data.length>0) {
+								this.openError("已操作完成");
+								return;
+							}else{
+								this.doFinish(row);
+							}
+
+						} else {
+							this.openError(response.data.messageInfo);
+						}
+					}).catch(function(error) {
+						let errorinfo = error.response.data.messageInfo;
+							this.openError(errorinfo);
+					}.bind(this));
+
+
+			},
+			doFinish(row) {
+
+				this.$confirm('请确认,是否操作完成?', '注意', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning',
+					center: false
+				}).then(() => {
+					let params = {
+						orderUuid: row.orderUuid,
+						businessScope: row.businessScope,
+						orderCode: row.orderCode,
+						orderId: row.orderId,
+						receiptDate:this.getDate(new Date())
+					}
+					this.$axios.post2('/afbase/afoporder/doFinish', params).then((response) => {
+						if(response.data.code == 0) {
+							this.openSuccess("操作成功");
+							this.findByPage();
+						} else {
+							this.openError(response.data.messageInfo);
+						}
+					}).catch(function(error) {
+						let errorinfo = error.response.data.messageInfo;
+						if(errorinfo.indexOf('已操作完成') > -1) {
+							this.openError(errorinfo);
+						}
+					}.bind(this));
+				}).catch(() => {
+					// this.$message({
+					// 	type: 'info',
+					// 	message: '已取消删除'
+					// });
+				});
 			},
 			share(row) {
 				//分享之前做一次校验
@@ -967,7 +1005,7 @@
 						this.frow.orderId = row.orderId;
 						this.customerSelectVisible = true
 					} else {
-						this.openError("订单已财务锁账");
+						this.openError("订单已操作完成");
 					}
 				}.bind(this));
 
@@ -1199,7 +1237,7 @@
 							this.editVisible = true;
 						}
 					} else {
-						this.openError("订单已财务锁账");
+						this.openError("订单已操作完成");
 					}
 				}.bind(this));
 			},
@@ -1248,7 +1286,7 @@
 						this.frow.weighttagButtonFlag2 = true;
 						this.editVisible = true;
 					} else {
-						this.openError("订单已财务锁账");
+						this.openError("订单已操作完成");
 					}
 				}.bind(this));
 
@@ -1270,7 +1308,7 @@
 							this.editVisible = true;
 						}
 					} else {
-						this.openError("订单已财务锁账");
+						this.openError("订单已操作完成");
 					}
 				}.bind(this));
 
@@ -1281,7 +1319,7 @@
 					if (!response.data.data) {
 						this.matchVisible = true;
 					} else {
-						this.openError("订单已财务锁账");
+						this.openError("订单已操作完成");
 					}
 				}.bind(this));
 
@@ -1333,7 +1371,7 @@
 						this.frow.weighttagButtonFlag2 = true;
 						this.editVisible = true;
 					} else {
-						this.openError("订单已财务锁账");
+						this.openError("订单已操作完成");
 					}
 				}.bind(this));*/
 
@@ -1503,7 +1541,7 @@
                 			this.openError1(response.data.messageInfo)
                 			return
                 		}
-                		
+
                 	}
                     if (response.data.data.code=='01') {
                     	if (response.data.data.dataList.length>0) {
@@ -1546,8 +1584,8 @@
 							center: true
 						}).then(() => {
 
-							// this.$axios.get('/afbase/afoporder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
-							// 	if (!response.data.data) {
+							this.$axios.get('/afbase/afoporder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
+								if (!response.data.data) {
 									let params = '{"orderUuid":"' + row.orderUuid + '","awbId":' + row.awbId + '}';
 									this.$axios.post2('/afbase/afoporder/doUninstall', params)
 										.then(function(response) {
@@ -1558,16 +1596,16 @@
 												this.openError(response.data.messageInfo);
 											}
 										}.bind(this));
-							// 	} else {
-							// 		this.openError("订单已财务锁账");
-							// 	}
-							// }.bind(this));
+								} else {
+									this.openError("订单已操作完成");
+								}
+							}.bind(this));
 
 						}).catch(action => {
 							if (action === 'cancel') {
 
-								// this.$axios.get('/afbase/afoporder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
-								// 	if (!response.data.data) {
+								this.$axios.get('/afbase/afoporder/selectOrderStatus?node_name=财务锁账&order_uuid=' + row.orderUuid).then(function(response) {
+									if (!response.data.data) {
 										let params = '{"orderUuid":"' + row.orderUuid + '","awbId":' + row.awbId + '}';
 										this.$axios.post2('/afbase/afoporder/doStop', params)
 											.then(function(response) {
@@ -1578,15 +1616,15 @@
 													this.openError(response.data.messageInfo);
 												}
 											}.bind(this));
-								// 	} else {
-								// 		this.openError("订单已财务锁账");
-								// 	}
-								// }.bind(this));
+									} else {
+										this.openError("订单已操作完成");
+									}
+								}.bind(this));
 
 							}
 						});
 				// 	} else {
-				// 		this.openError("订单已财务锁账");
+				// 		this.openError("订单已操作完成");
 				// 	}
 				// }.bind(this));
 			},
@@ -1861,7 +1899,10 @@
 				var _year = theDate.getFullYear();
 				var _month = theDate.getMonth();
 				var _date = theDate.getDate();
-				// _month = _month + 1;
+		        if (_month === 0) {
+		            _year = parseInt(_year) - 1;
+		            _month = 12;
+		        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}
@@ -1870,6 +1911,20 @@
 				}
 				return _year + "-" + _month + "-01 00:00:00";
 				// return _year + "-" + _month + "-" + _date;
+			},
+			getDate(theDate) {
+				// theDate.setDate(theDate.getDate()-30);
+				var _year = theDate.getFullYear();
+				var _month = theDate.getMonth();
+				var _date = theDate.getDate();
+				 _month = _month + 1;
+				if (_month < 10) {
+					_month = "0" + _month;
+				}
+				if (_date < 10) {
+					_date = "0" + _date;
+				}
+				return _year + "-" + _month + "-" + _date;
 			},
 			continueOperation(data) {
 				this.$confirm('是否继续录入 托书信息 等内容 ？', '提示', {
@@ -2027,6 +2082,42 @@
 					this.openError1("未配主单号，不能删除");
 				}
 			},
+      doMft2201_Delete(){
+        if (this.currRow.awbNumber) {
+          if(this.form.contactTel){
+            if(this.form.deleteReason){
+                this.$confirm('此操作将删除预配, 是否继续?', '注意', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                  this.$axios.post("/afbase/send/doMft2201_Delete/"+this.currRow.awbNumber+"/"+this.currRow.hawbNumber+"/"+this.currRow.orderCode+"/"+this.form.contactTel+"/"+this.form.deleteReason)
+                  .then(function (response) {
+                          if (response.data.code == 0) {
+                              if(response.data.data.status=='success'){
+                                this.openSuccess('删除成功');
+                                this.dialogFormVisible=false;
+                                this.findByPage();
+                            }else{
+                                  this.openError(response.data.data.message);
+                            }
+                          } else {
+                              this.openError(response.data.messageInfo || "删除失败!");
+                          }
+                        }.bind(this));
+
+                }).catch(() => {});
+            }else {
+              this.openError1("请说明删除原因");
+            }
+          } else {
+            this.openError1("请写明操作联系人电话号码");
+          }
+        } else {
+          this.openError1("未配主单号，不能删除");
+        }
+      },
 			doSendESD() { //发送舱单20200827
 				if (this.currRow.awbNumber) {
 					this.$confirm('此操作将发送预录入, 是否继续?', '注意', {

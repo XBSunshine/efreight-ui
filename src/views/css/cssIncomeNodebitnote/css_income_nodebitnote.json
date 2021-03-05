@@ -25,7 +25,7 @@
                "align":"center",
                "sortable":false
              },{
-               "label": "离港日期/到港日期/用车日期/发车日期/业务日期",
+               "label": "离港日期/到港日期/用车日期/发车日期/到达日期/业务日期",
                "prop": "flightDate",
                "flag":"true",
                "index":4,

@@ -80,8 +80,6 @@ var LinesSeries = SeriesModel.extend({
     },
 
     mergeOption: function (option) {
-        // The input data may be null/undefined.
-        option.data = option.data || [];
 
         compatEc2(option);
 
@@ -315,6 +313,10 @@ var LinesSeries = SeriesModel.extend({
         // If lines are polyline
         // polyline not support curveness, label, animation
         polyline: false,
+
+        // If clip the overflow.
+        // Available when coordinateSystem is cartesian or polar.
+        clip: true,
 
         label: {
             show: false,

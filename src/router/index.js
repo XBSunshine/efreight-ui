@@ -32,6 +32,8 @@ const prm_service = resolve => require(['@/views/prm/prm_service.vue'], resolve)
 const prm_cloud_user = resolve => require(['@/views/prm/prm_cloud_user.vue'], resolve)
 const prm_coop_share = resolve => require(['@/views/prm/prm_coop_share.vue'], resolve)
 const externalCoopShare = resolve => require(['@/views/prm/coopshare/external_coop_share.vue'], resolve)
+const prm_report_receivable_age = resolve => require(['@/views/prm/prm_report_receivable_age.vue'], resolve)
+const prm_budget = resolve => require(['@/views/prm/prm_budget.vue'], resolve)
 
 //HRS
 const hrs_org = resolve => require(['@/views/hrs/hrs_org.vue'], resolve)
@@ -48,6 +50,7 @@ const unPermission = resolve => require(['@/components/unPermission.vue'], resol
 const unDevelop = resolve => require(['@/components/unDev.vue'], resolve)
 const hrs_orgUser = resolve => require(['@/views/hrs/hrs_orgUser.vue'], resolve)
 const hrs_org_configure = resolve => require(['@/views/hrs/hrs_org_configure.vue'], resolve)
+const hrs_doc = resolve => require(['@/views/hrs/hrs_doc.vue'], resolve)
 
 //AFBASE
 const af_base = resolve => require(['@/views/af/af_base.vue'], resolve)
@@ -86,6 +89,8 @@ const af_order_lock_unlock_list = resolve => require(['@/views/af/af_order_lock_
 const af_surcharge = resolve => require(['@/views/af/base/af_surcharge.vue'], resolve)
 const orderShareQrcodeTrack = resolve => require(['@/views/af/order/share/orderShareQrcodeTrack.vue'], resolve)
 const fhl_operation = resolve => require(['@/views/af/af_fhl_operation.vue'], resolve)
+const ai_customs_declaration = resolve => require(['@/views/af/ai_customs_declaration.vue'], resolve)
+const ai_operationLook = resolve => require(['@/views/af/ai_operationLook.vue'], resolve)
 const branch_line = resolve => require(['@/views/line/af_branch_line_list.vue'], resolve)
 const af_customs_declaration = resolve => require(['@/views/af/af_customs_declaration.vue'], resolve)
 
@@ -108,9 +113,6 @@ const customer_info_menu = resolve => require(['@/views/css/customerContribution
 const css_voucher_export = resolve => require(['@/views/css/css_voucher_export.vue'], resolve)
 const css_financial_expense_report = resolve => require(['@/views/css/css_financial_expense_report.vue'], resolve)
 const css_report_income_statement = resolve => require(['@/views/css/css_report_income_statement'], resolve)
-
-
-
 
 //SC
 const sc_si_order = resolve => require(['@/views/sc/si/order.vue'], resolve)
@@ -136,6 +138,8 @@ const tc_product = resolve => require(['@/views/tc/base/tc_product'], resolve)
 const tc_te_order = resolve => require(['@/views/tc/te/order.vue'], resolve)
 const tc_warehouse = resolve => require(['@/views/tc/base/tc_warehouse'], resolve)
 const te_order_delivery_notice_external = resolve => require(['@/views/tc/te/order/other/te_order_delivery_notice_external.vue'], resolve)
+
+const tc_ti_order = resolve => require(['@/views/tc/ti/order.vue'], resolve)
 
 //LC
 const lc_order = resolve => require(['@/views/lc/order.vue'], resolve)
@@ -452,19 +456,40 @@ let router = new Router({
 					},
 					name: '收发货人',
 					menuShow: true
-				},
-				{
-					path: '/prm_service',
-					components: {
-						default: prm_service,
-						top: TopNav,
-						aside: LeftNav
-					},
-					name: '账单收费项目',
-					menuShow: true
-				}
+        },
+        {
+          path: '/prm_service',
+          components: {
+            default: prm_service,
+            top: TopNav,
+            aside: LeftNav
+          },
+          name: '账单收费项目',
+          menuShow: true
+        },
+        {
+          path: '/prm_report_receivable_age',
+          components: {
+            default: prm_report_receivable_age,
+            top: TopNav,
+            aside: LeftNav
+          },
+          name: '应收账龄',
+          menuShow: true
+        },
+        {
+          path: '/prm_budget',
+          components: {
+            default: prm_budget,
+            top: TopNav,
+            aside: LeftNav
+          },
+          name: '预算分析',
+          menuShow: true
+        }
 
-			]
+
+      ]
 		},
 		{
 			path: '/hrsManager',
@@ -607,26 +632,38 @@ let router = new Router({
 				},
 				{
 					path: '/hrs_version',
-					name: '版本管理',
-					components: {
-						default: hrs_version,
-						top: TopNav,
-						aside: LeftNav
-					},
-					leaf: true, // 只有一个节点
-					iconCls: 'el-icon-notebook-2', // 图标样式class
-					menuShow: true
-				},
-				{
-					path: '/hrs_signtemplate',
-					name: '签约模板',
-					components: {
-						default: hrs_signtemplate,
-						top: TopNav,
-						aside: LeftNav
-					},
-					leaf: true, // 只有一个节点
-					iconCls: 'el-icon-notebook-2', // 图标样式class
+          name: '版本管理',
+          components: {
+            default: hrs_version,
+            top: TopNav,
+            aside: LeftNav
+          },
+          leaf: true, // 只有一个节点
+          iconCls: 'el-icon-notebook-2', // 图标样式class
+          menuShow: true
+        },
+        {
+          path: '/hrs_doc',
+          name: '单证管理',
+          components: {
+            default: hrs_doc,
+            top: TopNav,
+            aside: LeftNav
+          },
+          leaf: true, // 只有一个节点
+          iconCls: 'el-icon-notebook-2', // 图标样式class
+          menuShow: true
+        },
+        {
+          path: '/hrs_signtemplate',
+          name: '签约模板',
+          components: {
+            default: hrs_signtemplate,
+            top: TopNav,
+            aside: LeftNav
+          },
+          leaf: true, // 只有一个节点
+          iconCls: 'el-icon-notebook-2', // 图标样式class
 					menuShow: true
 				},
 				{
@@ -705,52 +742,64 @@ let router = new Router({
 					menuShow: true
 				},
 				{
-                    path: '/af_oporder',
-                    name: '操作订单',
-                    components: {
-                        default: af_oporder,
-                        top: TopNav,
-                        aside: LeftNav
-                    },
-                    leaf: true, // 只有一个节点
-                    iconCls: 'el-icon-tickets', // 图标样式class
-                    menuShow: true
-                },
-                {
-                    path: '/fhl_operation',
-                    name: '分单操作',
-                    components: {
-                        default: fhl_operation,
-                        top: TopNav,
-                        aside: LeftNav
-                    },
-                    leaf: true, // 只有一个节点
-                    iconCls: 'el-icon-tickets', // 图标样式class
-                    menuShow: true
-                },
-                {
-                    path: '/branch_line',
-                    name: '支线管理',
-                    components: {
-                        default: branch_line,
-                        top: TopNav,
-                        aside: LeftNav
-                    },
-                    leaf: true, // 只有一个节点
-                    iconCls: 'el-icon-tickets', // 图标样式class
-                    menuShow: true
-                },{
-                    path: '/af_customs_declaration',
-                    name: '出口报关单',
-                    components: {
-                        default: af_customs_declaration,
-                        top: TopNav,
-                        aside: LeftNav
-                    },
-                    leaf: true, // 只有一个节点
-                    iconCls: 'el-icon-tickets', // 图标样式class
-                    menuShow: true
-                },
+            path: '/af_oporder',
+            name: '操作订单',
+            components: {
+                default: af_oporder,
+                top: TopNav,
+                aside: LeftNav
+            },
+            leaf: true, // 只有一个节点
+            iconCls: 'el-icon-tickets', // 图标样式class
+            menuShow: true
+        },
+        {
+            path: '/fhl_operation',
+            name: '分单操作',
+            components: {
+                default: fhl_operation,
+                top: TopNav,
+                aside: LeftNav
+            },
+            leaf: true, // 只有一个节点
+            iconCls: 'el-icon-tickets', // 图标样式class
+            menuShow: true
+        },
+        {
+            path: '/ai_operationLook',
+            name: '操作看板',
+            components: {
+                default: ai_operationLook,
+                top: TopNav,
+                aside: LeftNav
+            },
+            leaf: true, // 只有一个节点
+            iconCls: 'el-icon-tickets', // 图标样式class
+            menuShow: true
+        },
+        {
+            path: '/branch_line',
+            name: '支线管理',
+            components: {
+                default: branch_line,
+                top: TopNav,
+                aside: LeftNav
+            },
+            leaf: true, // 只有一个节点
+            iconCls: 'el-icon-tickets', // 图标样式class
+            menuShow: true
+        },{
+            path: '/af_customs_declaration',
+            name: '出口报关单',
+            components: {
+                default: af_customs_declaration,
+                top: TopNav,
+                aside: LeftNav
+            },
+            leaf: true, // 只有一个节点
+            iconCls: 'el-icon-tickets', // 图标样式class
+            menuShow: true
+        },
 				{
 					path: '/ai_order',
 					name: '进口订单',
@@ -762,6 +811,17 @@ let router = new Router({
 					leaf: true, // 只有一个节点
 					iconCls: 'el-icon-tickets', // 图标样式class
 					menuShow: true
+        },{
+          path: '/ai_customs_declaration',
+          name: '进口报关单',
+          components: {
+            default: ai_customs_declaration,
+            top: TopNav,
+            aside: LeftNav
+          },
+          leaf: true, // 只有一个节点
+          iconCls: 'el-icon-tickets', // 图标样式class
+          menuShow: true
 				},
 				{
 					path: '/af_tariff_details',
@@ -1373,6 +1433,14 @@ let router = new Router({
 					name: '铁路订单TE',
 					components: {
 						default: tc_te_order,
+						top: TopNav,
+						aside: LeftNav
+					}
+				}, {
+					path: '/ti_order',
+					name: '铁路订单TI',
+					components: {
+						default: tc_ti_order,
 						top: TopNav,
 						aside: LeftNav
 					}

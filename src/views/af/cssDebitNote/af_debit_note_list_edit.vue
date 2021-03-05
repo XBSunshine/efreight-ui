@@ -156,10 +156,10 @@
 					</template>
 				</el-table-column>
 				<el-table-column align="center" prop="debitNoteNum" label="账单编号" width="150"></el-table-column>
-				<el-table-column align="center" v-if="chenckBusCode()" prop="awbNumber" label="主单号" width="150"></el-table-column>
+				<el-table-column align="center" v-if="chenckBusCode()" prop="awbNumber" :label="awbNumberLabel" width="150"></el-table-column>
 				<el-table-column align="center" prop="orderCode" label="订单号" width="150"></el-table-column>
 				<el-table-column align="center" prop="customerNumber" label="客户单号" width="150"></el-table-column>
-				<el-table-column align="center" prop="flightDate" label="开航日期" width="150"></el-table-column>
+				<el-table-column align="center" prop="flightDate" :label="flightDateLabel" width="150"></el-table-column>
 				<el-table-column align="right" label="账单金额">
 					<template slot-scope="scope">
 						<p v-for="(item,index) in scope.row.currencyAmount.split('  ')" :key="index">
@@ -192,6 +192,8 @@
 			return {
 				data1: [],
 				data222: [],
+        awbNumberLabel:'主单号',
+        flightDateLabel:'开航日期',
 				selectVisible: false,
 				ffrow: {
 					coopFlag: ''
@@ -239,6 +241,28 @@
 			'selectVisibleTag': selectVisibleVue,
 		},
 		created: function() {
+      if(this.frow.dataBean.businessScope.startsWith('T')){
+         this.awbNumberLabel = "运单号";
+         if(this.frow.dataBean.businessScope=='TE'){
+           this.flightDateLabel = "发车日期";
+         }else{
+           this.flightDateLabel = "到达日期";
+         }
+      }else if(this.frow.dataBean.businessScope.startsWith('A')||this.frow.dataBean.businessScope.startsWith('S')){
+         this.awbNumberLabel = "主单号";
+         if(this.frow.dataBean.businessScope.endsWith('E')){
+           this.flightDateLabel = "开航日期";
+         }else{
+           this.flightDateLabel = "到港日期";
+         }
+      }else if(this.frow.dataBean.businessScope=='LC'){
+         this.awbNumberLabel = "";
+         this.flightDateLabel = "用车日期";
+      }else if(this.frow.dataBean.businessScope=='IO'){
+         this.awbNumberLabel = "";
+         this.flightDateLabel = "业务日期";
+      }
+      
 			let params = {
 				statementId: this.frow.dataBean.statementId,
 				businessScope: this.frow.dataBean.businessScope
@@ -300,7 +324,7 @@
 
 			// })
 			chenckBusCode() {
-				if (this.frow.dataBean.businessScope == 'IO') {
+				if (this.frow.dataBean.businessScope == 'IO' ||this.frow.dataBean.businessScope == 'LC') {
 					return false;
 				} else {
 					return true;
@@ -321,7 +345,7 @@
 				} else {
 					this.data1 = this.data1.concat(selections2);
 					//更新账单表，给statementId赋值
-					this.$axios.post('/afbase/debitNote/updateDebitNote/' + selections2[0].debitNoteId + '/' + this.ruleForm2.statementId).then(function(response) {}.bind(this));
+					// this.$axios.post('/afbase/debitNote/updateDebitNote/' + selections2[0].debitNoteId + '/' + this.ruleForm2.statementId).then(function(response) {}.bind(this));
 				}
 
 				this.setValue();
@@ -335,7 +359,7 @@
 				// console.log(rrow.debitNoteNum);
 				this.data1.splice(index, 1);
 				//删除实施处理库的数据 将账单的清单ID去掉
-				//this.deleteDebitNote(rrow.debitNoteNum);
+				// this.deleteDebitNote(rrow.debitNoteNum);
 				this.setValue();
 				this.setData2();
 			},
@@ -388,6 +412,10 @@
 							}).then(function(response) {
 								let checkFlag = false;
 								let checkMsg = "";
+                let checkMsgTwo = "";
+                let checkFlagTwo = false;
+                let checkMsgThree = "";
+                let checkFlagThree = false;
 								if (response.data.data && response.data.data.length > 0) {
 									response.data.data.forEach((debitNote) => {
 										if (debitNote.writeoffComplete == 1 || debitNote.writeoffComplete == 0) {
@@ -397,13 +425,33 @@
 											} else {
 												checkMsg = debitNote.debitNoteNum;
 											}
-										}
+										}else if(debitNote.invoiceId){
+                      checkFlagTwo = true;
+                      if (checkMsgTwo) {
+                      	checkMsgTwo = checkMsgTwo + "," + debitNote.debitNoteNum;
+                      } else {
+                      	checkMsgTwo = debitNote.debitNoteNum;
+                      }
+                    }else if(debitNote.statementId&&this.ruleForm2.statementId!=debitNote.statementId){
+                      checkFlagThree = true;
+                      if (checkMsgThree) {
+                      	checkMsgThree = checkMsgThree + "," + debitNote.debitNoteNum;
+                      } else {
+                      	checkMsgThree = debitNote.debitNoteNum;
+                      }
+                    }
 									});
 								}
 								if (checkFlag) {
 									this.openError("编号" + checkMsg + "已核销无法保存清单");
 									return;
-								} else {
+								}else if(checkFlagThree){
+                  this.openError("编号" + checkMsgTwo + "已绑定其他清单");
+                  return;
+                }else if(checkMsgTwo){
+                  this.openError("编号" + checkMsgTwo + "已做开票申请或者已开票，无法保存清单");
+                  return;
+                } else {
 									this.ruleForm2.currencyList = this.data222;
 									this.ruleForm2.billList = this.data1;
 									this.$axios.post2('/afbase/statement/doUpdate', this.ruleForm2)

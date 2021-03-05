@@ -192,7 +192,7 @@
                 this.ffrow.awbNumber = this.awbNumber
                 this.ffrow.flightNumber = this.flightNumber
                 this.ffrow.hawbNumber = this.hawbNumber
-                this.ffrow.bussinessScope = 'AI'
+                this.ffrow.businessScope = 'AI'
                 this.component = hawbSave
                 this.componentName = '分单制作'
             }else{

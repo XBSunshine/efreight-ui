@@ -6,7 +6,7 @@
 					<el-col class="elementWidth">
 						<el-form-item>
 							<el-input v-model="query.mblNumber" auto-complete="off" clearable style="width:180px;" @input="query.mblNumber=query.mblNumber.toUpperCase()">
-								<template slot="prepend">主提单号</template>
+								<template slot="prepend">主提单号1</template>
 							</el-input>
 						</el-form-item>
 					</el-col>
@@ -298,12 +298,17 @@
 								<el-dropdown placement="right-start" @command="handleCommand" @visible-change="handleChange(scope.row)">
 									<span class="el-dropdown-link">打印单据<i class="el-icon-arrow-right el-icon--right"></i></span>
 									<el-dropdown-menu slot="dropdown">
-										<el-dropdown-item v-if="permissionButtonForHawbPrint" command="hawbPrint">分提单打印</el-dropdown-item>
-										<el-dropdown-item v-if="permissionButtonForPrintOrderLetter" command="orderLetter">订舱托书</el-dropdown-item>
-										<el-dropdown-item command="trailerPrint">拖车委托书</el-dropdown-item>
-										<el-dropdown-item v-if="permissionButtonForPrintBillView&&incomeServicePermissionButton" command="printBill">账单预览</el-dropdown-item>
-										<el-dropdown-item v-if="permissionButtonForPrintBillSend&&incomeServicePermissionButton" command="sendBill">发送账单</el-dropdown-item>
-									</el-dropdown-menu>
+                    <el-dropdown-item v-if="permissionButtonForHawbPrint" command="hawbPrint">提单确认件</el-dropdown-item>
+                    <el-dropdown-item v-if="permissionButtonForPrintOrderLetter" command="orderLetter">订舱托书
+                    </el-dropdown-item>
+                    <el-dropdown-item command="trailerPrint">拖车委托书</el-dropdown-item>
+                    <el-dropdown-item v-if="permissionButtonForPrintBillView&&incomeServicePermissionButton"
+                                      command="printBill">账单预览
+                    </el-dropdown-item>
+                    <el-dropdown-item v-if="permissionButtonForPrintBillSend&&incomeServicePermissionButton"
+                                      command="sendBill">发送账单
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
 								</el-dropdown>
 							</el-dropdown-item>
 							<el-dropdown-item v-if="permissionButtonForSpecialHandle">
@@ -1114,7 +1119,10 @@
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
 				let _date = theDate.getDate();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

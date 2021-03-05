@@ -215,11 +215,13 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="frow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="frow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="frow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="frow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="frow"></viewVisibleTagLC>
 		<viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="frow"></viewVisibleTagIO>
 		<viewVisibleTagSEForView ref="addMission" v-if="viewVisibleSEForView" :visible.sync="viewVisibleSEForView" :frow="frow"></viewVisibleTagSEForView>
 		<viewVisibleTagSIForView ref="addMission" v-if="viewVisibleSIForView" :visible.sync="viewVisibleSIForView" :frow="frow"></viewVisibleTagSIForView>
 		<viewVisibleTagTEForView ref="addMission" v-if="viewVisibleTEForView" :visible.sync="viewVisibleTEForView" :frow="frow"></viewVisibleTagTEForView>
+    <viewVisibleTagTIForView ref="addMission" v-if="viewVisibleTIForView" :visible.sync="viewVisibleTIForView" :frow="frow"></viewVisibleTagTIForView>
 		<viewVisibleTagLCForView ref="addMission" v-if="viewVisibleLCForView" :visible.sync="viewVisibleLCForView" :frow="frow"></viewVisibleTagLCForView>
 		<viewVisibleTagIOForView ref="addMission" v-if="viewVisibleIOForView" :visible.sync="viewVisibleIOForView" :frow="frow"></viewVisibleTagIOForView>
 		<setVisibleTag ref="addMission" v-if="setVisible" :visible.sync="setVisible" :frow="frow"></setVisibleTag>
@@ -234,11 +236,13 @@
 	import viewVisibleVueSE from '../sc/se/order/main/order_edit.vue'
 	import viewVisibleVueSI from '../sc/si/order/main/order_edit.vue'
 	import viewVisibleVueTE from '../tc/te/order/main/order_edit.vue'
+  import viewVisibleVueTI from '../tc/ti/order/main/order_edit.vue'
 	import viewVisibleVueLC from '../lc/order/main/order_edit.vue'
 	import viewVisibleVueIO from '../io/order/main/order_edit.vue'
 	import viewVisibleVueSEForView from '../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSIForView from '../sc/si/order/main/order_view.vue'
 	import viewVisibleVueTEForView from '../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTIForView from '../tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLCForView from '../lc/order/main/order_view.vue'
 	import viewVisibleVueIOForView from '../io/order/main/order_view.vue'
 
@@ -280,11 +284,13 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
 				viewVisibleIO: false,
 				viewVisibleSEForView: false,
 				viewVisibleSIForView: false,
 				viewVisibleTEForView: false,
+        viewVisibleTIForView: false,
 				viewVisibleLCForView: false,
 				viewVisibleIOForView: false,
 				setVisible: false,
@@ -297,11 +303,13 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
 			'viewVisibleTagIO': viewVisibleVueIO,
 			'viewVisibleTagSEForView': viewVisibleVueSEForView,
 			'viewVisibleTagSIForView': viewVisibleVueSIForView,
 			'viewVisibleTagTEForView': viewVisibleVueTEForView,
+      'viewVisibleTagTIForView': viewVisibleVueTIForView,
 			'viewVisibleTagLCForView': viewVisibleVueLCForView,
 			'viewVisibleTagIOForView': viewVisibleVueIOForView,
 		},
@@ -405,15 +413,18 @@
 					if (this.query.businessScope.endsWith('E') && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "开航日期";
 					}
-					if (this.query.businessScope.endsWith('I') && tableColumns[i].prop === 'flightDate') {
+					if ((this.query.businessScope == 'AI' || this.query.businessScope == 'SI') && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "到港日期";
 					}
 					if (this.query.businessScope.endsWith('C') && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "用车日期";
 					}
-					if (this.query.businessScope.startsWith('T') && tableColumns[i].prop === 'flightDate') {
+					if (this.query.businessScope == 'TE' && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "发车日期";
 					}
+          if (this.query.businessScope == 'TI' && tableColumns[i].prop === 'flightDate') {
+              tableColumns[i].label = "到达日期";
+          }
 					if (this.query.businessScope == 'IO' && tableColumns[i].prop === 'flightDate') {
 						tableColumns[i].label = "业务日期";
 					}
@@ -738,6 +749,51 @@
 						}
 					}
 				}
+        if (row.businessScope === 'TI') {
+            let buttonInfo = window.localStorage.getItem('buttonInfo')
+            if (buttonInfo.indexOf('ti_order_edit') > -1) {
+                this.frow.viewFlag = true;
+                this.frow.jumpToTab = "third";
+            } else {
+                this.frow.viewFlag = false;
+                this.frow.jumpToTab = "first";
+            }
+            if (buttonInfo.indexOf('ti_order_edit') > -1) {
+                this.frow.permissionButtonForEdit = true
+            } else {
+                this.frow.permissionButtonForEdit = false
+            }
+            if (buttonInfo.indexOf('ti_order_service') > -1) {
+                this.frow.permissionButtonForService = true
+            } else {
+                this.frow.permissionButtonForService = false
+            }
+            if (buttonInfo.indexOf('ti_order_file') > -1) {
+                this.frow.permissionButtonForFile = true
+            } else {
+                this.frow.permissionButtonForFile = false
+            }
+            if (buttonInfo.indexOf('ti_order_log') > -1) {
+                this.frow.permissionButtonForLog = true
+            } else {
+                this.frow.permissionButtonForLog = false
+            }
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.frow.ifFullscreen = true
+                if (buttonInfo.indexOf('ti_order_edit') > -1) {
+                    this.jumpToNewPage('edit', this.frow, '/ti_order')
+                } else {
+                    this.jumpToNewPage('view', this.frow, '/ti_order')
+                }
+            } else {
+                this.frow.ifFullscreen = false
+                if (buttonInfo.indexOf('ti_order_edit') > -1) {
+                    this.viewVisibleTI = true;
+                } else {
+                    this.viewVisibleTIForView = true;
+                }
+            }
+        }
 				if (row.businessScope === 'LC') {
 					let buttonInfo = window.localStorage.getItem('buttonInfo')
 					if (buttonInfo.indexOf('lc_order_edit') > -1) {
@@ -908,13 +964,15 @@
 				});
 				if (val == 'AE' || val == 'SE') {
 					this.flightDateName = '开航日期'
-				} else if (val == 'AI' || val == 'SI' || val == 'TI') {
+				} else if (val == 'AI' || val == 'SI') {
 					this.flightDateName = '到港日期'
 				} else if (val == 'LC') {
 					this.flightDateName = '用车日期';
 				} else if (val == 'TE') {
 					this.flightDateName = '发车日期'
-				}else if (val == 'IO') {
+				} else if (val == 'TI') {
+            this.flightDateName = '到达日期'
+        } else if (val == 'IO') {
 					this.flightDateName = '业务日期'
 				}
 
@@ -1002,7 +1060,10 @@
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
 				let _date = theDate.getDate();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

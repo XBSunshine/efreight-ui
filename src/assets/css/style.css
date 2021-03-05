@@ -492,6 +492,10 @@ aside .el-menu-item.is-active:hover {
 	padding: 0 36px;
 }
 
+.widthWithThermometer .el-input-group__prepend {
+  padding: 0 30px;
+}
+
 .phoneSelect .el-input__icon {
 	line-height: 30px !important;
 }

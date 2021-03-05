@@ -43,7 +43,7 @@
 					</el-form-item>
 				</el-col>
         <el-col class="elementWidth">
-          <el-form-item label="账单责任人" prop="transactorId" required label-width="96px">
+          <el-form-item label="销售负责人" prop="transactorId" required label-width="96px">
             <el-select style="width: 143px;" v-model="ruleForm.transactorId" filterable placeholder="请选择" :disabled="disabledFlag">
               <el-option v-for="item in useroptions" :key="item.value" :label="item.label" :value="item.value">
                 <span style="float: left">{{ item.label }}</span>
@@ -66,7 +66,17 @@
           </el-form-item>
         </el-col>
         <el-col class="elementWidth">
-          <el-form-item label="生效日期" label-width="87px">
+          <el-form-item label="自动发送账单" prop="isSendMailAuto" label-width="113px">
+            <el-select style="width: 92px;" v-model="ruleForm.isSendMailAuto">
+              <el-option label="否" value="0"></el-option>
+              <el-option label="是" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+			</el-row>
+      <el-row>
+        <el-col class="elementWidth">
+          <el-form-item label="生效日期" label-width="95px">
             <el-date-picker style="width: 120px;" v-model="ruleForm.beginDate" type="month" value-format="yyyy-MM" placeholder="开始日期" :disabled="disabledFlag">
             </el-date-picker>
             <span>-</span>
@@ -74,7 +84,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-			</el-row>
+      </el-row>
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="开票客户名称" prop="invoiceTitle" required label-width="123px">
@@ -185,6 +195,7 @@
           invoiceType: '',
           invoiceReceiveEmails: '',
           invoiceRemark: '',
+          isSendMailAuto: '',
 				},
         disabledFlag:false,
         settlementModBillMonthFlag:true,
@@ -216,7 +227,7 @@
           }],
           transactorId: [{
               required: true,
-              message: '账单责任人不能为空',
+              message: '销售负责人不能为空',
               trigger: 'change'
           }],
           invoiceTitle: [{
@@ -273,6 +284,7 @@
         this.ruleForm.invoiceTitle = this.frow.invoiceTitle
         this.ruleForm.invoiceType = this.frow.invoiceType
         this.ruleForm.invoiceRemark = this.frow.invoiceRemark
+        this.ruleForm.isSendMailAuto = this.frow.isSendMailAuto + ''
         if(this.frow.invoiceReceiveEmails!= null){
             this.ruleForm.invoiceReceiveEmails = this.frow.invoiceReceiveEmails[0]
         }else{
@@ -309,7 +321,8 @@
               invoiceTitle: this.ruleForm.invoiceTitle,
               invoiceType: this.ruleForm.invoiceType,
               invoiceReceiveEmails: this.ruleForm.invoiceReceiveEmails,
-              invoiceRemark: this.ruleForm.invoiceRemark
+              invoiceRemark: this.ruleForm.invoiceRemark,
+              isSendMailAuto: this.ruleForm.isSendMailAuto
 						}, {
 							headers: {
 								'Content-Type': 'application/x-www-form-urlencoded'

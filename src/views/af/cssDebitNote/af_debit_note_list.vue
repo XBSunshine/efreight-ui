@@ -93,23 +93,26 @@
 
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input v-model="query.invoiceTitle" auto-complete="off" clearable style="width:240px;">
-								<template slot="prepend">发票抬头</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label-width="10px">
-							<el-input style="width:255px;">
-								<template slot="prepend">发票日期</template>
-								<el-date-picker slot="suffix" v-model="query.invoiceDateStart" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始日期" style="width: 186px;margin-right: -5px;">
+								<!-- <el-input v-model="query.invoiceTitle" auto-complete="off" clearable style="width:300px;">
+									<template slot="prepend">发票抬头</template>
+								</el-input> -->
+						    <el-input v-model="query.invoiceCreatorName" auto-complete="off" clearable style="width:300px;">
+						    	<template slot="prepend">申请人</template>
+						    </el-input>
+							</el-form-item>
+						</el-col>
+						<el-col class="elementWidth">
+							<el-form-item label-width="10px">
+								<el-input style="width:255px;">
+									<template slot="prepend">申请日期</template>
+									<el-date-picker slot="suffix" v-model="query.invoiceCreateTimeStart" clearable type="date" value-format="yyyy-MM-dd 00:00:00" placeholder="开始日期" style="width: 186px;margin-right: -5px;">
+									</el-date-picker>
+								</el-input>
+								<span>-</span>
+								<el-date-picker v-model="query.invoiceCreateTimeEnd" clearable type="date" value-format="yyyy-MM-dd 23:59:59" placeholder="结束日期" style="width: 185px;">
 								</el-date-picker>
-							</el-input>
-							<span>-</span>
-							<el-date-picker v-model="query.invoiceDateEnd" clearable type="date" value-format="yyyy-MM-dd" placeholder="结束日期" style="width: 182px;">
-							</el-date-picker>
-						</el-form-item>
-					</el-col>
+							</el-form-item>
+						</el-col>
 				</el-row>
 
 				<el-row v-if=showFlag>
@@ -119,6 +122,9 @@
 								<template slot="prepend">清单状态</template>
 								<el-select slot="suffix" v-model="query.statementStatus" style="width:141px;margin-right: -5px;" clearable>
 									<el-option label="已制清单" :value="-1"></el-option>
+                  <el-option label="待开票" value="待开票"></el-option>
+                  <el-option label="部分开票" value="部分开票"></el-option>
+                  <el-option label="开票完毕" value="开票完毕"></el-option>
 									<el-option label="部分核销" :value="0"></el-option>
 									<el-option label="核销完毕" :value="1"></el-option>
 									<el-option label="未核销完毕" :value="-2"></el-option>
@@ -158,7 +164,9 @@
 					<el-dropdown :hide-on-click="false" trigger="click" v-if="scope.row.statementNum!='合计'" @command="handleCommand" @visible-change="handleChange(scope.row)">
 						<i class="el-icon-s-operation"></i>
 						<el-dropdown-menu slot="dropdown">
-							<el-dropdown-item command="writeoff" v-if="listButtonFlag">核销</el-dropdown-item>
+              <el-dropdown-item v-if="openInvoiceFlag" command="openInvoice" >开票申请</el-dropdown-item>
+              <el-dropdown-item command="invoiceAutoWriteoff" v-if="invoiceAutoWriteoffFlag">核销</el-dropdown-item>
+							<!-- <el-dropdown-item command="writeoff" v-if="listButtonFlag">核销</el-dropdown-item> -->
 							<el-dropdown-item command="print">预览</el-dropdown-item>
 							<el-dropdown-item>
 								<el-dropdown placement="right-start" @command="handleCommand" @visible-change="handleChange(scope.row)">
@@ -171,9 +179,10 @@
 								</el-dropdown>
 							</el-dropdown-item>
 							<el-dropdown-item command="send">发送</el-dropdown-item>
-							<el-dropdown-item command="edit" v-if="scope.row.invoiceId==null">修改</el-dropdown-item>
-							<el-dropdown-item command="delete" v-if="scope.row.invoiceId==null">删除</el-dropdown-item>
-							<el-dropdown-item command="remark">发票信息</el-dropdown-item>
+							<el-dropdown-item command="edit" v-if="editFlag&&scope.row.invoiceId==null">修改</el-dropdown-item>
+							<el-dropdown-item command="delete" v-if="deleteFlag&&scope.row.invoiceId==null">删除</el-dropdown-item>
+							<!-- <el-dropdown-item command="remark">发票信息</el-dropdown-item> -->
+              <el-dropdown-item v-if="cancelInvoiceFlag" command="cancelInvoice" >撤销发票申请</el-dropdown-item>
 						</el-dropdown-menu>
 					</el-dropdown>
 					<span v-else>合计</span>
@@ -218,25 +227,37 @@
 				<el-table-column v-if="item.label=='核销单号'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 					<template slot-scope="scope" v-if="scope.row.writeoffNum">
 						<p v-for="(item,index) in scope.row.writeoffNum.split('  ')" :key="index">
-							<a href="javascript:void(0)" @click="doView2(item.split(' ')[0],scope.row.statementNum)" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a>
+              <span>{{item.split(' ')[1]}}</span>
+							<!-- <a href="javascript:void(0)" @click="doView2(item.split(' ')[0],scope.row.statementNum)" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a> -->
 						</p>
 					</template>
 				</el-table-column>
 				<el-table-column v-if="item.label=='清单备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 				</el-table-column>
-				<el-table-column v-if="item.label=='发票日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
-				</el-table-column>
-				<el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
-				</el-table-column>
-				<el-table-column v-if="item.label=='发票抬头'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center">
+			<!-- 	<el-table-column v-if="item.label=='发票日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+				</el-table-column> -->
+				 <el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+				   <template slot-scope="scope" v-if="scope.row.invoiceNum">
+				   	<p v-for="(item,index) in scope.row.invoiceNum.split('  ')" :key="index">
+                        <span>{{item.split(' ')[1]}}</span>
+				   	</p>
+				   </template>
+         </el-table-column>
+			   <el-table-column v-if="item.label=='开票申请备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+			   </el-table-column>
+			<!-- 	<el-table-column v-if="item.label=='发票抬头'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center">
 				</el-table-column>
 				<el-table-column v-if="item.label=='发票备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center">
+				</el-table-column> -->
+				<el-table-column v-if="item.label=='开票申请人'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_creatorName_invoice">
+				</el-table-column>
+				<el-table-column v-if="item.label=='开票申请时间'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 				</el-table-column>
 				<el-table-column v-if="item.label=='制单人'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_creatorName">
 				</el-table-column>
 				<el-table-column v-if="item.label=='清单制作时间'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 				</el-table-column>
-			</template>
+			 </template>
 
 
 
@@ -302,6 +323,8 @@
 		<editVisibleTag ref="addMission" v-if="editVisible" :visible.sync="editVisible" :frow="frow"></editVisibleTag>
 		<writeoffVisibleTag ref="addMission" v-if="writeoffVisible" :visible.sync="writeoffVisible" :frow="frow"></writeoffVisibleTag>
 		<remarkVisible ref="addMission" v-if="remarkVisible" :visible.sync="remarkVisible" :frow="frow"></remarkVisible>
+    <invoiceVisibleTag ref="addMission" v-if="invoiceVisible" :visible.sync="invoiceVisible" :frow="frow"></invoiceVisibleTag>
+    <invoiceAutoTag ref="addMission" v-if="invoiceAutoVisible" :visible.sync="invoiceAutoVisible" :frow="frow"></invoiceAutoTag>
 	</div>
 </template>
 <script>
@@ -314,6 +337,8 @@
 	import writeoffVisibleVue from './af_debit_note_list_writeoff'
 	import remarkVisible from './af_debit_note_list_remark'
 	import columns from './af_debit_note_list_column.json'
+  import invoice from '../invoice/openInvoice.vue'
+  import invoiceAuto from '../invoice/invoice_auto.vue'
 	export default {
 		data() {
 			return {
@@ -322,6 +347,12 @@
 				exportLoading: false,
 				loadingText: '',
 				listButtonFlag: false,
+        openInvoiceFlag:false,
+        editFlag:false,
+        deleteFlag:false,
+        cancelInvoiceFlag:false,
+        invoiceAutoVisible:false,
+        invoiceAutoWriteoffFlag:false,
 				data: [],
 				progressShow: false,
 				percentage: 0,
@@ -361,6 +392,7 @@
 				editVisible: false,
 				remarkVisible: false,
 				writeoffVisible: false,
+        invoiceVisible:false,
 				awbNumberFlag: true,
 				frow: {},
 				query: {
@@ -381,6 +413,9 @@
 					invoiceTitle: '',
 					invoiceDateStart: '',
 					invoiceDateEnd: '',
+          invoiceCreatorName:'',
+          invoiceCreateTimeStart:'',
+          invoiceCreateTimeEnd:''
 				},
 				businessCodes: [],
 				multipleSelection: [],
@@ -391,9 +426,21 @@
 		},
 		created: function() {
 			let buttonInfo = window.localStorage.getItem('buttonInfo');
-			if (buttonInfo.indexOf('af-writeoff-list') > -1) {
-				this.listButtonFlag = true;
+			if (buttonInfo.indexOf('af-statement-open-invoice') > -1) {
+				this.openInvoiceFlag = true;
 			}
+      if (buttonInfo.indexOf('af-statement-cancel-invoice') > -1) {
+      	this.cancelInvoiceFlag = true;
+      }
+      if (buttonInfo.indexOf('af-statement-edit') > -1) {
+      	this.editFlag = true;
+      }
+      if (buttonInfo.indexOf('af-statement-delete') > -1) {
+      	this.deleteFlag = true;
+      }
+      if(buttonInfo.indexOf('af-debit-invoice-writeoff') > -1){
+        this.invoiceAutoWriteoffFlag = true;
+      }
 			//查询业务范畴
 			this.$axios.get2('/afbase/category/paramsNew', {
 				categoryName: "业务范畴"
@@ -403,7 +450,7 @@
 				console.log(error);
 			})
 			//
-			this.query.statementStatus = -2;
+			this.query.statementStatus = -1;
 			//从数据库查询设置信息
 			let pageName = '财务结算管理/收入对账/清单';
 			this.$axios.get2("/hrs/user/getUserPageSet?pageName=" + pageName)
@@ -442,9 +489,65 @@
 			'remarkVisible': remarkVisible,
 			'editVisibleTag': editVisibleVue,
 			'writeoffVisibleTag': writeoffVisibleVue,
-			'print': Print
+			'print': Print,
+      'invoiceVisibleTag':invoice,
+      'invoiceAutoTag':invoiceAuto
 		},
 		methods: {
+      //cancelInvoice
+       cancelInvoice(row){
+         if(row.invoiceStatus==-1){
+            this.$confirm('请确认 是否撤销开票申请？', '提示', {
+            	confirmButtonText: '是',
+            	cancelButtonText: '否',
+            	type: 'warning',
+            	center: true
+            }).then(() => {
+            	this.$axios.deletes('/afbase/cssIncomeInvoice/statementId/' + row.statementId+'/'+row.rowUuid).then((response) => {
+            		if (response.data.code == '0') {
+            			this.openSuccess("撤销成功！")
+            			this.queryList();
+            		} else {
+            			this.openError("撤销失败：" + response.data.messageInfo)
+            		}
+            	}).catch((error) => {
+            		this.openError("撤销失败：" + error.response.data.messageInfo)
+            	});
+            }).catch(() => {
+            	this.$message({
+            		type: 'info',
+            		message: '已取消撤销'
+            	});
+            });
+         }else{
+            this.openError("您好，未开发票的清单 才可 撤销开票申请。");
+         }
+       },
+
+      //invoice
+      openInvoice(){
+         this.$axios.get2('/afbase/statement/checkCssStatement', {
+         	statementId: this.frow.statementId
+         }).then(function(response) {
+         	let checkFlag = true;
+         	if (response.data.data) {
+         		// response.data.data.forEach((statement) => {
+               if(response.data.data.invoiceId){
+                 this.openError("您好，清单号" + response.data.data.statementNum + "已做 开票申请 或 已开票 ，不能重复申请！");
+                 checkFlag = false;
+                 // return false;
+               }
+         		// });
+         	}else{
+             checkFlag = false;
+             this.openError("清单不是最新数据，请刷新页面再操作");
+          }
+         	if (checkFlag) {
+            this.frow.invoiceType = 'statement';
+         		this.invoiceVisible = true;
+         	}
+         }.bind(this));
+      },
 			businessScopeChange() {
 				if (this.query.businessScope == 'LC') {
 					this.awbNumberFlag = false;
@@ -510,9 +613,42 @@
 					this.exportExcelSettleStatement();
 				} else if (command == 'remark') {
 					this.showRemark()
-				}
+				}else if(command == 'openInvoice'){
+          this.openInvoice();
+        }else if(command == 'cancelInvoice'){
+          this.cancelInvoice(this.frow);
+        }else if(command == 'invoiceAutoWriteoff'){
+           this.invoiceAuto();
+        }
 
 			},
+      invoiceAuto(){
+        if(this.frow.currency.indexOf(",")>0){
+          this.openError("您好，清单页面只支持单币种的账单进行核销，请开票后再进行核销。");
+          return false
+        }
+        this.$axios.get2('/afbase/statement/checkCssStatement', {
+        	statementId: this.frow.statementId
+        }).then(function(response) {
+        	let checkFlag = true;
+        	if (response.data.data) {
+        		// response.data.data.forEach((statement) => {
+              if(response.data.data.invoiceId){
+                this.openError("您好，清单号" + response.data.data.statementNum + "已申请开票或已开票，请在发票页面进行核销。");
+                checkFlag = false;
+                // return false;
+              }
+        		// });
+        	}else{
+            checkFlag = false;
+            this.openError("清单不是最新数据，请刷新页面再操作");
+         }
+        	if (checkFlag) {
+           this.frow.titleName="清单";
+           this.invoiceAutoVisible = true;
+        	}
+        }.bind(this));
+      },
 			handleChange(command) {
 				this.frow = command
 			},
@@ -534,10 +670,12 @@
 
 				this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
 					.then(function(response) {
-						if (response.data.data.writeoffComplete == 1 || response.data.data.writeoffComplete == 0) {
-							this.openError("清单已核销");
-							return;
-						} else {
+         if(!response.data.data){
+           this.openError("清单不是最新数据，请刷新页面再操作");
+         }else if(response.data.data.invoiceId){
+           this.openError("您好，"+response.data.data.statementNum+" 清单 已申请开票 或 已开票 ，不能修改。");
+           return;
+         }else {
 							this.frow.dataBean = this.frow;
 							this.editVisible = true;
 						}
@@ -547,10 +685,12 @@
 			doDelete() {
 				this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
 					.then(function(response) {
-						if (response.data.data.writeoffComplete == 1 || response.data.data.writeoffComplete == 0) {
-							this.openError("清单已核销");
-							return;
-						} else {
+						if(!response.data.data){
+              this.openError("清单不是最新数据，请刷新页面再操作");
+            }else if(response.data.data.invoiceId){
+              this.openError("您好，"+response.data.data.statementNum+" 清单 已申请开票 或 已开票 ，不能删除。");
+              return;
+            }else {
 							this.$confirm('此操作将永久删除,不可恢复, 是否继续?', '注意', {
 								confirmButtonText: '确定',
 								cancelButtonText: '取消',
@@ -802,25 +942,35 @@
 				}
 			},
 			formatterNumber7(row, column) {
-				if (row.functionalAmountWriteoff === '' || row.functionalAmountWriteoff === 'null' || row.functionalAmountWriteoff ==
-					null) {
-					return "";
-				} else if (row.functionalAmount === '' || row.functionalAmount === 'null' || row.functionalAmount == null) {
-					return "";
-				} else {
-					let numW = row.functionalAmount - row.functionalAmountWriteoff
+				// if (row.functionalAmountWriteoff === '' || row.functionalAmountWriteoff === 'null' || row.functionalAmountWriteoff ==
+				// 	null) {
+				// 	return "";
+				// } else if (row.functionalAmount === '' || row.functionalAmount === 'null' || row.functionalAmount == null) {
+				// 	return "";
+				// } else {
+          let numW = "";
+          if(row.functionalAmountWriteoff === '' || row.functionalAmountWriteoff === 'null' || row.functionalAmountWriteoff ==null){
+            numW = row.functionalAmount;
+          }else{
+           numW = row.functionalAmount - row.functionalAmountWriteoff
+          }
 					if (numW > 0 || numW < 0) {
 						return this.getNumber(numW);
 					} else {
 						return "";
 					}
-				}
+				// }
 			},
 			formatter_creatorName(row, column) {
 				if (row.creatorName) {
 					return row.creatorName.split(' ')[0];
 				}
 			},
+      formatter_creatorName_invoice(row, column) {
+      	if (row.invoiceCreatorName) {
+      		return row.invoiceCreatorName.split(' ')[0];
+      	}
+      },
 			getNumber(data) {
 				return data.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
 			},
@@ -850,20 +1000,32 @@
 				}
 			},
 			doSend() {
-				var map = [];
-				map.push(this.frow);
-				this.frow.data = map;
-				this.frow.frow = this.frow
-				this.billSend = true
-
+        this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
+        					.then(function(response) {
+                   if(!response.data.data){
+                       this.openError("清单不是最新数据，请刷新页面再操作");
+                    }else{
+                     var map = [];
+                     map.push(this.frow);
+                     this.frow.data = map;
+                     this.frow.frow = this.frow
+                     this.billSend = true
+                    }
+          }.bind(this));
 			},
 			printStatement() {
-				var map = [];
-				map.push(this.frow);
-				this.frow.data = map;
-				this.frow.frow = this.frow
-				this.printVisible = true
-
+        this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
+        					.then(function(response) {
+                   if(!response.data.data){
+                       this.openError("清单不是最新数据，请刷新页面再操作");
+                    }else{
+                      var map = [];
+                      map.push(this.frow);
+                      this.frow.data = map;
+                      this.frow.frow = this.frow
+                      this.printVisible = true
+                    }
+          }.bind(this));
 			},
 			printStatement2() {
 				if (this.multipleSelection.length == 0) {
@@ -875,16 +1037,23 @@
 
 			},
 			exportExcelDebitnoteStatementCH() {
-				this.$confirm('您好，账单明细是否和清单一同导出？', '注意', {
-					confirmButtonText: '是',
-					cancelButtonText: '否',
-					type: 'warning',
-					center: true
-				}).then(() => {
-					this.doExportExcelDebitnoteStatementCH(true)
-				}).catch(() => {
-					this.doExportExcelDebitnoteStatementCH(false)
-				})
+        this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
+        					.then(function(response) {
+                   if(!response.data.data){
+                       this.openError("清单不是最新数据，请刷新页面再操作");
+                    }else{
+                      this.$confirm('您好，账单明细是否和清单一同导出？', '注意', {
+                      	confirmButtonText: '是',
+                      	cancelButtonText: '否',
+                      	type: 'warning',
+                      	center: true
+                      }).then(() => {
+                      	this.doExportExcelDebitnoteStatementCH(true)
+                      }).catch(() => {
+                      	this.doExportExcelDebitnoteStatementCH(false)
+                      })
+                    }
+          }.bind(this));
 			},
 			doExportExcelDebitnoteStatementCH(ifDetail) {
 				//下为开启进度条功能
@@ -932,16 +1101,24 @@
 					});
 			},
 			exportExcelDebitnoteStatementEN() {
-				this.$confirm('您好，账单明细是否和清单一同导出？', '注意', {
-					confirmButtonText: '是',
-					cancelButtonText: '否',
-					type: 'warning',
-					center: true
-				}).then(() => {
-					this.doExportExcelDebitnoteStatementEN(true)
-				}).catch(() => {
-					this.doExportExcelDebitnoteStatementEN(false)
-				})
+        this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
+        					.then(function(response) {
+                   if(!response.data.data){
+                       this.openError("清单不是最新数据，请刷新页面再操作");
+                    }else{
+                      this.$confirm('您好，账单明细是否和清单一同导出？', '注意', {
+                      	confirmButtonText: '是',
+                      	cancelButtonText: '否',
+                      	type: 'warning',
+                      	center: true
+                      }).then(() => {
+                      	this.doExportExcelDebitnoteStatementEN(true)
+                      }).catch(() => {
+                      	this.doExportExcelDebitnoteStatementEN(false)
+                      })
+                    }
+          }.bind(this));
+
 			},
 			doExportExcelDebitnoteStatementEN(ifDetail) {
 				if (ifDetail) {
@@ -978,20 +1155,27 @@
 					});
 			},
 			exportExcelSettleStatement() {
-				this.$axios.post3('/afbase/statement/exportSettleStatementExcel/' + this.frow.statementId + '/C/AE')
-					.then(function(response) {
-						var blob = new Blob([response.data], {
-							type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
-						});
-						var downloadElement = document.createElement('a');
-						var href = window.URL.createObjectURL(blob); // 创建下载的链接
-						downloadElement.href = href;
-						downloadElement.download = 'STATEMENT_LIST_' + this.frow.statementNum + '.xlsx'; // 下载后文件名
-						document.body.appendChild(downloadElement);
-						downloadElement.click(); // 点击下载
-						document.body.removeChild(downloadElement); // 下载完成移除元素
-						window.URL.revokeObjectURL(href); // 释放掉blob对象
-					}.bind(this));
+        this.$axios.get('/afbase/statement/checkCssStatement?statementId=' + this.frow.statementId)
+        					.then(function(response) {
+                if(!response.data.data){
+                     this.openError("清单不是最新数据，请刷新页面再操作");
+                }else{
+                  this.$axios.post3('/afbase/statement/exportSettleStatementExcel/' + this.frow.statementId + '/C/AE')
+                    .then(function(response) {
+                      var blob = new Blob([response.data], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                      });
+                      var downloadElement = document.createElement('a');
+                      var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                      downloadElement.href = href;
+                      downloadElement.download = 'STATEMENT_LIST_' + this.frow.statementNum + '.xlsx'; // 下载后文件名
+                      document.body.appendChild(downloadElement);
+                      downloadElement.click(); // 点击下载
+                      document.body.removeChild(downloadElement); // 下载完成移除元素
+                      window.URL.revokeObjectURL(href); // 释放掉blob对象
+                    }.bind(this));
+                }
+        }.bind(this));
 			},
 			handleSelectionChange(val) {
 				this.multipleSelection = val

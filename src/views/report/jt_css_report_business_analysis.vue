@@ -83,7 +83,7 @@
 									</el-input>
 								</el-form-item>
 							</el-col>
-							<el-col class="elementWidth" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE'">
+							<el-col class="elementWidth" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE' ||query.businessScope=='TI'">
 								<el-form-item label="" label-width="10px">
 									<el-input style="width:172px;">
 										<template slot="prepend">装箱方式</template>
@@ -211,7 +211,7 @@
 								<span v-else>{{scope.row.incomeAmount2}}</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="incomeAmount2" label="单位毛利" width="130" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE'">
+						<el-table-column prop="incomeAmount2" label="单位毛利" width="130" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE' ||query.businessScope=='TI'">
 							<template slot-scope="scope">
 								<span v-if="scope.row.incomeAmount2.indexOf('-')>-1" style="color:red">{{scope.row.incomeAmount2}}</span>
 								<span v-else>{{scope.row.incomeAmount2}}</span>
@@ -265,7 +265,7 @@
 								<span v-else>{{scope.row.costAmount2}}</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="costAmount2" label="单位毛利" width="100" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE'">
+						<el-table-column prop="costAmount2" label="单位毛利" width="100" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE' ||query.businessScope=='TI'">
 							<template slot-scope="scope">
 								<span v-if="scope.row.costAmount2.indexOf('-')>-1" style="color:red">{{scope.row.costAmount2}}</span>
 								<span v-else>{{scope.row.costAmount2}}</span>
@@ -320,7 +320,7 @@
 								<span v-else>{{scope.row.costAmount2}}</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="costAmount2" label="单位毛利" width="100" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE'">
+						<el-table-column prop="costAmount2" label="单位毛利" width="100" v-if="query.businessScope=='SE'||query.businessScope=='SI' ||query.businessScope=='TE' ||query.businessScope=='TI'">
 							<template slot-scope="scope">
 								<span v-if="scope.row.costAmount2.indexOf('-')>-1" style="color:red">{{scope.row.costAmount2}}</span>
 								<span v-else>{{scope.row.costAmount2}}</span>
@@ -662,6 +662,69 @@
                   bottom: 20,
               },
           },
+          "TI": {
+              tooltip: {
+                  formatter: function(params) {
+                      return params['seriesName'] + "：" + params['value'];
+                  }
+              },
+              color: ['#73a4de', '#f0c686', '#00c686', '#d293e1', '#2093f1'],
+              legend: {
+                  data: ['票数', '计重（吨）', '标箱数量', '收入（万元）', '毛利（万元）'],
+                  left: 'right'
+              },
+              xAxis: {
+                  data: []
+              },
+              yAxis: [{
+                  type: 'value',
+                  name: "",
+                  nameLocation: "center",
+                  nameGap: 35,
+                  nameRotate: 0,
+                  nameTextStyle: {
+                      fontSize: 16,
+                  },
+                  //默认以千分位显示，不想用的可以在这加一段
+                  axisLabel: { //调整左侧Y轴刻度， 直接按对应数据显示
+                      show: true,
+                      showMinLabel: true,
+                      showMaxLabel: true,
+                      formatter: function(value) {
+                          return value;
+                      }
+                  }
+              },
+                  {
+                      type: 'value',
+                      name: "",
+                      nameLocation: "center",
+                      nameGap: 35,
+                      nameRotate: 0,
+                      nameTextStyle: {
+                          fontSize: 16,
+                      },
+                      splitLine: {
+                          show: false //是否显示分隔线。
+                      },
+                      //默认以千分位显示，不想用的可以在这加一段
+                      axisLabel: { //调整左侧Y轴刻度， 直接按对应数据显示
+                          show: true,
+                          showMinLabel: true,
+                          showMaxLabel: true,
+                          formatter: function(value) {
+                              return value;
+                          }
+                      }
+                  }
+
+              ],
+              series: [],
+              grid: {
+                  top: 30,
+                  bottom: 20,
+              },
+          },
 					"SEE": {
 						tooltip: {
 							formatter: function(params) {
@@ -789,6 +852,69 @@
 						},
 					},
           "TEE": {
+              tooltip: {
+                  formatter: function(params) {
+                      return params['seriesName'] + "：" + params['value'];
+                  }
+              },
+              color: ['#73a4de', '#f0c686', '#d293e1', '#2093f1'],
+              legend: {
+                  data: ['票数', '标箱数量', '收入（万元）', '毛利（万元）'],
+                  left: 'right'
+              },
+              xAxis: {
+                  data: []
+              },
+              yAxis: [{
+                  type: 'value',
+                  name: "",
+                  nameLocation: "center",
+                  nameGap: 35,
+                  nameRotate: 0,
+                  nameTextStyle: {
+                      fontSize: 16,
+                  },
+                  //默认以千分位显示，不想用的可以在这加一段
+                  axisLabel: { //调整左侧Y轴刻度， 直接按对应数据显示
+                      show: true,
+                      showMinLabel: true,
+                      showMaxLabel: true,
+                      formatter: function(value) {
+                          return value;
+                      }
+                  }
+              },
+                  {
+                      type: 'value',
+                      name: "",
+                      nameLocation: "center",
+                      nameGap: 35,
+                      nameRotate: 0,
+                      nameTextStyle: {
+                          fontSize: 16,
+                      },
+                      splitLine: {
+                          show: false //是否显示分隔线。
+                      },
+                      //默认以千分位显示，不想用的可以在这加一段
+                      axisLabel: { //调整左侧Y轴刻度， 直接按对应数据显示
+                          show: true,
+                          showMinLabel: true,
+                          showMaxLabel: true,
+                          formatter: function(value) {
+                              return value;
+                          }
+                      }
+                  }
+
+              ],
+              series: [],
+              grid: {
+                  top: 30,
+                  bottom: 20,
+              },
+          },
+          "TIE": {
               tooltip: {
                   formatter: function(params) {
                       return params['seriesName'] + "：" + params['value'];
@@ -1382,6 +1508,17 @@
                 }
             ]
             this.query.caliber = '发车日';
+        } else if(this.query.businessScope == 'TI'){
+            this.calibers = [{
+                label: '到达日期',
+                value: '到达日'
+            },
+                {
+                    label: '财务日期',
+                    value: '财务日'
+                }
+            ]
+            this.query.caliber = '到达日';
         } else if(this.query.businessScope == 'LC'){
             this.calibers = [{
                 label: '用车日期',
@@ -1405,7 +1542,7 @@
           ]
           this.query.caliber = '业务日';
         }
-				if (this.query.businessScope == 'SI' || this.query.businessScope == 'SE' || this.query.businessScope == 'TE') {
+				if (this.query.businessScope == 'SI' || this.query.businessScope == 'SE' || this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 					this.query.containerMethod = "整箱";
 				} else {
 					this.query.containerMethod = "";
@@ -1467,7 +1604,7 @@
 				this.setfiledMap();
 				// this.buildTable(data);
 
-				if ((key == 'SE' || key == 'SI' || key == 'TE') && this.query.containerMethod == '整箱') {
+				if ((key == 'SE' || key == 'SI' || key == 'TE' || key == 'TI') && this.query.containerMethod == '整箱') {
 					// if (key=='SE') {
 					key = key + "E"
 					this.buildCharOption(key, data);
@@ -1666,7 +1803,7 @@
 				this.querySettleList();
 			},
 			getDateTime(theDate) {
-				theDate.setDate(theDate.getDate() - 6);
+				//theDate.setDate(theDate.getDate() - 6);
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
 				var _date = theDate.getDate();

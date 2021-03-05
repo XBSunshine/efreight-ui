@@ -105,6 +105,7 @@
 						<span v-if="frow.businessScope=='AE'||frow.businessScope=='SE'">开航日期</span>
 						<span v-if="frow.businessScope=='AI'||frow.businessScope=='SI'">到港日期</span>
 						<span v-if="frow.businessScope=='TE'">发车日期</span>
+						<span v-if="frow.businessScope=='TI'">到达日期</span>
 						<span v-if="frow.businessScope=='LC'">用车日期</span>
 						<span v-if="frow.businessScope=='IO'">业务日期</span>
 					</template>
@@ -245,7 +246,7 @@
 				});
 			},
 			showAdd() {
-				if(this.ruleForm.customerId == null || this.ruleForm.customerId === '') {
+        if (!this.ruleForm.customerId || this.ruleForm.customerId == -1) {
 					this.openError('请选择付款对象')
 					return
 				}
@@ -481,7 +482,7 @@
 				this.$emit('update:visible', false);
 			}
 
-			//--------------------- 
+			//---------------------
 
 		}
 	}

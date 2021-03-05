@@ -117,7 +117,9 @@
 								column.label = "到港日期"
 							} else if (this.frow.businessScope == 'TE') {
 								column.label = "发车日期"
-							} else if (this.frow.businessScope == 'LC') {
+							} else if (this.frow.businessScope == 'TI') {
+                column.label = "到达日期"
+              } else if (this.frow.businessScope == 'LC') {
 								column.label = "用车日期"
 							} else if (this.frow.businessScope == 'IO') {
 								column.label = "业务日期"
@@ -127,7 +129,7 @@
 						if (column.prop == 'awbFrom') {
 							if (this.frow.businessScope == 'AE') {
 								column.label = "运单来源"
-							} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'SE') {
+							} else if (this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI' || this.frow.businessScope == 'SE') {
 								column.label = "订舱代理"
 							} else {
 								indexDelete.push(index)
@@ -135,7 +137,7 @@
 						}
 						//航线
 						if (column.prop == 'routingName') {
-							if (this.frow.businessScope == "TE" || this.frow.businessScope == "LC" || this.frow.businessScope == "IO") {
+							if (this.frow.businessScope == "TE" || this.frow.businessScope == 'TI' || this.frow.businessScope == "LC" || this.frow.businessScope == "IO") {
 								indexDelete.push(index)
 							}
 						}
@@ -147,7 +149,7 @@
 						}
 						//货物类型
 						if (column.prop == 'goodsType') {
-							if (!(this.frow.businessScope.startsWith('S') || this.frow.businessScope == 'TE')) {
+							if (!(this.frow.businessScope.startsWith('S') || this.frow.businessScope == 'TE' || this.frow.businessScope == 'TI')) {
 								indexDelete.push(index)
 							}
 						}

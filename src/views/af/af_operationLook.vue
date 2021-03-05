@@ -63,7 +63,7 @@
               <el-button type="primary" size="small" @click="queryList">查询</el-button>
               <el-button type="primary" size="small" v-if="cellShowFlag" v-on:click="setCellShowFlag">简化</el-button>
               <el-button type="primary" size="small" v-if="!cellShowFlag" v-on:click="setCellShowFlag">详细</el-button>
-                    
+
             </el-form-item>
           </el-col>
         </el-row>
@@ -81,7 +81,7 @@
         <el-table-column prop="mawbCode" label="主单号"  width="120" align="center" fixed></el-table-column>
         <el-table-column prop="hawbCode" label="分单号"  width="120" align="center" fixed></el-table-column>
         <el-table-column prop="hawbCount" label="分单数量"  width="90" align="center" fixed></el-table-column>
-        <el-table-column prop="departure" label="始发港" width="80" align="center" fixed></el-table-column>       
+        <el-table-column prop="departure" label="始发港" width="80" align="center" fixed></el-table-column>
         <el-table-column prop="destination" label="目的港" width="80" align="center" fixed></el-table-column>
 
         <el-table-column align="center" key="1" label="预录入状态" width="100" v-if="!cellShowFlag">
@@ -105,10 +105,24 @@
           <el-table-column prop="opLableTime" label="打标签时间" width="145" align="center" > </el-table-column>
           <el-table-column prop="awbPrintsliTime" label="打印托书时间" width="145" align="center" > </el-table-column>
         </el-table-column>
-       
-        <el-table-column  prop="mft2201Status" key="2" label="预配状态" width="100" align="center" :formatter="formatter_mft2201Status" v-if="!cellShowFlag" > </el-table-column>
+
+        <el-table-column  prop="mft2201Status" key="2" label="预配状态" width="100" align="center"  v-if="!cellShowFlag" >
+             <template slot-scope="scope">
+              <span v-html="formatter_mft2201Status2(scope.row.mft2201Status,scope.row.mft2201Optype)"></span>
+               <a  href="javascript:void(0)" @click="handleChange(scope.row),dialogFormVisible = true"  style="color: #137DFA;text-decoration: underline;" v-if="scope.row.mft2201Status=='SUCC'&&scope.row.existsMftt2201=='Y'">删除</a>
+               <i v-else>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+             </template>
+        </el-table-column>
+
         <el-table-column label="预配数据" align="center" v-if="cellShowFlag" >
-          <el-table-column  prop="mft2201Status" label="状态" width="100" align="center" :formatter="formatter_mft2201Status"> </el-table-column>
+          <el-table-column  prop="mft2201Status" key="2" label="预配状态" width="100" align="center"  v-if="!cellShowFlag" >
+            <template slot-scope="scope">
+              <span v-html="formatter_mft2201Status2(scope.row.mft2201Status,scope.row.mft2201Optype)"></span>
+              <a href="javascript:void(0)" @click="handleChange(scope.row),dialogFormVisible = true" style="color: #137DFA;text-decoration: underline;" v-if="scope.row.mft2201Status=='SUCC'&&scope.row.existsMftt2201=='Y'">删除</a>
+               <i v-else>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+            </template>
+          </el-table-column>
+          <el-table-column  prop="mft2201Status" label="状态" width="100" align="center" > </el-table-column>
           <el-table-column  prop="mft2201Pieces" label="件数" width="100" align="center"> </el-table-column>
           <el-table-column prop="mft2201Weight" label="重量"  width="100" align="center"> </el-table-column>
           <el-table-column prop="mft2201Flightno" label="航班" width="100" align="center"> </el-table-column>
@@ -117,7 +131,7 @@
           <el-table-column prop="mft2201Time" label="发送时间" width="100" align="center"> </el-table-column>
           <el-table-column prop="mft2201Optype" label="操作类型" width="100" align="center"> </el-table-column>
         </el-table-column>
-        
+
         <el-table-column prop="acFohTime" key="3" label="入库时间" width="145" align="center" v-if="!cellShowFlag" > </el-table-column>
         <el-table-column label="入库" align="center" v-if="cellShowFlag" >
           <el-table-column prop="acFohTime" label="入库时间" width="145" align="center"> </el-table-column>
@@ -145,14 +159,14 @@
             <i class="iconfont el-icon-myduihao" style="color: green;" v-if="scope.row.mft9999Recv!=null && scope.row.mft9999Recv"></i>
           </template>
         </el-table-column>
-        
+
         <!-- <el-table-column prop="mft3201Recv" key="4" label="运抵" width="80" align="center"></el-table-column>
         <el-table-column prop="mft9993Recv" key="5" label="审结" width="80" align="center"></el-table-column>
         <el-table-column prop="mft99935Recv" key="6" label="查验" width="80" align="center"></el-table-column>
         <el-table-column prop="mft9999Recv"key="7" label="放行回执" width="80" align="center"></el-table-column> -->
-        
 
-        <el-table-column label="电子运单" key="8" align="center" >          
+
+        <el-table-column label="电子运单" key="8" align="center" >
           <el-table-column  prop="awbPiece" label="件数" width="100" align="center" v-if="cellShowFlag" > </el-table-column>
           <el-table-column prop="awbWeight" label="重量"  width="100" align="center" v-if="cellShowFlag" > </el-table-column>
           <el-table-column prop="fwbStatus" label="运单状态" width="100" align="center" :formatter="formatter_fwbStatus" v-if="cellShowFlag"> </el-table-column>
@@ -161,6 +175,22 @@
           <el-table-column prop="acRcsTime" label="交单时间" align="center" v-if="!cellShowFlag"> </el-table-column>
         </el-table-column>
       </el-table>
+      <el-dialog title="删除预配" :modal="false" :visible.sync="dialogFormVisible">
+
+            <el-form :model="form">
+              <el-form-item label="操作联系人电话" :label-width="formLabelWidth">
+                <el-input v-model="form.contactTel" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="删除原因" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="form.deleteReason" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer"  class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="doMft2201_Delete()">确 定</el-button>
+            </div>
+
+        </el-dialog>
     </div>
     <div>
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageConf.pageCode" :page-sizes="pageConf.pageOption" :page-size.sync="pageConf.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageConf.totalPage">
@@ -178,6 +208,13 @@ import logVisible from './mns/af_mns_log'
         logVisible:false,
         loading: false,
         cellShowFlag:false,
+        dialogFormVisible: false,
+        form: {
+          contactTel:'',
+          deleteReason:''
+        },
+        currRow: '',
+        formLabelWidth: '120px',
         data: [],
         multipleSelection: [],
             frow: {},
@@ -207,7 +244,7 @@ import logVisible from './mns/af_mns_log'
       'logVisible': logVisible
     },
   created: function() {
-      
+
     },
     methods: {
       setCellShowFlag() {
@@ -217,6 +254,14 @@ import logVisible from './mns/af_mns_log'
         this.$notify({
           title: '',
           message: '操作失败，' + info,
+          type: 'error',
+          position: 'bottom-right'
+        });
+      },
+      openError1(info) {
+        this.$notify({
+          title: '',
+          message: info,
           type: 'error',
           position: 'bottom-right'
         });
@@ -240,13 +285,18 @@ import logVisible from './mns/af_mns_log'
       doDeleteESD(row) {
         var str="";
         var url="";
+        var orderCode="";
+        orderCode = this.selectOrderCode(orderCode,row.mawbCode)
+
         if (row.hawbCode) {
+
           str='此操作将删除分单预录入(主单:'+row.mawbCode+'，分单:'+row.hawbCode+')';
-          url="doEawbPreDeleteFHL/"+row.mawbCode+"/"+row.hawbCode+"/"+row.orderCode;
+          url="doEawbPreDeleteFHL/"+row.mawbCode+"/"+row.hawbCode+"/"+orderCode;
         } else{
+
           str='此操作将删除主单预录入(主单:'+row.mawbCode+')';
-          
-          url="doEawbPreDeleteAwb/"+row.mawbCode+"/"+row.orderCode;
+
+          url="doEawbPreDeleteAwb/"+row.mawbCode+"/"+orderCode;
         }
           this.$confirm(str+', 是否继续?', '注意', {
           confirmButtonText: '确定',
@@ -266,11 +316,72 @@ import logVisible from './mns/af_mns_log'
                         this.openError(response.data.messageInfo || "删除失败!");
                     }
                   }.bind(this));
-                  
+
                 }).catch(() => {});
-        
-        
+
+
       },
+      selectOrderCode(orderCode,mawbCode){
+        for(var i = 0; i< this.data.length ; i++){
+
+            if(this.data[i].mawbCode==mawbCode){
+                orderCode = this.data[i].orderCode;
+                return orderCode;
+            }
+        }
+      },
+      doMft2201_Delete(){
+        var str="";
+        var orderCode = "";
+
+        if (this.currRow.hawbCode!=null && this.currRow.hawbCode !="" && this.currRow.hawbCode!=" ") {
+          str='此操作将删除分单预配(主单:'+this.currRow.mawbCode+'，分单:'+this.currRow.hawbCode+')';
+        } else {
+
+          str='此操作将删除主单预配(主单:'+this.currRow.mawbCode+')';
+          this.currRow.hawbCode=" ";
+        }
+
+        orderCode=this.selectOrderCode(orderCode,this.currRow.mawbCode);
+
+        var url="doMft2201_Delete/"+this.currRow.mawbCode+"/"+this.currRow.hawbCode+"/"+orderCode+"/"+this.form.contactTel+"/"+this.form.deleteReason;
+
+        if(this.form.contactTel){
+          if(this.form.deleteReason){
+              this.$confirm(str+', 是否继续?', '注意', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center: true
+              }).then(() => {
+                this.$axios.post("/afbase/send/"+url).then(function (response) {
+
+                        if (response.data.code == 0) {
+                            if(response.data.data.status=='success'){
+
+                              this.openSuccess('删除成功');
+                              this.dialogFormVisible=false;
+                              this.queryList();
+                          }else{
+                                this.openError(response.data.data.message);
+                          }
+                        } else {
+                            this.openError(response.data.messageInfo || "删除失败!");
+                        }
+                      }.bind(this));
+
+                    }).catch(() => {});
+          }else{
+            this.openError1("请说明删除原因");
+          }
+        }else{
+          this.openError1("请写明操作联系人电话号码");
+        }
+      },
+      handleChange(command) {
+
+				this.currRow = command
+			},
       queryList() {
         let params={
                   'currentPage': this.pageConf.pageCode,
@@ -315,7 +426,7 @@ import logVisible from './mns/af_mns_log'
         if (this.cellShowFlag) {
           if (column.property=='sliStatus'||column.property=='esdPieces'||column.property=='sliSendTime'||column.property=='esdWeight'||column.property=='opLableTime'||column.property=='awbPrintsliTime') {
             return 'background-color:#EDF3E9 ;border-color:#FFFFFF'
-          }else 
+          }else
           if (column.property=='mft2201Status' ||column.property=='mft2201Pieces'||column.property=='mft2201Weight'||column.property=='mft2201Flightno'||column.property=='mft2201Flightdate'||column.property=='terminalName'||column.property=='mft2201Time'||column.property=='mft2201Optype') {
             return 'background-color:#E9EFFF ;border-color:#FFFFFF'
 
@@ -351,7 +462,7 @@ import logVisible from './mns/af_mns_log'
         }
       },
 
-    
+
       formatter_sliStatus(row, column) {
         if ('SUCC'==row.sliStatus) {
             return "成功";
@@ -374,18 +485,20 @@ import logVisible from './mns/af_mns_log'
           return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         }
       },
-      
-      formatter_mft2201Status(row, column) {
-        if ('SUCC'==row.mft2201Status) {
-            return "成功";
-        }else if ('ERROR'==row.mft2201Status) {
-            return "失败";
-        }else if ('AUDIT'==row.mft2201Status) {
-            return "人审";
-        }else if (row.mft2201Status && row.mft2201Status.indexOf('do-')==0) {
-            return "正在执行";
+       formatter_mft2201Status2(mft2201Status,mft2201Optype) {
+          
+        if ('SUCC'==mft2201Status && ('new'==mft2201Optype || 'modify'==mft2201Optype)) {
+            return "成功&nbsp;&nbsp;";
+        }else if ('ERROR'==mft2201Status) {
+            return "失败&nbsp;&nbsp;";
+        }else if ('AUDIT'==mft2201Status) {
+            return "人审&nbsp;&nbsp;";
+        }else if (mft2201Status && mft2201Status.indexOf('do-')==0) {
+            return "正在执行&nbsp;&nbsp;";
+        }else if (mft2201Status &&'SAVE'==mft2201Status.toUpperCase()) {
+            return "暂存&nbsp;&nbsp;";
         }else{
-          return "";
+          return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         }
       },
       formatter_fwbStatus(row, column) {

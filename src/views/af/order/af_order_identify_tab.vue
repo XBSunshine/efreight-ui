@@ -10,14 +10,14 @@
             <el-table-column align="center" prop="auditName" label="审核人" width="150"></el-table-column>
             <el-table-column align="center" prop="auditDate" label="审核时间" width="150"></el-table-column>
             <el-table-column label="操作" width="150">
-                <template slot-scope="scope" v-if="frow.viewFlag">
+                <template slot-scope="scope" v-if="frow.viewFlag&&frow.finishFlag">
                     <el-button @click.native.stop="deleteClick(scope.row)" v-if="scope.row.followDelete" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
 		<el-form :rules="identifyRules" :inline="true" ref="identifyForm" label-width="100px" class="identify-form" :model="identifyForm">
-			<el-form-item prop="carrierId" label="承运人">
+			<el-form-item label="承运人">
 				<el-input :disabled="isdisabled" v-model="identifyForm.carrierId" maxlength="2" @input="identifyForm.carrierId=identifyForm.carrierId.toUpperCase()" auto-complete="off">
 				</el-input>
 			</el-form-item>
@@ -25,17 +25,17 @@
 				<el-input :disabled="isdisabled" v-model="identifyForm.agentHandlerName" maxlength="32" auto-complete="off">
 				</el-input>
 			</el-form-item>
-			<el-form-item v-if="frow.viewFlag">
-				<el-button v-if="followSave" type="primary" size="mini" @click="onSave">暂存</el-button>
-				<el-button v-if="followSend" type="primary" size="mini" @click="onSend">发送</el-button>
+			<el-form-item v-if="frow.viewFlag&&frow.finishFlag">
+				<el-button :disabled="isdisabled" v-if="followSave" type="primary" size="mini" @click="onSave">暂存</el-button>
+				<el-button :disabled="isdisabled" v-if="followSend" type="primary" size="mini" @click="onSend">发送</el-button>
 				<el-button v-if="followSendDelete" type="primary" size="mini" @click="onSendDelete">发送删除申请</el-button>
-				<el-button type="primary" size="mini" @click="add">新建</el-button>
+				<el-button :disabled="isdisabled" type="primary" size="mini" @click="add">新建</el-button>
 
 				<span class="upload-title-explain">(格式：jpg/jpeg/bmp/png/gif/pdf/excel/word，大小不超过5M)</span>
 			</el-form-item>
 
 			<el-table border :data="identifyForm.afOrderIdentifyDetailList" :row-class-name="identifyTableRowClassName">
-				<el-table-column align="center" width="90" v-if="frow.viewFlag">
+				<el-table-column align="center" width="90" v-if="frow.viewFlag&&frow.finishFlag">
 					<template slot="header" slot-scope="scope">
 						<i class="iconfont el-icon-myyuanquanjiahao" @click="addafOrderIdentifyDetail(scope.$index,scope.row)" style="cursor: pointer;size: b5;color: #409EFF;"></i>
 					</template>
@@ -52,10 +52,14 @@
 				<el-table-column :render-header="renderHeader" label="鉴定机构" width="180" prop="reportIssueOrgan">
 					<template slot-scope="scope">
 						<el-select :disabled="isdisabled" v-model="scope.row.reportIssueOrgan" placeholder="请选择鉴定机构">
-							<el-option label="南京理工" value="南京理工"></el-option>
-							<el-option label="迪捷姆" value="迪捷姆"></el-option>
-							<el-option label="信诺递捷" value="信诺递捷"></el-option>
 							<el-option label="上海化工" value="上海化工"></el-option>
+							<el-option label="南京理工" value="南京理工"></el-option>
+							<el-option label="计量" value="计量"></el-option>
+							<el-option label="北京迪捷姆" value="北京迪捷姆"></el-option>
+							<el-option label="信诺递捷" value="信诺递捷"></el-option>
+							<el-option label="广州测试中心" value="广州测试中心"></el-option>
+							<el-option label="上海海关" value="上海海关"></el-option>
+							<el-option label="常州检测中心" value="常州检测中心"></el-option>
 							<el-option label="其他" value="其他"></el-option>
 						</el-select>
 					</template>
@@ -87,13 +91,13 @@
 							<span class="el-upload-list__item-preview el-upload-icon" >
 								<i class="el-icon-zoom-in" v-if="checkImage(scope.row.reportImgUrl)" @click="handlePictureCardPreview(scope.row.reportImgUrl)"></i>
 								<i class="el-icon-download" @click="handleDownload(scope.row.reportImgUrl)"></i>
-								<i class="el-icon-delete" v-if="frow.viewFlag" @click="handleRemove(scope.row)"></i>
+								<i class="el-icon-delete" v-if="frow.viewFlag&&frow.finishFlag" @click="handleRemove(scope.row)"></i>
 							</span>							
 						</div>						
-						<el-upload v-else :action="actionPath" :accept="acceptFileFormat" list-type="picture" :auto-upload="true"
+						<el-upload :disabled="uploadDisabled" v-else :action="actionPath" :accept="acceptFileFormat" list-type="picture" :auto-upload="true"
 							:show-file-list="false" :data="uptoken" :before-upload="beforeUpload" :on-remove="handleRemove" 
 							:on-success="function(res,file,fileList){ return handleSuccess(res,file,fileList,scope.row)}" :limit="1">
-							<i slot="default" class="el-icon-plus" v-if="isFollowUpload||!frow.viewFlag"></i>							
+							<i slot="default" class="el-icon-plus" v-if="frow.viewFlag&&frow.finishFlag"></i>							
 						</el-upload>
 					</template>
 				</el-table-column>
@@ -155,6 +159,7 @@
 	} */
 </style>
 <script>
+import data from '@/assets/Carrier.json'
 	//鉴定证书
 	export default {
 		props: {
@@ -167,6 +172,7 @@
 		data() {
 			return {
 				isdisabled:false,
+				uploadDisabled:false,
 				followSave:true,
 				followSend:true,
 				followSendDelete:false,
@@ -351,17 +357,22 @@
 				this.fileName='';
 				this.setButtonStatus('','');
 			},
+			//删除暂存
 			deleteClick(row){
 				if(row.status=='save'||row.status=='delete'){
 					let that = this;
 					let params = {
-						id: row.orderIdentifyId
+						pageName: this.frow.pageName
 					}
-					that.$axios.post2("/afbase/identify/delete/" + row.orderIdentifyId).then(function(response) {
+					that.$axios.post("/afbase/identify/delete/" + row.orderIdentifyId+"/"+this.frow.pageName).then(function(response) {
 						if (response.data.code == 0) {
 							that.openSuccess();
 							that.queryIdentifyList();
 							that.add();
+							//刷新日志tab
+							that.frow.updateLogTab=true;
+							//刷新电子单证tab
+							that.frow.updateState=true;
 						}else {
 							that.openError(response.data.messageInfo);
 						}
@@ -381,6 +392,7 @@
 			onSend(){
 				this.commonSave('send');
 			},
+			//暂存和发送
 			commonSave(status){
 				let that = this;
 				// that.identifyForm.reportImgUrls = that.handlerUrls();
@@ -415,6 +427,7 @@
 
 				if(!status) status='save';
 				this.$refs['identifyForm'].validate((valid) => {
+					that.identifyForm.pageName=this.frow.pageName;
 					if (valid) {
 						that.$axios.post2("/afbase/identify/"+(status=='send'?'declare':'save'), that.identifyForm)
 						.then(function(response) {
@@ -422,6 +435,10 @@
 								that.openSuccess();
 								that.queryIdentifyList();
 								that.add();
+								//发送操作需刷新日志tab
+								that.frow.updateLogTab=true;
+								//刷新电子单证tab
+								that.frow.updateState=true;
 							}else {
 								that.openError(response.data.messageInfo);
 							}
@@ -438,13 +455,16 @@
 					}
 				});
 			},
+			//删除申请
 			onSendDelete(){
 				let that = this;
-				this.$axios.post2("/afbase/identify/deldeclare/" + that.identifyForm.orderIdentifyId).then(function(response) {
+				this.$axios.post2("/afbase/identify/deldeclare/" + that.identifyForm.orderIdentifyId+"/"+this.frow.pageName).then(function(response) {
 					if (response.data.code == 0) {
 						that.openSuccess();
 						that.queryIdentifyList();
 						that.add();
+						//刷新日志tab
+						this.frow.updateLogTab=true;
 					}
 				});
 			},
@@ -610,9 +630,14 @@
 				if (month < 10) {
 					month = '0' + month
 				}
-				debugger;
-				this.uptoken.key = "OrderIdentify/" + this.frow.departureStation + "/" + year.toString().substring(2) + month + "/" 
-						+ this.hexMD5(new Date().getTime()) + '_' + file.name.replaceAll(/_/g,'');
+				let orguuid = '';
+				if(window.localStorage.getItem('orgUuid')){
+					orguuid = window.localStorage.getItem('orgUuid') + "/";
+				}
+				this.uptoken.key =  "org/" + year.toString().substring(2) + month + "/" + orguuid +
+						"orderIdentify_" + this.frow.departureStation +"_"+ this.hexMD5(new Date().getTime()) + '_' 
+						+ file.name.replace(/_/g,'').replace(/&/g,'');
+				
 				const isLt1M = file.size < 5 * 1024 * 1024;
 				if (!isLt1M) {
 					this.$message.error('上传模板大小不能超过 5MB!');
@@ -811,9 +836,20 @@
 			rawMD5(s) {
 				return this.rstrMD5(this.str2rstrUTF8(s))
 			},
+			queryCarrierId(){
+				if(this.frow.awbNumber!=null&&this.frow.awbNumber!=''){
+					var num = this.frow.awbNumber.split('-')[0];
+					this.identifyForm.carrierId=data[num];
+				}else{
+					// this.isdisabled = true;
+					// this.uploadDisabled = true;
+				}
+			}
 		},
 		created() {
-			debugger;
+			if (!this.frow.pageName) {
+				this.frow.pageName='AE订单';
+			}
 			this.queryIdentifyList();
 			this.identifyForm.orderId = this.frow.orderId;
 			this.identifyForm.awbNumber =this.frow.awbNumber;
@@ -822,6 +858,8 @@
 				this.identifyForm.carrierId = this.frow.flightDateBegin.substring(0,2);
 			}
 			this.isdisabled = !this.frow.viewFlag;
+			this.uploadDisabled = !this.frow.viewFlag;
+			this.queryCarrierId();
 		},
 		mounted: function() {
 			this.$axios.get('/hrs/org/getUpToken')

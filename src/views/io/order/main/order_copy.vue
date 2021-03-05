@@ -217,26 +217,40 @@
 						<el-form-item prop="planChargeWeight">
 							<el-input maxlength="12" class="widthWithTwoWithXing" @input="formatToFloat('planChargeWeight')" @change="formatDecimalPlaces('planChargeWeight')" v-model="ruleForm.planChargeWeight" auto-complete="off" style="width:295px;" clearable>
 								<template slot="prepend">
-									<font style="color: red;">*</font>
-									<span>计重</span>
-								</template>
-								<template slot="append">
-									<span>KG</span>
-								</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row>
-					<el-col class="elementWidth">
-						<el-form-item>
-							<el-input class="showWordLimit" v-model="ruleForm.orderRemark" auto-complete="off" style="width:1253px;" show-word-limit maxlength="300" clearable>
-								<template slot="prepend">
-									<span>订单备注</span>
-								</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
+                  <font style="color: red;">*</font>
+                  <span>计重</span>
+                </template>
+                <template slot="append">
+                  <span>KG</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col class="elementWidth">
+            <el-form-item>
+              <el-input v-model="ruleForm.containerList" auto-complete="off" style="width:1253px;margin-right: 15px;"
+                        readOnly>
+                <template slot="prepend">
+                  <span>集装箱量</span>
+                </template>
+                <el-button slot="append" @click="editContainerList" icon="el-icon-edit"></el-button>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col class="elementWidth">
+            <el-form-item>
+              <el-input class="showWordLimit" v-model="ruleForm.orderRemark" auto-complete="off" style="width:1253px;"
+                        show-word-limit maxlength="300" clearable>
+                <template slot="prepend">
+                  <span>订单备注</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
 				</el-row>
 				<div style="padding:0px 0px 10px 0px">
 					<HR color="#eee" size="5">
@@ -299,12 +313,14 @@
 			</el-form>
 			<customerSelect ref="addMission" v-if="customerSelectVisible" :visible.sync="customerSelectVisible" :frow="ffrow"></customerSelect>
 			<shipperConsignee ref="addMission" v-if="shipperConsigneeVisible" :visible.sync="shipperConsigneeVisible" :frow="ffrow"></shipperConsignee>
+      <container ref="addMission" v-if="containerVisible" :visible.sync="containerVisible" :frow="ffrow"></container>
 		</div>
 	</el-dialog>
 </template>
 <script>
 	import CustomerSelect from '@/views/public/customer_select'
-	import ShipperConsignee from '../other/order_shipperConsignee_select'
+  import ShipperConsignee from '../other/order_shipperConsignee_select'
+  import Container from './public/order_container_edit'
 	export default {
 		props: {
 			visible: {
@@ -315,16 +331,17 @@
 		},
 		data() {
 			return {
+        containerVisible: false,
         workgroups: [],
-				helpDocumentUrl: '',
-				useroptions: [],
-				packageTypes: [],
-				goodsTypes: [],
-				businessMethods: [],
-				customerSelectVisible: false,
-				shipperConsigneeVisible: false,
-				showFlag: false,
-				ffrow: {},
+        helpDocumentUrl: '',
+        useroptions: [],
+        packageTypes: [],
+        goodsTypes: [],
+        businessMethods: [],
+        customerSelectVisible: false,
+        shipperConsigneeVisible: false,
+        showFlag: false,
+        ffrow: {},
 				loading: false,
 				vLoad: false,
 				ifFullscreen: false,
@@ -333,16 +350,19 @@
 				orderIoDigitsVolume: 3,
 				orderIoDigitsChargeWeight: 2,
 				ruleForm: {
-					orderCode: '',
-					coopName: '',
-					coopId: '',
-					customerNumber: '',
-					orderCodeAssociated: '',
-					salesId: '',
-					salesName: '',
-					servicerId: '',
-					servicerName: '',
-					businessMethod: '',
+          containerDetails: [],
+          containerNumber: '',
+          containerList: '',
+          orderCode: '',
+          coopName: '',
+          coopId: '',
+          customerNumber: '',
+          orderCodeAssociated: '',
+          salesId: '',
+          salesName: '',
+          servicerId: '',
+          servicerName: '',
+          businessMethod: '',
 					businessDate: '',
 					departureStation: '',
 					arrivalStation: '',
@@ -419,14 +439,16 @@
 		},
 		inject: ['findByPage'],
 		components: {
-			customerSelect: CustomerSelect,
-			shipperConsignee: ShipperConsignee
-		},
+      customerSelect: CustomerSelect,
+      shipperConsignee: ShipperConsignee,
+      container: Container,
+    },
 		provide() {
 			return {
-				setValue: this.setCoop,
-				shipperConsigneeCallback: this.shipperConsigneeCallback
-			}
+        setValue: this.setCoop,
+        shipperConsigneeCallback: this.shipperConsigneeCallback,
+        containerCallback: this.containerCallback,
+      }
 		},
 		methods: {
 			openSuccess() {
@@ -715,18 +737,50 @@
 				}
 
 			},
-			emptyData() {
-				this.ruleForm.orderId = ''
-				this.ruleForm.orderCode = ''
-				this.ruleForm.orderUuid = ''
-				this.ruleForm.orgId = ''
-				this.ruleForm.orderStatus = ''
-				this.ruleForm.incomeStatus = ''
-				this.ruleForm.costStatus = ''
-				this.ruleForm.incomeRecorded = 0
-				this.ruleForm.costRecorded = 0
-			}
-		},
+      emptyData() {
+        this.ruleForm.orderId = ''
+        this.ruleForm.orderCode = ''
+        this.ruleForm.orderUuid = ''
+        this.ruleForm.orgId = ''
+        this.ruleForm.orderStatus = ''
+        this.ruleForm.incomeStatus = ''
+        this.ruleForm.costStatus = ''
+        this.ruleForm.incomeRecorded = 0
+        this.ruleForm.costRecorded = 0
+      },
+      editContainerList() {
+        this.containerVisible = true
+        this.ffrow.containerDetails = this.ruleForm.containerDetails
+        this.ffrow.planPieces = this.ruleForm.planPieces
+        this.ffrow.planWeight = this.ruleForm.planWeight
+        this.ffrow.planVolume = this.ruleForm.planVolume
+      },
+      containerCallback(row) {
+        if (row.flag == 'replace') {
+          this.ruleForm.planPieces = row.totalPieces
+          if (row.totalVolume) {
+            let t = row.totalVolume.split('.');
+            if (t.length > 1) {
+              this.ruleForm.planVolume = t[0] + "." + t[1].substr(0, this.orderIoDigitsVolume);
+            } else {
+              this.ruleForm.planVolume = parseFloat(row.totalVolume).toFixed(this.orderIoDigitsVolume);
+            }
+          }
+          if (row.totalWeight) {
+            let t = row.totalWeight.split('.');
+            if (t.length > 1) {
+              this.ruleForm.planWeight = t[0] + "." + t[1].substr(0, this.orderIoDigitsWeight);
+            } else {
+              this.ruleForm.planWeight = parseFloat(row.totalWeight).toFixed(this.orderIoDigitsWeight);
+            }
+          }
+        }
+        this.ruleForm.containerList = row.val
+        this.ruleForm.containerNumber = row.total
+        this.ruleForm.containerDetails = row.containerDetails
+        this.setPlanChargeWeight();
+      },
+    },
 		created() {
 			this.ifFullscreen = this.frow.ifFullscreen
 			if (this.ifFullscreen) {

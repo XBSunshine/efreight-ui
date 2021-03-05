@@ -70,6 +70,7 @@
 									<el-option v-if="query.businessScope=='AE'||query.businessScope=='SE'" label="开航日期" value="开航日期"></el-option>
 									<el-option v-if="query.businessScope=='AI'||query.businessScope=='SI'" label="到港日期" value="到港日期"></el-option>
 									<el-option v-if="query.businessScope=='TE'" label="发车日期" value="发车日期"></el-option>
+                  <el-option v-if="query.businessScope=='TI'" label="到达日期" value="到达日期"></el-option>
 									<el-option v-if="query.businessScope=='LC'" label="用车日期" value="用车日期"></el-option>
 									<el-option v-if="query.businessScope=='IO'" label="业务日期" value="业务日期"></el-option>
 									<el-option label="财务日期" value="财务日期"></el-option>
@@ -171,7 +172,7 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth" v-if="query.businessScope=='TE' || query.businessScope=='LC'||query.businessScope=='IO'">
+					<el-col class="elementWidth" v-if="query.businessScope=='TE' || query.businessScope=='TI' || query.businessScope=='LC'||query.businessScope=='IO'">
 						<el-form-item label-width="5px">
 							<el-checkbox style="float: right;margin-right: 5px;margin-bottom: 5px;" @change="setConstituteFlag" v-model="query.showConstituteFlag">显示毛利构成</el-checkbox>
 						</el-form-item>
@@ -179,7 +180,7 @@
 				</el-row>
 
 				<el-row v-show="showFlag">
-					<el-col class="elementWidth" v-if="query.businessScope!='LC'&&query.businessScope!='IO'&&query.businessScope!='TE'">
+					<el-col class="elementWidth" v-if="query.businessScope!='LC'&&query.businessScope!='IO'&&query.businessScope!='TE'&&query.businessScope!='TI'">
 						<el-form-item label-width="10px">
 							<el-input style="width:160px;">
 								<template slot="prepend">航线</template>
@@ -190,7 +191,7 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth" v-if="query.businessScope!='LC'&&query.businessScope!='IO'&&query.businessScope!='TE'">
+					<el-col class="elementWidth" v-if="query.businessScope!='LC'&&query.businessScope!='IO'&&query.businessScope!='TE'&&query.businessScope!='TI'">
 						<el-form-item>
 							<el-input class="widthWithFourWithXing" v-model="query.country" @input="query.country=toUpperCaseValue(query.country)" style="width:150px;margin-right: 5px;">
 								<template slot="prepend">
@@ -209,7 +210,7 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth" v-if="query.businessScope!='TE' && query.businessScope!='LC'&&query.businessScope!='IO'">
+					<el-col class="elementWidth" v-if="query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC'&&query.businessScope!='IO'">
 						<el-form-item label-width="5px">
 							<el-checkbox style="float: right;margin-right: 5px;margin-bottom: 5px;" @change="setConstituteFlag" v-model="query.showConstituteFlag">显示毛利构成</el-checkbox>
 						</el-form-item>
@@ -243,7 +244,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='票数'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -284,7 +285,7 @@
 												</p>
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='票数'" v-for="(item,index) in rawData">
 
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -318,7 +319,7 @@
 							<span slot="label">
 								<p>{{titleNameTwo}}</p>
 								<p style="margin-top: -18px;"><span style="font-size:25px; color:blue; ">{{data.planChargeWeight}}</span></p>
-								<p style="margin-top: -18px;"><i class="el-icon-top-right" style="color:rgb(105, 197, 60)" v-if="data.planChargeWeightTwo>0"></i><i class="el-icon-bottom-right" style="color:red" v-else-if="data.planChargeWeightTwo<0"></i><i class="el-icon-right" v-else></i><span style="font-size:4px;">{{formatPull(data.planChargeWeightTwo)}}<span v-if="(query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE')&&query.containerMethod=='整箱'">箱</span><span v-else>吨</span></span></p>
+								<p style="margin-top: -18px;"><i class="el-icon-top-right" style="color:rgb(105, 197, 60)" v-if="data.planChargeWeightTwo>0"></i><i class="el-icon-bottom-right" style="color:red" v-else-if="data.planChargeWeightTwo<0"></i><i class="el-icon-right" v-else></i><span style="font-size:4px;">{{formatPull(data.planChargeWeightTwo)}}<span v-if="(query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI')&&query.containerMethod=='整箱'">箱</span><span v-else>吨</span></span></p>
 							</span>
 							<el-tabs type="border-card" :value="tapType" @tab-click="handleClickTwo">
 								<el-tab-pane :label="depName" name="dep">
@@ -333,7 +334,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='货量'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -373,7 +374,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='货量'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -424,7 +425,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='收入'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -464,7 +465,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='收入'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -515,7 +516,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='成本'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -555,7 +556,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='成本'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -605,7 +606,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='毛利'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -647,7 +648,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='毛利'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC' ||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC' ||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -697,7 +698,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='毛利率'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC' ||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC' ||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -739,7 +740,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='毛利率'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC' ||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC' ||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -789,7 +790,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='dep' && titleName=='单位毛利'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC' ||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC' ||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -831,7 +832,7 @@
 												</p>
 												<!-- 循环 -->
 												<div style="margin-top: 10px;" v-if="rawData!=null&&tapType=='arr' && titleName=='单位毛利'" v-for="(item,index) in rawData">
-													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='LC'||query.businessScope=='IO'">
+													<el-row v-if="query.businessScope=='SE'||query.businessScope=='SI'||query.businessScope=='TE'||query.businessScope=='TI'||query.businessScope=='LC'||query.businessScope=='IO'">
 														<el-row>
 															<el-col :span="24">{{item[0]}}:</el-col>
 														</el-row>
@@ -1001,6 +1002,7 @@
 									<span v-if="query.businessScope == 'SE'">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
 									<span v-if="query.businessScope == 'SI'">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
 									<span v-if="query.businessScope == 'TE'">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
+                  <span v-if="query.businessScope == 'TI'">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
 									<span v-if="query.businessScope == 'LC'">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
 									<span v-if="query.businessScope == 'IO'">{{returnAwb(scope.row,'awb_number','hawb_number')}}</span>
 								</template>
@@ -1212,6 +1214,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="frow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="frow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="frow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="frow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="frow"></viewVisibleTagLC>
 		<viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="frow"></viewVisibleTagIO>
 		<setColumnTag ref="addMission" v-if="setColumnFlag" :visible.sync="setColumnFlag" :frow="frow"></setColumnTag>
@@ -1227,6 +1230,7 @@
 	import viewVisibleVueSE from '../../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '../../sc/si/order/main/order_view.vue'
 	import viewVisibleVueTE from '../../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '../../tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLC from '../../lc/order/main/order_view.vue'
 	import viewVisibleVueIO from '../../io/order/main/order_view.vue'
 	import setColumnVue from './customer_info_setting.vue'
@@ -1314,6 +1318,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
 				viewVisibleIO: false,
 				constituteFlag: false,
@@ -1329,6 +1334,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
 			'viewVisibleTagIO': viewVisibleVueIO,
 			'setColumnTag': setColumnVue,
@@ -1601,6 +1607,9 @@
 					if (this.query.businessScope == 'TE') {
 						this.query.countType = '发车日期'
 					}
+          if (this.query.businessScope == 'TI') {
+            this.query.countType = '到达日期'
+          }
 					if (this.query.businessScope == 'LC') {
 						this.query.countType = '用车日期'
 					}
@@ -1653,7 +1662,7 @@
 						this.routingNames = response.data.data;
 					});
 				}
-				if (this.query.businessScope == 'TE') {
+				if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 					this.$axios.get('/sc/vScCategory/货物类型').then((response) => {
 						this.goodsTypes = response.data.data;
 						this.goodsType = '';
@@ -1697,11 +1706,11 @@
 					this.count_jz_name = '计重(吨)';
 					this.count_name = '目的地';
 				}
-				if (this.query.businessScope != 'TE' && this.query.businessScope != 'LC' && this.query.businessScope != 'IO') {
+				if (this.query.businessScope != 'TE' && this.query.businessScope != 'TI' && this.query.businessScope != 'LC' && this.query.businessScope != 'IO') {
 					this.depName = '始发港';
 					this.arrName = '目的港';
 				}
-				if (this.query.businessScope == 'TE' || this.query.businessScope == 'IO') {
+				if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI' || this.query.businessScope == 'IO') {
 					this.depName = '起运地';
 					this.arrName = '目的地';
 				}
@@ -2063,7 +2072,7 @@
 				try {
 					tableColumns.forEach((column, index) => {
 						if (column.prop == 'awb_number') {
-							if (this.query.businessScope == 'TE') {
+							if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 								column.label = "运单号码";
 							} else if (this.query.businessScope == 'LC' || this.query.businessScope == 'IO') {
 								// column.label = "客户单号";
@@ -2099,7 +2108,10 @@
 								}
 							} else if (this.query.businessScope == 'TE') {
 								column.label = "发车日期";
-							} else if (this.query.businessScope == 'LC') {
+							} else if (this.query.businessScope == 'TI') {
+                column.label = "到达日期";
+                column.prop = 'expect_arrival';
+              } else if (this.query.businessScope == 'LC') {
 								column.label = "用车日期";
 							} else if (this.query.businessScope == 'IO') {
 								column.label = "业务日期";
@@ -2109,7 +2121,7 @@
 						if (column.prop == 'awb_from') {
 							if (this.query.businessScope == 'AE') {
 								column.label = "运单来源";
-							} else if (this.query.businessScope == 'TE') {
+							} else if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 								column.label = "订舱代理";
 							} else {
 								indexDelete.push(index);
@@ -2117,7 +2129,7 @@
 						}
 						//航线
 						if (column.prop == 'routing_name') {
-							if (this.query.businessScope == "TE" || this.query.businessScope == "LC" || this.query.businessScope == "IO") {
+							if (this.query.businessScope == "TE" || this.query.businessScope == "TI" || this.query.businessScope == "LC" || this.query.businessScope == "IO") {
 								indexDelete.push(index);
 							}
 						}
@@ -2277,6 +2289,16 @@
 						this.viewVisibleTE = true;
 					}
 				}
+        if (row.businessScope === 'TI') {
+            this.frow.activeName = "first";
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.frow.ifFullscreen = true
+                this.jumpToNewPage('view', this.frow, '/ti_order')
+            } else {
+                this.frow.ifFullscreen = false
+                this.viewVisibleTI = true;
+            }
+        }
 				if (row.businessScope === 'LC') {
 					this.frow.activeName = "first";
 					if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {

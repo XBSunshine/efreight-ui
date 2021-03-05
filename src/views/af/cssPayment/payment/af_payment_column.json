@@ -4,7 +4,7 @@
 		"prop": "paymentNum",
 		"flag": "true",
 		"index": 1,
-		"width": 160,
+		"width": 150,
 		"align": "center",
 		"sortable": false
 	}, {
@@ -20,7 +20,7 @@
 		"prop": "paymentDate",
 		"flag": "true",
 		"index": 3,
-		"width": 120,
+		"width": 100,
 		"align": "center",
 		"sortable": false
 	}, {
@@ -28,7 +28,7 @@
 		"prop": "customerName",
 		"flag": "true",
 		"index": 4,
-		"width": 280,
+		"width": 250,
 		"align": "left",
 		"sortable": false
 	}, {
@@ -36,7 +36,7 @@
 		"prop": "amountPaymentStr",
 		"flag": "true",
 		"index": 5,
-		"width": 170,
+		"width": 150,
 		"align": "right",
 		"sortable": false
 	}, {
@@ -44,7 +44,7 @@
 		"prop": "amountPaymentWriteoffStr",
 		"flag": "true",
 		"index": 6,
-		"width": 170,
+		"width": 150,
 		"align": "right",
 		"sortable": false
 	}, {
@@ -52,7 +52,7 @@
 		"prop": "amountPaymentNoWriteoffStr",
 		"flag": "true",
 		"index": 7,
-		"width": 170,
+		"width": 150,
 		"align": "right",
 		"sortable": false
 	}, {
@@ -60,7 +60,7 @@
 		"prop": "creatorName",
 		"flag": "true",
 		"index": 8,
-		"width": 250,
+		"width": 130,
 		"align": "center",
 		"sortable": false
 	}, {
@@ -80,36 +80,36 @@
 		"align": "center",
 		"sortable": false
 	}, {
-    "label": "发票日期",
-    "prop": "invoiceDate",
-    "flag": "true",
-    "index": 11,
-    "width": 100,
-    "align": "center",
-    "sortable": false
-  }, {
-    "label": "发票号码",
-    "prop": "invoiceNum",
-    "flag": "true",
-    "index": 12,
-    "width": 200,
-    "align": "center",
-    "sortable": false
-  }, {
-    "label": "发票抬头",
-    "prop": "invoiceTitle",
-    "flag": "true",
-    "index": 13,
-    "width": 300,
-    "align": "left",
-    "sortable": false
-  }, {
-		"label": "发票备注",
-		"prop": "invoiceRemark",
+		"label": "发票号码",
+		"prop": "invoiceNum",
+		"flag": "true",
+		"index": 12,
+		"width": 180,
+		"align": "center",
+		"sortable": false
+	}, {
+		"label": "付款申请备注",
+		"prop": "invoiceInqurityRemark",
+		"flag": "true",
+		"index": 13,
+		"width": 200,
+		"align": "center",
+		"sortable": false
+	}, {
+		"label": "申请人",
+		"prop": "invoiceCreatorName",
 		"flag": "true",
 		"index": 14,
-		"width": 200,
-		"align": "left",
+		"width": 130,
+		"align": "center",
+		"sortable": false
+	}, {
+		"label": "申请时间",
+		"prop": "invoiceTime",
+		"flag": "true",
+		"index": 15,
+		"width": 150,
+		"align": "center",
 		"sortable": false
 	}]
 }

@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="海运出口订单 - 集装箱量" width="1050px" :visible.sync="visible" :close-on-press-escape="false" :close-on-click-modal="false" :before-close="handleClose" append-to-body style="top:-80px;">
+	<el-dialog :title="'海运'+titleName+'订单 - 集装箱量'" width="1050px" :visible.sync="visible" :close-on-press-escape="false" :close-on-click-modal="false" :before-close="handleClose" append-to-body style="top:-80px;">
 		<div style="margin-right: 10px;float: right;">
 			<span style="margin-right: 20px;">订单件数&nbsp;&nbsp;{{orderPiecesShow}}</span>
 			<span style="margin-right: 20px;">订单毛重&nbsp;&nbsp;{{orderWeightShow}}</span>
@@ -94,6 +94,7 @@
 		},
 		data() {
 			return {
+        titleName: '出口',
 				orderPieces: '',
 				orderVolume: '',
 				orderWeight: '',
@@ -120,6 +121,9 @@
 
 		inject: ['containerCallback'],
 		created: function() {
+		  if(this.frow.businessScope=='SI') {
+        this.titleName = "进口";
+      }
 			this.$axios.get('/sc/vScCategory/集装箱尺寸').then((response) => {
 				this.containerSizes = response.data.data;
 			})
@@ -341,7 +345,7 @@
 			},
 			checkContainerNumber() {
 				try {
-					this.data.forEach((item, index) => {
+					this.data.forEach((item, index) => {debugger
 						let containerNumber = item.containerNumber
 						if (containerNumber) {
 							let regx = /^[A-Z]{4}\d{7}$/g

@@ -34,7 +34,7 @@
 				<el-col class="elementWidth">
 					<el-form-item label-width="10px">
 						<el-input v-model="query.portCode" auto-complete="off" clearable style="width:206px;" @input="query.portCode=query.portCode.toUpperCase()">
-							<template slot="prepend" v-if="query.businessScope=='AE'||query.businessScope=='SE'">始发港</template>
+							<template slot="prepend" v-if="query.businessScope=='AE'||query.businessScope=='SE'||query.businessScope=='TI'">始发港</template>
 							<template slot="prepend" v-else>目的港</template>
 						</el-input>
 					</el-form-item>
@@ -92,8 +92,8 @@
       <template v-for="(item,index) in tableColumns">
         <el-table-column v-if="item.label=='业务范畴'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
         <el-table-column v-if="item.label=='模板类型'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_templateType"></el-table-column>
-        <el-table-column v-if="item.prop=='portCode' && (query.businessScope=='AE'||query.businessScope=='SE')" label="始发港" :key="index" :prop="item.prop" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-        <el-table-column v-if="item.prop=='portCode' && (query.businessScope!='AE'&&query.businessScope!='SE')" label="目的港" :key="index" :prop="item.prop" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+        <el-table-column v-if="item.prop=='portCode' && (query.businessScope=='AE'||query.businessScope=='SE'||query.businessScope=='TI')" label="始发港" :key="index" :prop="item.prop" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+        <el-table-column v-if="item.prop=='portCode' && (query.businessScope!='AE' && query.businessScope!='SE' && query.businessScope!='TI')" label="目的港" :key="index" :prop="item.prop" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
         <el-table-column v-if="item.label=='模板名称'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center"></el-table-column>
         <el-table-column v-if="item.label=='备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center"></el-table-column>
         <el-table-column v-if="item.label=='操作人'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_editorName"></el-table-column>

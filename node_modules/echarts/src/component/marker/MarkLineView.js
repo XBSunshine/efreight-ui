@@ -23,6 +23,7 @@ import * as numberUtil from '../../util/number';
 import * as markerHelper from './markerHelper';
 import LineDraw from '../../chart/helper/LineDraw';
 import MarkerView from './MarkerView';
+import {getStackedDimension} from '../../data/helper/dataStackHelper';
 
 var markLineTransform = function (seriesModel, coordSys, mlModel, item) {
     var data = seriesModel.getData();
@@ -40,22 +41,19 @@ var markLineTransform = function (seriesModel, coordSys, mlModel, item) {
         )
     ) {
         var valueAxis;
-        var valueDataDim;
         var value;
 
         if (item.yAxis != null || item.xAxis != null) {
-            valueDataDim = item.yAxis != null ? 'y' : 'x';
-            valueAxis = coordSys.getAxis(valueDataDim);
-
+            valueAxis = coordSys.getAxis(item.yAxis != null ? 'y' : 'x');
             value = zrUtil.retrieve(item.yAxis, item.xAxis);
         }
         else {
             var axisInfo = markerHelper.getAxisInfo(item, data, coordSys, seriesModel);
-            valueDataDim = axisInfo.valueDataDim;
             valueAxis = axisInfo.valueAxis;
+            var valueDataDim = getStackedDimension(data, axisInfo.valueDataDim);
             value = markerHelper.numCalculate(data, valueDataDim, mlType);
         }
-        var valueIndex = valueDataDim === 'x' ? 0 : 1;
+        var valueIndex = valueAxis.dim === 'x' ? 0 : 1;
         var baseIndex = 1 - valueIndex;
 
         var mlFrom = zrUtil.clone(item);
@@ -296,8 +294,10 @@ export default MarkerView.extend({
             ]);
 
             lineData.setItemVisual(idx, {
+                'fromSymbolRotate': fromData.getItemVisual(idx, 'symbolRotate'),
                 'fromSymbolSize': fromData.getItemVisual(idx, 'symbolSize'),
                 'fromSymbol': fromData.getItemVisual(idx, 'symbol'),
+                'toSymbolRotate': toData.getItemVisual(idx, 'symbolRotate'),
                 'toSymbolSize': toData.getItemVisual(idx, 'symbolSize'),
                 'toSymbol': toData.getItemVisual(idx, 'symbol')
             });
@@ -319,8 +319,8 @@ export default MarkerView.extend({
             updateSingleMarkerEndLayout(
                 data, idx, isFrom, seriesModel, api
             );
-
             data.setItemVisual(idx, {
+                symbolRotate: itemModel.get('symbolRotate'),
                 symbolSize: itemModel.get('symbolSize') || symbolSize[isFrom ? 0 : 1],
                 symbol: itemModel.get('symbol', true) || symbolType[isFrom ? 0 : 1],
                 color: itemModel.get('itemStyle.color') || seriesData.getVisual('color')

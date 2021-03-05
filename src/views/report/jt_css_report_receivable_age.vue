@@ -45,9 +45,9 @@
         <el-row v-show="showFlag">
           <el-col class="elementWidth">
           	<el-form-item label-width="10px">
-          		<el-input style="width:608px;">
+          		<el-input style="width:339px;">
           			<template slot="prepend">分公司&emsp;</template>
-          			<el-select slot="suffix" v-model="query.otherOrg" filterable placeholder="请选择"  style="width: 540px;margin-right: -5px">
+          			<el-select slot="suffix" v-model="query.otherOrg" filterable placeholder="请选择"  style="width: 271px;margin-right: -5px">
           				<el-option v-for="item in otherOrgs" :key="item.orgId" :label="item.orgName" :value="item.orgId">
           				</el-option>
           			</el-select>
@@ -55,8 +55,15 @@
           	</el-form-item>
           </el-col>
           <el-col class="elementWidth">
+            <el-form-item label-width="10px">
+              <el-input style="width: 260px;" v-model="query.salesName" auto-complete="off" clearable>
+                <template slot="prepend">责任销售</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth">
           	<el-form-item label-width="39px">
-          		<el-button :loading="buttonLoading" style="margin-left: 12px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
+          		<el-button :loading="buttonLoading" style="margin-left: 13px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
           	</el-form-item>
           </el-col>
         </el-row>
@@ -213,7 +220,8 @@
 					overdueValid: '全部',
 					durationValid: '全部',
 					orgEditionName: '',
-          otherOrg:-1
+          otherOrg:-1,
+          salesName: '',
 				},
 				countRanges: '15;30;60;90',
 				customerType: '1',
@@ -263,7 +271,7 @@
 			let orgVersion = window.localStorage.getItem('orgVersion')
 			if (orgVersion) {
 				this.query.orgEditionName = orgVersion;
-				if (orgVersion.indexOf("专业版") >= 0|| orgVersion.indexOf("旗舰版")>-1) {
+				if (orgVersion.indexOf("专业版") >= 0 || orgVersion.indexOf("旗舰版")>-1 || orgVersion.indexOf("标准版")>-1) {
 					this.columnFlag = true;
 				}
 			}
@@ -282,7 +290,7 @@
 						//      class:'cell'
 						//    },
 						domProps: {
-							innerHTML: column.label + "<span style='color: red;'>(此功能仅限专业版和旗舰版使用)</span>"
+							innerHTML: column.label + "<span style='color: red;'>(此功能仅限标准版,专业版和旗舰版使用)</span>"
 						}
 					})
 				])
@@ -330,6 +338,7 @@
 				this.frow.customerType = this.customerType
 				this.frow.businessScope = row.business_scope
         this.frow.otherOrg = this.query.otherOrg;
+        this.frow.salesName = this.query.salesName
         this.frow.otherOrgFlag = true;
 				this.detailVisible = true;
 			},

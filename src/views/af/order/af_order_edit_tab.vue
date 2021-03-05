@@ -576,6 +576,7 @@
 							<el-row>
 								<el-button type="text" style="margin-left: 20px;" disabled>Handling&nbsp;Info</el-button>
 								<el-checkbox style="margin-left: 10px;" v-model="ruleForm.isNoSolidWood" @change="changeIsNoSolidWood">非木</el-checkbox>
+                <el-checkbox style="margin-left: 10px;" v-model="ruleForm.isCelsiusRequire" @change="changeIsCelsiusRequire">温度要求</el-checkbox>
 							</el-row>
 							<el-input class="showWordLimit" type="textarea" v-model="ruleForm.handlingInfo" auto-complete="off" :rows="3" maxlength="500" style="width: 540px;" show-word-limit @input="ruleForm.handlingInfo = ruleForm.handlingInfo.toUpperCase()"></el-input>
 						</el-form-item>
@@ -703,28 +704,28 @@
 					</el-col>
 				</el-row>
 				<el-row v-show="showFlag2">
+          <!--<el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;">
+            <el-form-item prop="appraisalCompany">
+              &lt;!&ndash; <el-input style="width:265px;">
+                  <template slot="prepend">
+                    <span>鉴定单位</span>
+                  </template>
+                  <el-select slot="suffix" v-model="ruleForm.appraisalCompany" clearable  filterable placeholder="请选择" style="width:168px;margin-right: -5px;">
+                    <el-option v-for="item in appraisalCompanyOptions" :key="item.appraisal_company" :label="item.appraisal_company" :value="item.appraisal_company">
+                    </el-option>
+                  </el-select>
+                </el-input> &ndash;&gt;
+              <el-input class="showWordLimit" @input="ruleForm.appraisalCompany = ruleForm.appraisalCompany.toUpperCase()" v-model="ruleForm.appraisalCompany" auto-complete="off" style="width:265px;" clearable show-word-limit maxlength="200">
+                <template slot="prepend">
+                  <span>鉴定单位</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>-->
 					<el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;">
-						<el-form-item prop="appraisalCompany">
-							<!-- <el-input style="width:265px;">
-									<template slot="prepend">
-										<span>鉴定单位</span>
-									</template>
-									<el-select slot="suffix" v-model="ruleForm.appraisalCompany" clearable  filterable placeholder="请选择" style="width:168px;margin-right: -5px;">
-										<el-option v-for="item in appraisalCompanyOptions" :key="item.appraisal_company" :label="item.appraisal_company" :value="item.appraisal_company">
-										</el-option>
-									</el-select>
-								</el-input> -->
-							<el-input class="showWordLimit" @input="ruleForm.appraisalCompany = ruleForm.appraisalCompany.toUpperCase()" v-model="ruleForm.appraisalCompany" auto-complete="off" style="width:265px;" clearable show-word-limit maxlength="200">
-								<template slot="prepend">
-									<span>鉴定单位</span>
-								</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-					<el-col class="elementWidth">
 						<el-form-item prop="dangerousType">
 
-							<el-input class="showWordLimit" @input="ruleForm.dangerousType = ruleForm.dangerousType.toUpperCase()" v-model="ruleForm.dangerousType" auto-complete="off" style="width:266px;margin-right: 15px;" clearable show-word-limit maxlength="40">
+							<el-input class="showWordLimit" @input="ruleForm.dangerousType = ruleForm.dangerousType.toUpperCase()" v-model="ruleForm.dangerousType" auto-complete="off" style="width:266px;" clearable show-word-limit maxlength="40">
 								<template slot="prepend">
 									<span>危品类项</span>
 								</template>
@@ -732,7 +733,49 @@
 						</el-form-item>
 					</el-col>
 
-					<el-col class="elementWidth">
+          <el-col class="elementWidth">
+            <el-form-item prop="specialPackage">
+              <el-input style="width:266px;margin-right: 15px;">
+                <template slot="prepend">
+                  <span>特货包装</span>
+                </template>
+                <el-select slot="suffix" v-model="ruleForm.specialPackage" clearable placeholder="请选择特货包装" style="width:169px;margin-right: -5px;">
+                  <el-option v-for="item in specialPackageOptions" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col class="elementWidth">
+            <el-form-item prop="celsiusRequire">
+              <el-input style="width:255px;">
+                <template slot="prepend">
+                  <span>温度要求</span>
+                </template>
+                <el-select slot="suffix" v-model="ruleForm.celsiusRequire" clearable placeholder="请选择温度要求" style="width:158px;margin-right: -5px;">
+                  <el-option v-for="item in celsiusRequireOptions" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col class="elementWidth">
+            <el-form-item>
+              <el-input auto-complete="off" style="width:272px;" class="widthWithThermometer">
+                <template slot="prepend">
+                  <span>温度计</span>
+                </template>
+                <el-select slot="suffix" v-model="ruleForm.thermometer" placeholder="请选择" style="width:175px;margin-right: -5px;" clearable>
+                  <el-option label="有" value="1"></el-option>
+                  <el-option label="无" value="0"></el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+					<!--<el-col class="elementWidth">
 						<el-form-item>
 							<el-input class="widthWithThree showWordLimit" @input="ruleForm.appraisalNote = ruleForm.appraisalNote.toUpperCase()" v-model="ruleForm.appraisalNote" auto-complete="off" style="width:537px;margin-right: 15px;" clearable show-word-limit maxlength="200">
 								<template slot="prepend">
@@ -740,8 +783,23 @@
 								</template>
 							</el-input>
 						</el-form-item>
-					</el-col>
+					</el-col>-->
 				</el-row>
+        <el-row v-show="showFlag2">
+          <el-col class="elementWidth afOrderLinkTwoInput" style="margin-left: 50px;">
+            <el-form-item prop="palletMaterial">
+              <el-input style="width:266px;margin-right: 15px;">
+                <template slot="prepend">
+                  <span>托盘材质</span>
+                </template>
+                <el-select slot="suffix" v-model="ruleForm.palletMaterial" clearable placeholder="请选择托盘材质" style="width:169px;margin-right: -5px;">
+                  <el-option v-for="item in palletMaterialOptions" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
 				<el-row v-show="showFlag2" style="margin-top: 20px;">
 					<el-tabs style="width: 1103px;height:280px;margin-left: 50px;" type="border-card" v-model="activeOperationName">
@@ -1289,6 +1347,9 @@
 				goodsTypeOptions: [],
 				appraisalCompanyOptions: [],
 				batteryTypeOptions: [],
+        specialPackageOptions: [],
+        celsiusRequireOptions: [],
+        palletMaterialOptions: [],
 				departureWarehouseOptions: [],
 				departureStorehouseOptions: [],
 				packageTypeOptions: [],
@@ -1405,6 +1466,7 @@
 					customerNumber: '',
 					isConsol: false,
 					isNoSolidWood: false,
+          isCelsiusRequire: false,
 					hawbFlag: '直单',
 					hawbQuantity: 0,
 					departureStation: '',
@@ -1451,6 +1513,10 @@
 					arrivalAgent: '',
 					appraisalCompany: '',
 					dangerousType: '',
+          specialPackage: '',
+          palletMaterial: '',
+          celsiusRequire: '',
+          thermometer: '',
 					paymentMethod: 'PP',
 					paymentMethodOther: 'PP',
 					undgCode: '',
@@ -2121,6 +2187,9 @@
 													this.priceType2 = "单价";
 													this.ruleForm.priceValue2 = this.ruleForm.msrUnitprice;
 												}
+                        if(this.ruleForm.thermometer || this.ruleForm.thermometer === 0){
+                            this.ruleForm.thermometer = this.ruleForm.thermometer + '';
+                        }
 												this.ruleForm.freightUnitprice = '';
 												this.ruleForm.freightAmount = '';
 												this.ruleForm.msrUnitprice = '';
@@ -2649,13 +2718,32 @@
 					this.ruleForm.goodsNameEn = this.ruleForm.goodsNameEn.replace(/CONSOLIDATION AS PER ATTACHED MANIFEST/g, '')
 				}
 			},
-			changeIsNoSolidWood(val) {
-				if (val) {
-					this.ruleForm.handlingInfo = 'NO SOLID WOOD PACKING MATERIAL USED'
-				} else {
-					this.ruleForm.handlingInfo = this.ruleForm.handlingInfo.replace(/NO SOLID WOOD PACKING MATERIAL USED/g, '')
-				}
-			},
+      changeIsNoSolidWood(val) {
+          if (val) {
+              if(this.ruleForm.handlingInfo){
+                  this.ruleForm.handlingInfo = this.ruleForm.handlingInfo + ' NO SOLID WOOD PACKING MATERIAL USED'
+              }else{
+                  this.ruleForm.handlingInfo = 'NO SOLID WOOD PACKING MATERIAL USED'
+              }
+          } else {
+              this.ruleForm.handlingInfo = this.ruleForm.handlingInfo.replace(/NO SOLID WOOD PACKING MATERIAL USED/g, '')
+          }
+      },
+      changeIsCelsiusRequire(val) {
+          if (val) {
+              if(this.ruleForm.handlingInfo){
+                  if(this.ruleForm.celsiusRequire){
+                      this.ruleForm.handlingInfo = this.ruleForm.handlingInfo + ' ' + this.ruleForm.celsiusRequire
+                  }
+              }else{
+                  if(this.ruleForm.celsiusRequire){
+                      this.ruleForm.handlingInfo = this.ruleForm.celsiusRequire
+                  }
+              }
+          } else {
+              this.ruleForm.handlingInfo = this.ruleForm.handlingInfo.replace(this.ruleForm.celsiusRequire, '')
+          }
+      },
       /**
        * 通用搜索方法
        * @param url 请求地址
@@ -2750,6 +2838,15 @@
 			this.$axios.get('/afbase/awb/selectCategory?category=电池情况').then(function(response) {
 				this.batteryTypeOptions = response.data.data;
 			}.bind(this));
+      this.$axios.get('/afbase/awb/selectCategory?category=特货包装').then(function(response) {
+          this.specialPackageOptions = response.data.data;
+      }.bind(this));
+      this.$axios.get('/afbase/awb/selectCategory?category=温度要求').then(function(response) {
+          this.celsiusRequireOptions = response.data.data;
+      }.bind(this));
+      this.$axios.get('/afbase/awb/selectCategory?category=托盘材质').then(function(response) {
+          this.palletMaterialOptions = response.data.data;
+      }.bind(this));
 
 			this.$axios.get('/afbase/awb/selectCategory?category=包装类型').then(function(response) {
 				this.packageTypeOptions = response.data.data;
@@ -2770,12 +2867,12 @@
 			this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
 				this.currencyCodeOptions = response.data.data;
 				this.msrCurrecnyCodeOptions = response.data.data;
-				if (this.currencyCodeOptions && this.currencyCodeOptions[0]) {
-					if ('CNY' != this.currencyCodeOptions[0].currency_code) {
-						//this.ruleForm.currencyCode=this.currencyCodeOptions[0].currency_code;
-						//this.ruleForm.msrCurrecnyCode=this.msrCurrecnyCodeOptions[0].currency_code;
-					}
-				}
+				// if (this.currencyCodeOptions && this.currencyCodeOptions[0]) {
+				// 	if ('CNY' != this.currencyCodeOptions[0].currency_code) {
+				// 		//this.ruleForm.currencyCode=this.currencyCodeOptions[0].currency_code;
+				// 		//this.ruleForm.msrCurrecnyCode=this.msrCurrecnyCodeOptions[0].currency_code;
+				// 	}
+				// }
 			}.bind(this));
 			this.$axios.get('/afbase/warehouse/库房').then((response) => {
 				this.departureStorehouseOptions = response.data.data
@@ -2829,6 +2926,9 @@
 						this.priceType2 = "单价";
 						this.ruleForm.priceValue2 = this.ruleForm.msrUnitprice;
 					}
+					if(this.ruleForm.thermometer || this.ruleForm.thermometer === 0){
+              this.ruleForm.thermometer = this.ruleForm.thermometer + '';
+          }
 					this.ruleForm.freightUnitprice = '';
 					this.ruleForm.freightAmount = '';
 					this.ruleForm.msrUnitprice = '';

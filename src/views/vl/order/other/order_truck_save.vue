@@ -151,7 +151,6 @@
 				});
 			},
 			submitForm(formName) {
-				debugger
 				if (this.ruleForm.length === '0') {
 					this.openError('长度不能为0')
 					return

@@ -54,7 +54,7 @@
               </el-form-item>
             </el-col>
             <el-col class="elementWidth">
-              <el-form-item label="销售确认人" label-width="105px">
+              <el-form-item label="账单确认人" label-width="105px">
                 <el-input v-model="query.billConfirmName" clearable style="width: 135px;">
                 </el-input>
               </el-form-item>
@@ -123,7 +123,7 @@
         </el-table-column>
         <el-table-column align="center" prop="quantityConfirmName" label="数据填充人" width="85">
         </el-table-column>
-        <el-table-column align="center" prop="billConfirmName" label="销售确认人" width="85">
+        <el-table-column align="center" prop="billConfirmName" label="账单确认人" width="85">
         </el-table-column>
         <el-table-column align="center" prop="headOfficeConfirmName" label="总部确认人" width="85">
         </el-table-column>

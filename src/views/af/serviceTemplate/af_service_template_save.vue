@@ -31,7 +31,7 @@
 		            <el-col class="elementWidth">
 						<el-form-item label-width="10px">
 							<el-input v-model="ruleForm.portCode" auto-complete="off" clearable style="width:206px;margin-right: 7px;" maxlength="10" @input="ruleForm.portCode=ruleForm.portCode.toUpperCase()">
-								<template slot="prepend" v-if="ruleForm.businessScope=='AE'||ruleForm.businessScope=='SE'">始发港</template>
+								<template slot="prepend" v-if="ruleForm.businessScope=='AE'||ruleForm.businessScope=='SE'||ruleForm.businessScope=='TI'">始发港</template>
 							<template slot="prepend" v-else>目的港</template>
 							</el-input>
 						</el-form-item>

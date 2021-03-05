@@ -953,13 +953,13 @@
 			this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
 				this.currencyCodeOptions = response.data.data;
 				this.msrCurrecnyCodeOptions = response.data.data;
-				if (this.currencyCodeOptions && this.currencyCodeOptions[0]) {
-					if ('CNY' != this.currencyCodeOptions[0].currency_code) {
-						this.ruleForm.freightCurrecnyCode = this.currencyCodeOptions[0].currency_code;
-						this.ruleForm.msrCurrecnyCode = this.msrCurrecnyCodeOptions[0].currency_code;
-					}
-
-				}
+				// if (this.currencyCodeOptions && this.currencyCodeOptions[0]) {
+				// 	if ('CNY' != this.currencyCodeOptions[0].currency_code) {
+				// 		this.ruleForm.freightCurrecnyCode = this.currencyCodeOptions[0].currency_code;
+				// 		this.ruleForm.msrCurrecnyCode = this.msrCurrecnyCodeOptions[0].currency_code;
+				// 	}
+        //
+				// }
 			}.bind(this));
 			this.$axios.get('/sc/vLcCategory/运输方式').then((response) => {
 				this.shippingMethods = response.data.data;

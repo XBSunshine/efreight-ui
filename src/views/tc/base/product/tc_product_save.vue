@@ -4,19 +4,26 @@
       <el-form v-loading="vLoad" :model="ruleForm" :rules="rules"  ref="ruleForm" label-width="10px" style="margin-right: 10px;">
         <el-row>
           <el-col :span="6">
+            <el-form-item prop="departureStation">
+              <el-input v-model="ruleForm.businessScope"  clearable disabled >
+                <template slot="prepend">业务范畴</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item prop="productType" label-width="10px">
-              <el-input class="" auto-complete="off" style="width:256px;">
+              <el-input class="widthWithFourWithXing" auto-complete="off" style="width:256px;">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
                   <span>产品类型</span>
                 </template>
-                <el-select slot="suffix" v-model="ruleForm.productType" placeholder="请选择" style="width:150px;margin-right: -5px;">
+                <el-select slot="suffix" v-model="ruleForm.productType" placeholder="请选择" style="width:152px;margin-right: -5px;">
                       <el-option  v-for="item in productTypes" :key="item.paramText" :label="item.paramText" :value="item.paramText"></el-option>
                 </el-select>
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="18">
+          <el-col :span="12">
             <el-form-item prop="productName">
               <el-input v-model="ruleForm.productName" clearable show-word-limit maxlength="100" >
                 <template slot="prepend"> <font style="color:red">*</font>产品名称</template>
@@ -65,7 +72,10 @@
           <el-col :span="6">
             <el-form-item prop="exitPort">
               <el-input v-model="ruleForm.exitPort"  @input="ruleForm.exitPort=ruleForm.exitPort.toUpperCase()"  clearable show-word-limit maxlength="20">
-                <template slot="prepend">出境口岸</template>
+                <template slot="prepend">
+                  <span v-if="ruleForm.businessScope=='TE'">出境口岸</span>
+                  <span v-if="ruleForm.businessScope=='TI'">进境口岸</span>
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -187,7 +197,7 @@
           customerSelectVisible:false,
           ffrow:{},
           ruleForm: {
-            businessScope:'TE',
+            businessScope:'',
             productType: '外采产品',
             productName: '',
             bookingAgentId: '',
@@ -308,6 +318,7 @@
 
       },
       created() {
+        this.ruleForm.businessScope = this.frow.businessScope;
          this.$axios.get('/sc/tcCategory/装箱方式').then((response) => {
           this.containerMethods = response.data.data;
          })
@@ -316,12 +327,12 @@
          })
          this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
            this.currecnyCodes = response.data.data;
-           if (this.freightCurrecnyCode && this.currecnyCodes[0]) {
-             if ('CNY' != this.currecnyCodes[0].currency_code) {
-               this.ruleForm.freightCurrecnyCode = this.currecnyCodes[0].currency_code;
-               this.ruleForm.msrCurrecnyCode = this.currecnyCodes[0].currency_code;
-             }
-           }
+           // if (this.freightCurrecnyCode && this.currecnyCodes[0]) {
+           //   if ('CNY' != this.currecnyCodes[0].currency_code) {
+           //     this.ruleForm.freightCurrecnyCode = this.currecnyCodes[0].currency_code;
+           //     this.ruleForm.msrCurrecnyCode = this.currecnyCodes[0].currency_code;
+           //   }
+           // }
          }.bind(this));
       }
     }

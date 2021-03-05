@@ -158,6 +158,8 @@ SunburstPieceProto.updateData = function (
 
     this._seriesModel = seriesModel || this._seriesModel;
     this._ecModel = ecModel || this._ecModel;
+
+    graphic.setHoverStyle(this);
 };
 
 SunburstPieceProto.onEmphasis = function (highlightPolicy) {
@@ -201,9 +203,13 @@ SunburstPieceProto._updateLabel = function (seriesModel, visualColor, state) {
         : itemModel.getModel(state + '.label');
     var labelHoverModel = itemModel.getModel('emphasis.label');
 
+    var labelFormatter = labelModel.get('formatter');
+    // Use normal formatter if no state formatter is defined
+    var labelState = labelFormatter ? state : 'normal';
+
     var text = zrUtil.retrieve(
         seriesModel.getFormattedLabel(
-            this.node.dataIndex, 'normal', null, null, 'label'
+            this.node.dataIndex, labelState, null, null, 'label'
         ),
         this.node.name
     );
@@ -292,7 +298,8 @@ SunburstPieceProto._updateLabel = function (seriesModel, visualColor, state) {
         else if (rotate < -Math.PI / 2) {
             rotate += Math.PI;
         }
-    } else if (typeof rotateType === 'number') {
+    }
+    else if (typeof rotateType === 'number') {
         rotate = rotateType * Math.PI / 180;
     }
     label.attr('rotation', rotate);

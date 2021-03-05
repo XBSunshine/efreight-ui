@@ -1033,10 +1033,10 @@
 </template>
 <script>
 	import CustomerSelect from '@/views/public/customer_select'
-	import BookingAgentIdSelect from '../public/order_bookingAgent_select'
-	import ProductSelect from '../public/order_product_select'
-	import ShipperConsignee from '../public/order_shipperConsignee_select'
-	import Container from '../public/order_container_edit'
+	import BookingAgentIdSelect from '@/views/tc/public/order_bookingAgent_select'
+	import ProductSelect from '@/views/tc/public/order_product_select'
+	import ShipperConsignee from '@/views/tc/public/order_shipperConsignee_select'
+	import Container from '@/views/tc/public/order_container_edit'
 	export default {
 		props: {
 			visible: {
@@ -1118,6 +1118,7 @@
 				orderTeDigitsVolume: 3,
 				orderTeDigitsChargeWeight: 3,
 				ruleForm: {
+          businessScope: 'TE',
 					containerLoadWarehouseId: '',
 					carrierName: '',
 					orderCode: '',
@@ -1209,7 +1210,6 @@
 					containerPickupRemark: '',
 
 					bookingAgentName: '',
-					businessScope: '',
 					bookingAgentId: '',
 					containerDetails: [],
 					consignee: {
@@ -1358,9 +1358,11 @@
 			},
 
 			selectRailwayProductId() {
+        this.ffrow.businessScope = 'TE'
 				this.productSelectVisible = true
 			},
 			selectBookingAgentId() {
+        this.ffrow.businessScope = 'TE'
 				this.bookingAgentIdSelectVisible = true
 			},
 			changeShipName(val) {
@@ -1808,12 +1810,12 @@
 			})
 			this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
 				this.currecnyCodes = response.data.data;
-				if (this.freightCurrecnyCode && this.currecnyCodes[0]) {
-					if ('CNY' != this.currecnyCodes[0].currency_code) {
-						this.ruleForm.freightCurrecnyCode = this.currecnyCodes[0].currency_code;
-						this.ruleForm.msrCurrecnyCode = this.currecnyCodes[0].currency_code;
-					}
-				}
+				// if (this.freightCurrecnyCode && this.currecnyCodes[0]) {
+				// 	if ('CNY' != this.currecnyCodes[0].currency_code) {
+				// 		this.ruleForm.freightCurrecnyCode = this.currecnyCodes[0].currency_code;
+				// 		this.ruleForm.msrCurrecnyCode = this.currecnyCodes[0].currency_code;
+				// 	}
+				// }
 			}.bind(this));
 
 			this.ifFullscreen = this.frow.ifFullscreen

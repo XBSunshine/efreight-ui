@@ -49,8 +49,8 @@
 							<el-col class="elementWidth" v-if="query.businessScope!='LC'&&query.businessScope!='IO'">
 								<el-form-item label-width="10px">
 									<el-input v-model="query.awbNumber" clearable auto-complete="off" style="width:190px;">
-										<template v-if="query.businessScope!='TE'" slot="prepend">主&nbsp;&nbsp;单&nbsp;&thinsp;号</template>
-										<template v-if="query.businessScope=='TE'" slot="prepend">运&nbsp;&nbsp;单&nbsp;&thinsp;号</template>
+										<template v-if="query.businessScope!='TE' && query.businessScope!='TI'" slot="prepend">主&nbsp;&nbsp;单&nbsp;&thinsp;号</template>
+										<template v-if="query.businessScope=='TE' || query.businessScope=='TI'" slot="prepend">运&nbsp;&nbsp;单&nbsp;&thinsp;号</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
@@ -95,8 +95,8 @@
 							<el-col class="elementWidth">
 								<el-form-item label-width="10px">
 									<el-input v-model="query.departureStation" @input="query.departureStation=toUpperCaseValue(query.departureStation)" clearable auto-complete="off" style="width:189px;" maxlength="4" show-word-limit>
-										<template v-if="query.businessScope!='TE' && query.businessScope!='LC'&& query.businessScope!='IO'" slot="prepend">始&nbsp;&nbsp;发&nbsp;&thinsp;港</template>
-										<template v-if="query.businessScope=='TE'||query.businessScope=='IO'" slot="prepend">起&nbsp;&nbsp;运&nbsp;&thinsp;地</template>
+										<template v-if="query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC'&& query.businessScope!='IO'" slot="prepend">始&nbsp;&nbsp;发&nbsp;&thinsp;港</template>
+										<template v-if="query.businessScope=='TE' || query.businessScope=='TI' ||query.businessScope=='IO'" slot="prepend">起&nbsp;&nbsp;运&nbsp;&thinsp;地</template>
 										<template v-if="query.businessScope=='LC'" slot="prepend">始发城市</template>
 									</el-input>
 								</el-form-item>
@@ -104,8 +104,8 @@
 							<el-col class="elementWidth">
 								<el-form-item label-width="10px">
 									<el-input v-model="query.arrivalStation" @input="query.arrivalStation=toUpperCaseValue(query.arrivalStation)" clearable auto-complete="off" style="width:189px;" maxlength="4" show-word-limit>
-										<template v-if="query.businessScope!='TE' && query.businessScope!='LC'&& query.businessScope!='IO'" slot="prepend">目&nbsp;&nbsp;的&nbsp;&thinsp;港</template>
-										<template v-if="query.businessScope=='TE'||query.businessScope=='IO'" slot="prepend">目&nbsp;&nbsp;的&nbsp;&thinsp;地</template>
+										<template v-if="query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC'&& query.businessScope!='IO'" slot="prepend">目&nbsp;&nbsp;的&nbsp;&thinsp;港</template>
+										<template v-if="query.businessScope=='TE' || query.businessScope=='TI' || query.businessScope=='IO'" slot="prepend">目&nbsp;&nbsp;的&nbsp;&thinsp;地</template>
 										<template v-if="query.businessScope=='LC'" slot="prepend">目的城市</template>
 									</el-input>
 								</el-form-item>
@@ -137,7 +137,7 @@
 								</el-form-item>
 							</el-col>
 							<el-col class="elementWidth">
-								<el-form-item label-width="10px" v-if="query.businessScope!='TE'  && query.businessScope!='LC'&& query.businessScope!='IO'">
+								<el-form-item label-width="10px" v-if="query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC'&& query.businessScope!='IO'">
 									<el-input style="width:189px;">
 										<template slot="prepend">航&emsp;&emsp;线</template>
 										<el-select slot="suffix" v-model="chooseRoutingNames" multiple filterable placeholder="请选择" clearable style="width:120px;margin-right: -5px;">
@@ -151,6 +151,11 @@
 										<template slot="prepend">出境口岸</template>
 									</el-input>
 								</el-form-item>
+                <el-form-item label-width="10px" v-if="query.businessScope=='TI'">
+                  <el-input v-model="query.exitPort" @input="query.exitPort=toUpperCaseValue(query.exitPort)" clearable auto-complete="off" style="width:189px;" maxlength="4" show-word-limit>
+                    <template slot="prepend">进境口岸</template>
+                  </el-input>
+                </el-form-item>
 								<el-form-item label-width="10px" v-if="query.businessScope=='LC'">
 									<el-input style="width:189px;">
 										<template slot="prepend">运输方式</template>
@@ -197,6 +202,13 @@
 									</el-input>
 								</el-form-item>
 							</el-col>
+              <el-col class="elementWidth" v-if="query.businessScope=='AE'">
+                <el-form-item label-width="10px">
+                  <el-input v-model="query.routingPersonName" clearable auto-complete="off" style="width:170px;">
+                    <template slot="prepend">责任航线</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
 							<el-col class="elementWidth" v-if="query.businessScope=='AE'">
 								<el-form-item label-width="10px">
 									<el-input style="width:189px;">
@@ -210,11 +222,11 @@
 							</el-col>
 							<el-col class="elementWidth" v-if="query.businessScope=='AE'">
 								<el-form-item label-width="10px">
-									<el-input v-model="query.awbFromName" clearable auto-complete="off" style="width:189px;" maxlength="50" show-word-limit>
+									<el-input v-model="query.awbFromName" clearable auto-complete="off" style="width:330px;" maxlength="50" show-word-limit>
 									</el-input>
 								</el-form-item>
 							</el-col>
-							<el-col class="elementWidth" v-if="query.businessScope=='SE' || query.businessScope=='TE'">
+							<el-col class="elementWidth" v-if="query.businessScope=='SE' || query.businessScope=='TE' || query.businessScope=='TI'">
 								<el-form-item label-width="10px">
 									<el-input v-model="query.awbFromName" clearable auto-complete="off" style="width:299px;" maxlength="50" show-word-limit>
 										<template slot="prepend">订舱代理</template>
@@ -223,7 +235,7 @@
 							</el-col>
 						</el-row>
 						<el-row v-show="showFlag">
-							<el-col class="elementWidth" v-if="businessScopeFlag2 && query.businessScope!='TE' && query.businessScope!='LC'&& query.businessScope!='IO' && query.businessScope!='AI'">
+							<el-col class="elementWidth" v-if="businessScopeFlag2 && query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC'&& query.businessScope!='IO' && query.businessScope!='AI'">
 								<el-form-item label-width="10px">
 									<el-input style="width:255px;">
 										<template slot="prepend">服务产品</template>
@@ -315,7 +327,7 @@
 							<a href="javascript:void(0)" @click="cellClick(scope.row,item.label)" style="color: #137DFA;text-decoration: underline;">{{scope.row[item.prop]}}</a>
 						</template> -->
 					</el-table-column>
-					<el-table-column v-if="item.prop=='awbNumber' && flagTE" :prop="item.prop" :key="index" label="运单号码" :width="item.width" :align="item.align" :sortable="item.sortable">
+					<el-table-column v-if="item.prop=='awbNumber' && (flagTE || flagTI)" :prop="item.prop" :key="index" label="运单号码" :width="item.width" :align="item.align" :sortable="item.sortable">
 						<!-- <template slot-scope="scope">
 							<a href="javascript:void(0)" @click="cellClick(scope.row,item.label)" style="color: #137DFA;text-decoration: underline;">{{scope.row[item.prop]}}</a>
 						</template> -->
@@ -333,14 +345,14 @@
 					<el-table-column v-if="item.prop=='coopCode'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='coopName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='businessProduct' && flagAE" :key="index" :prop="item.prop" label="服务产品" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-					<el-table-column v-if="item.prop=='businessProduct' && flagTE" :key="index" :prop="item.prop" label="产品类型" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.prop=='businessProduct' && (flagTE || flagTI)" :key="index" :prop="item.prop" label="产品类型" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='businessProduct' && flagLC" :key="index" :prop="item.prop" label="运输方式" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='businessProduct' && flagIO" :key="index" :prop="item.prop" label="业务分类" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='departureStation' && (flagAE||flagAI||flagSE||flagSI)" :key="index" :prop="item.prop" label="始发港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-					<el-table-column v-if="item.prop=='departureStation' && (flagTE||flagIO)" :key="index" :prop="item.prop" label="起运地" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.prop=='departureStation' && (flagTE||flagTI||flagIO)" :key="index" :prop="item.prop" label="起运地" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='departureStation' && flagLC" :key="index" :prop="item.prop" label="始发城市" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='arrivalStation' && (flagAE||flagAI||flagSE||flagSI)" :key="index" :prop="item.prop" label="目的港" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-					<el-table-column v-if="item.prop=='arrivalStation' &&  (flagTE||flagIO)" :key="index" :prop="item.prop" label="目的地" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.prop=='arrivalStation' &&  (flagTE||flagTI||flagIO)" :key="index" :prop="item.prop" label="目的地" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='arrivalStation' && flagLC" :key="index" :prop="item.prop" label="目的城市" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
           <el-table-column v-if="item.prop=='transitStation' && flagAE" :key="index" :prop="item.prop" label="中转港1" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
           <el-table-column v-if="item.prop=='transitStation2' && flagAE" :key="index" :prop="item.prop" label="中转港2" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
@@ -351,29 +363,31 @@
 					<el-table-column v-if="item.prop=='expectDeparture' && (flagAE||flagSE)" :key="index" :prop="item.prop" label="开航日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='expectDeparture' && (flagAI||flagSI)" :key="index" :prop="item.prop" label="到港日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='expectDeparture' && flagTE" :key="index" :prop="item.prop" label="发车日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+          <el-table-column v-if="item.prop=='expectDeparture' && flagTI" :key="index" :prop="item.prop" label="到达日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='expectDeparture' && flagLC" :key="index" :prop="item.prop" label="用车日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='expectDeparture' && flagIO" :key="index" :prop="item.prop" label="业务日期" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='salesName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='servicerName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-					<el-table-column v-if="item.prop=='goodsType' && (flagAE||flagAI||flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" label="货物类型" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+          <el-table-column v-if="item.prop=='routingPersonName' && flagAE" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.prop=='goodsType' && (flagAE||flagAI||flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" label="货物类型" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='pieces' && (flagAE||flagAI||flagLC||flagIO)" :key="index" :prop="item.prop" label="件数" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortPieces"></el-table-column>
-					<el-table-column v-if="item.prop=='pieces' && (flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" label="标箱数量" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortPieces"></el-table-column>
+					<el-table-column v-if="item.prop=='pieces' && (flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" label="标箱数量" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortPieces"></el-table-column>
 					<el-table-column v-if="item.prop=='weight'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortWeight"></el-table-column>
 					<el-table-column v-if="item.prop=='volume'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVolume"></el-table-column>
 					<el-table-column v-if="item.prop=='chargeWeight' && (flagAE||flagAI||flagLC||flagIO)" :key="index" :prop="item.prop" label="计重" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortChargeWeight"></el-table-column>
-					<el-table-column v-if="item.prop=='chargeWeight' && (flagSE||flagSI||flagTE)" :key="index" :prop="item.prop" label="计费吨" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortChargeWeight"></el-table-column>
+					<el-table-column v-if="item.prop=='chargeWeight' && (flagSE||flagSI||flagTE||flagTI)" :key="index" :prop="item.prop" label="计费吨" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortChargeWeight"></el-table-column>
 					<el-table-column v-if="item.prop=='incomeFunctionalAmount'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortIncomeFunctionalAmount"></el-table-column>
 					<el-table-column v-if="item.prop=='costFunctionalAmount'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortCostFunctionalAmount"></el-table-column>
 					<el-table-column v-if="item.prop=='grossProfit'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortGrossProfit"></el-table-column>
 					<el-table-column v-if="item.prop=='grossProfitWeight' && (flagAE||flagAI)" :key="index" :prop="item.prop" label="单公斤毛利" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortGrossProfitWeight"></el-table-column>
-					<el-table-column v-if="item.prop=='grossProfitWeight' && (flagSE||flagSI||flagTE||flagLC||flagIO)" :key="index" :prop="item.prop" label="单位毛利" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortGrossProfitWeight"></el-table-column>
+					<el-table-column v-if="item.prop=='grossProfitWeight' && (flagSE||flagSI||flagTE||flagTI||flagLC||flagIO)" :key="index" :prop="item.prop" label="单位毛利" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortGrossProfitWeight"></el-table-column>
 					<el-table-column v-if="item.prop=='mainRoutingGrossProfitWeight' && (flagAE||flagAI)" :key="index" :prop="item.prop" label="干线单公斤毛利" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortMainRoutingGrossProfitWeight"></el-table-column>
-					<el-table-column v-if="item.prop=='mainRoutingGrossProfitWeight' && (flagSE||flagSI||flagTE||flagLC||flagIO)" :key="index" :prop="item.prop" label="干线单位毛利" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortMainRoutingGrossProfitWeight"></el-table-column>
+					<el-table-column v-if="item.prop=='mainRoutingGrossProfitWeight' && (flagSE||flagSI||flagTE||flagTI||flagLC||flagIO)" :key="index" :prop="item.prop" label="干线单位毛利" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable" :sort-method="sortMainRoutingGrossProfitWeight"></el-table-column>
 					<el-table-column v-if="item.prop=='financialDate'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='supplierCode' && (flagAE||flagAI)" :key="index" :prop="item.prop" label="供应商代码" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
-					<el-table-column v-if="item.prop=='supplierCode' && (flagSE||flagTE)" :key="index" :prop="item.prop" label="订舱代理编码" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.prop=='supplierCode' && (flagSE||flagTE||flagTI)" :key="index" :prop="item.prop" label="订舱代理编码" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='awbFrom' && flagAE" :key="index" :prop="item.prop" label="运单来源" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable"></el-table-column>
-					<el-table-column v-if="item.prop=='awbFrom' && (flagSE||flagTE)" :key="index" :prop="item.prop" label="订舱代理" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.prop=='awbFrom' && (flagSE||flagTE||flagTI)" :key="index" :prop="item.prop" label="订舱代理" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.prop=='deptName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" header-align="center" :sortable="item.sortable"></el-table-column>
 
 					<!--					<el-table-column v-if="item.prop=='pieces'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortPieces">
@@ -557,6 +571,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="frow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="frow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="frow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="frow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="frow"></viewVisibleTagLC>
 		<viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="frow"></viewVisibleTagIO>
 	</div>
@@ -569,6 +584,7 @@
 	import viewVisibleVueSE from '.././sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '.././sc/si/order/main/order_view.vue'
 	import viewVisibleVueTE from '.././tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '.././tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLC from '.././lc/order/main/order_view.vue'
 	import viewVisibleVueIO from '.././io/order/main/order_view.vue'
 
@@ -666,6 +682,7 @@
 					orderCode: "",
 					salesName: "",
 					servicerName: "",
+          routingPersonName: "",
 					expectFlight: "",
 					shipVoyageNumber: "",
 					salesDep: "",
@@ -686,6 +703,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
 				viewVisibleIO: false,
 				flagAE: false,
@@ -693,6 +711,7 @@
 				flagSE: false,
 				flagSI: false,
 				flagTE: false,
+        flagTI: false,
 				flagLC: false,
 				flagIO: false
 			}
@@ -705,6 +724,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
 			'viewVisibleTagIO': viewVisibleVueIO
 		},
@@ -764,6 +784,11 @@
 			} else {
 				this.flagTE = false;
 			}
+      if (this.query.businessScope == 'TI') {
+          this.flagTI = true;
+      } else {
+          this.flagTI = false;
+      }
 			if (this.query.businessScope == 'LC') {
 				this.flagLC = true;
 			} else {
@@ -879,7 +904,7 @@
 				tableColumns.forEach((column, index) => {
 					//主单号
 					if (column.prop == 'awbNumber') {
-						if (this.query.businessScope == 'TE') {
+						if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 							column.label = "运单号码";
 						} else if (this.query.businessScope == 'LC' || this.query.businessScope == 'IO') {
 							column.label = "客户单号";
@@ -894,7 +919,7 @@
 					if (column.prop == 'businessProduct') {
 						if (this.query.businessScope.startsWith('S') || this.query.businessScope == 'AI') {
 							indexDelete.push(index);
-						} else if (this.query.businessScope == 'TE') {
+						} else if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 							column.label = "产品类型";
 						} else if (this.query.businessScope == 'LC') {
 							column.label = "运输方式";
@@ -908,7 +933,7 @@
 					if (column.prop == 'departureStation') {
 						if (this.query.businessScope.startsWith('S') || this.query.businessScope.startsWith('A')) {
 							column.label = "始发港";
-						} else if (this.query.businessScope == 'TE' || this.query.businessScope == 'IO') {
+						} else if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI' || this.query.businessScope == 'IO') {
 							column.label = "起运地";
 						} else if (this.query.businessScope == 'LC') {
 							column.label = "始发城市";
@@ -918,7 +943,7 @@
 					if (column.prop == 'arrivalStation') {
 						if (this.query.businessScope.startsWith('S') || this.query.businessScope.startsWith('A')) {
 							column.label = "目的港";
-						} else if (this.query.businessScope == 'TE' || this.query.businessScope == 'IO') {
+						} else if (this.query.businessScope == 'TE' || this.query.businessScope == 'TI' || this.query.businessScope == 'IO') {
 							column.label = "目的地";
 						} else if (this.query.businessScope == 'LC') {
 							column.label = "目的城市";
@@ -944,7 +969,7 @@
 					}
 					//航线
 					if (column.prop == 'routingName') {
-						if (this.query.businessScope == "TE" || this.query.businessScope == "LC" || this.query.businessScope == "IO") {
+						if (this.query.businessScope == "TE" || this.query.businessScope == "TI" || this.query.businessScope == "LC" || this.query.businessScope == "IO") {
 							indexDelete.push(index);
 						}
 					}
@@ -964,7 +989,9 @@
 							}
 						} else if (this.query.businessScope == 'TE') {
 							column.label = "发车日期";
-						} else if (this.query.businessScope == 'LC') {
+						} else if (this.query.businessScope == 'TI') {
+              column.label = "到达日期";
+            } else if (this.query.businessScope == 'LC') {
 							column.label = "用车日期";
 						} else if (this.query.businessScope == 'IO') {
 							column.label = "业务日期";
@@ -974,7 +1001,7 @@
 					if (column.prop == 'supplierCode') {
 						if (this.query.businessScope == "SI" || this.query.businessScope == "LC" || this.query.businessScope == "IO") {
 							indexDelete.push(index);
-						} else if (this.query.businessScope == "TE" || this.query.businessScope == "SE") {
+						} else if (this.query.businessScope == "TE" || this.query.businessScope == "TI" || this.query.businessScope == "SE") {
 							column.label = "订舱代理编码";
 						} else if (this.query.businessScope.startsWith('A')) {
 							column.label = "供应商代码";
@@ -985,7 +1012,7 @@
 					if (column.prop == 'awbFrom') {
 						if (this.query.businessScope == 'AE') {
 							column.label = "运单来源";
-						} else if (this.query.businessScope == 'SE' || this.query.businessScope == 'TE') {
+						} else if (this.query.businessScope == 'SE' || this.query.businessScope == 'TE' || this.query.businessScope == 'TI') {
 							column.label = "订舱代理";
 						} else {
 							indexDelete.push(index);
@@ -1217,6 +1244,16 @@
 						this.viewVisibleTE = true;
 					}
 				}
+        if (row.businessScope === 'TI') {
+            this.frow.activeName = "first";
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.frow.ifFullscreen = true
+                this.jumpToNewPage('view', this.frow, '/ti_order')
+            } else {
+                this.frow.ifFullscreen = false
+                this.viewVisibleTI = true;
+            }
+        }
 				if (row.businessScope === 'LC') {
 					this.frow.activeName = "first";
 					if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
@@ -1300,6 +1337,7 @@
 				this.data2 = []
 				this.query.routingName = ''
 				this.chooseRoutingNames = []
+        this.query.routingPersonName = '';
 				this.businessScopeStr = this.query.businessScope;
 				if (this.query.businessScope == 'AE' || this.query.businessScope == 'SE') {
 					this.businessScopeFlag = true;
@@ -1311,11 +1349,13 @@
 					this.flightDateName = '开航日期';
 				} else {
 					this.businessScopeFlag = false;
-					if (this.query.businessScope.endsWith('I')) {
+					if (this.query.businessScope == 'AI' || this.query.businessScope == 'SI') {
 						this.flightDateName = '到港日期';
 					} else if (this.query.businessScope == 'TE') {
 						this.flightDateName = '发车日期';
-					} else if (this.query.businessScope == 'IO') {
+					} else if (this.query.businessScope == 'TI') {
+            this.flightDateName = '到达日期';
+          } else if (this.query.businessScope == 'IO') {
 						this.flightDateName = '业务日期';
 					} else {
 						this.flightDateName = '用车日期';
@@ -1488,6 +1528,11 @@
 				} else {
 					this.flagTE = false;
 				}
+        if (this.query.businessScope == 'TI') {
+            this.flagTI = true;
+        } else {
+            this.flagTI = false;
+        }
 				if (this.query.businessScope == 'LC') {
 					this.flagLC = true;
 				} else {
@@ -1574,7 +1619,10 @@
 			getDateTime(theDate) {
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

@@ -94,7 +94,7 @@
             pageCode: 1, //当前页
             pageSize: 10, //每页显示的记录数
             totalPage: 0, //总记录数
-            pageOption: [10, 30, 50] //分页选项
+            pageOption: [10, 30, 50, 500] //分页选项
           },
           query: {
             permissionId: '',

@@ -218,6 +218,13 @@
 				} else {
 					code2 = this.frow.customerNumber
 				}
+			} else if (businessScope == 'TI') {
+				coopName = this.frow.customerName;
+				if (this.frow.rwbNumber) {
+					code2 = this.frow.rwbNumber
+				} else {
+					code2 = this.frow.customerNumber
+				}
 			} else if (businessScope == 'LC') {
 				coopName = this.frow.coopName;
 				if (this.frow.orderCode) {
@@ -425,6 +432,15 @@
 						code2 = this.frow.customerNumber
 					}
 				} else if (businessScope == 'TE') {
+					coopName = this.frow.customerName;
+					if (this.frow.rwbNumber) {
+						code2 = this.frow.rwbNumber
+					} else if (!this.frow.rwbNumber && this.frow.customerNumber) {
+						code2 = this.frow.customerNumber
+					} else {
+						code2 = this.frow.orderCode
+					}
+				} else if (businessScope == 'TI') {
 					coopName = this.frow.customerName;
 					if (this.frow.rwbNumber) {
 						code2 = this.frow.rwbNumber

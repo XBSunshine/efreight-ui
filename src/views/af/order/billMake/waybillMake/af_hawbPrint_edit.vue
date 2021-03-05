@@ -17,15 +17,17 @@
 							<sub class="required">&nbsp;</sub>
 							<input v-model="ruleForm.awbNumberSuffix" type="text" class="TextBox" id="mawbcodeSuffix" name="mawbcodeSuffix" readonly="readonly">
 						</div>
-						<div class="horizontal" style="position: relative;left: 305px;top: 5px;">
+						<div class="horizontal" style="position: relative;left: 205px;top: 5px;">
 							<span class="label">HAWB Number<sub class="required">&nbsp;</sub></span>
 							<input disabled="disabled" v-model="ruleForm.hawbNumber" style="width: 150px;" type="text" class="TextBox" id="hawbNumber" name="hawbNumber" maxlength="50">
 						</div>
-						<div style="margin-left: 360px;display: inline">
-							<el-button :loading="loading" type="primary" size="small" @click="modify" v-if="editHawbFlag">修改</el-button>
+						<div style="margin-left: 210px;display: inline ;">
+							<!-- <el-button :loading="loading" type="primary" size="small" @click="newSelect" v-if="frow.businessScope=='AE'">新建/查询</el-button> -->
+							<el-button :loading="loading" style="margin-left: 5px;" type="primary" size="small" @click="modify" v-if="editHawbFlag">修改</el-button>
 							<el-button style="margin-left: 5px;" type="primary" size="small" @click="printG">打印运单(格打)</el-button>
 							<el-button style="margin-left: 5px;" type="primary" size="small" @click="printT">打印运单(套打)</el-button>
-							<el-button style="margin-left: 5px;" :loading="loading" type="primary" size="small" @click="checkSendFHL" >发送</el-button>
+							<el-button style="margin-left: 5px;" :loading="loading" type="primary" size="small" @click="checkSendFHL('AMS')" >发送运单</el-button>
+							<el-button style="margin-left: 5px;" :loading="loading" type="primary" size="small" @click="checkSendFHL('TB')" v-if="frow.businessScope=='AE'">发送货站</el-button>
               <!-- <el-button style="margin-left: 5px;" type="primary" size="small" @click="sendAms">发送AMS</el-button> -->
 						</div>
 					</div>
@@ -109,7 +111,7 @@
 							<div id="flight">
 								<div id="airport-destination">
 									<span class="label">Airport of Destination<sub class="required">&nbsp;</sub></span>
-									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30" readonly="readonly">
+									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30">
 								</div>
 								<div id="flight-detail">
 									<div id="head-label">
@@ -549,6 +551,7 @@
 		</fee>
 		<size ref="addMission" v-if="sizeVisible" :visible.sync="sizeVisible" :frow="ffrow">
 		</size>
+		<query ref="addMission" v-if="query" :visible.sync="query" :frow="ffrow"></query>
 	</div>
 </template>
 
@@ -556,6 +559,7 @@
 	import shipperAndConsignee from '@/views/public/shipper_consignee_select'
 	import Fee from "./af_awbPrint_fee"
 	import Size from "./af_awbPrint_size"
+	import query from "./af_order_select"
 	export default {
 		provide() {
 			return {
@@ -566,6 +570,7 @@
 		components: {
 			'shipperAndConsignee': shipperAndConsignee,
 			'fee': Fee,
+			'query': query,
 			'size': Size
 		},
 		props: {
@@ -573,6 +578,7 @@
 		},
 		data() {
 			return {
+        cancelButtonClass: 'btn-print-e-cancel',
 				sendHawbFlag: false,
 				finishHawbFlag: false,
 				editHawbFlag: false,
@@ -584,6 +590,14 @@
 				scVisible: false,
 				sizeVisible: false,
 				feeVisible: false,
+				query:false,
+        voucher: {
+          awbPrintType: 'PRINT_HAWB',
+          awbPrintId:'',
+          orderUuid:'',
+          printType: '',
+          awbPrint: {}
+        },
 				ruleForm: {
 					awbId: '',
 					awbUuid: '',
@@ -858,11 +872,14 @@
 					position: 'bottom-right'
 				});
 			},
-			doSendFHL() {
+			doSendFHL(sendType) {
+				if (!this.sendCheckNotNull()) {
+					return
+				}
 				this.loading = true
 				var orderUUID= this.ruleForm.orderUuid;
 				var letterIds=this.ruleForm.awbPrintId;
-				this.$axios.post("/afbase/send/doEAWB_AMS/hwb/"+orderUUID+'/'+letterIds).then(function (response) {
+				this.$axios.post("/afbase/send/doEAWB_"+sendType+"/hwb/"+orderUUID+'/'+letterIds).then(function (response) {
 		            if (response.data.code == 0) {
 		                if(response.data.data.status=='success'){
 		                  this.openSuccess('发送成功');
@@ -875,7 +892,7 @@
 		            this.loading = false
 	            }.bind(this));
 			},
-			doSave() {
+			doSave(sendType) {
 				if (!this.checkNotNull()) {
 					return
 				}
@@ -884,7 +901,7 @@
 						if (response.data.code == 0) {
 							this.callbackforInit('hawb');
 							this.afterModify();
-							this.doSendFHL();
+							this.doSendFHL(sendType);
 						} else {
 							this.openError(response.data.messageInfo);
 						}
@@ -893,20 +910,23 @@
 						this.openError(errorinfo)
 					}.bind(this));
 			},
-			checkSendFHL() {
+			checkSendFHL(sendType) {
 				this.$confirm('您将保存并发送分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning',
 					center: true
 				}).then(() => {
-					this.doSave();
+					this.doSave(sendType);
 				}).catch(() => {
 					this.$message({
 						type: 'info',
 						message: '已取消'
 					});
 				});
+			},
+			newSelect(){
+				this.query=true;
 			},
 			modify() {
 				if (!this.checkNotNull()) {
@@ -952,13 +972,13 @@
 						this.openError(errorinfo)
 					}.bind(this));
 			},
-      checkSendAms(type,awbNumber,letterId) {debugger
+      checkSendAms(type,awbNumber,letterId) {
         // let params = '{"type":"' + type + '","awbNumber":' + awbNumber+ '","letterId":' + letterId + '}';
         this.$axios.post("/afbase/awbPrint/sendAmsDataCheck/"+type+"/" + awbNumber+"/" + (letterId || '')).then(function(response) {
           function extracted() {
             this.$axios.post("/afbase/awbPrint/sendAmsData/"+type+"/"+awbNumber+"/" + (letterId || '')).then(function (response) {
               // 调用发送舱单后台接口
-              if (response.data.code == 0) {debugger
+              if (response.data.code == 0) {
                 if(response.data.data.status=='success'){
                   this.openSuccess('发送成功');
                 }else{
@@ -1078,20 +1098,23 @@
         });
       },
 			printG() {
+        let awbPrintType = '';
+        if (this.frow.businessScope=='AI') {
+          awbPrintType = 'PRINT_HAWB_AI'
+        } else {
+          awbPrintType = 'PRINT_HAWB'
+        }
 				this.$confirm('您将保存并格打分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          cancelButtonClass: this.cancelButtonClass,
+          cancelButtonText: '导出',
+          confirmButtonText: '打印',
+          type: 'warning',
+          center: true
 				}).then(() => {
 					if (!this.checkNotNull()) {
 						return
-					}
-					let awbPrintType = '';
-					if (this.frow.bussinessScope) {
-						awbPrintType = 'PRINT_HAWB_AI'
-					} else {
-						awbPrintType = 'PRINT_HAWB'
 					}
 					this.$axios.post2('/afbase/awbPrint/downloadHAWB', {
 							awbPrintType: awbPrintType,
@@ -1106,28 +1129,49 @@
 							let errorinfo = error.response.data.messageInfo;
 							this.openError(errorinfo)
 						}.bind(this));
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消格打'
-					});
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.voucher.printType = '2';
+            this.voucher.awbPrintType = awbPrintType;
+            this.voucher.awbPrintId = this.ruleForm.awbPrintId;
+            this.voucher.orderUuid = this.ruleForm.orderUuid;
+            this.voucher.awbPrint = this.ruleForm;
+            this.$axios.postRequestJSONResponseBlob('/afbase/awbPrint/exportExcel', this.voucher)
+              .then(function (response) {
+                var blob = new Blob([response.data], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                });
+                var downloadElement = document.createElement('a');
+                var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                downloadElement.href = href;
+
+                downloadElement.download = this.ruleForm.awbNumber + '_' + this.ruleForm.hawbNumber + '_FORMAT.xlsx'; // 下载后文件名
+                document.body.appendChild(downloadElement);
+                downloadElement.click(); // 点击下载
+                document.body.removeChild(downloadElement); // 下载完成移除元素
+                window.URL.revokeObjectURL(href); // 释放掉blob对象
+              }.bind(this));
+          }
 				});
 			},
 			printT() {
-				this.$confirm('您将保存并格打分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+        let awbPrintType = '';
+        if (this.frow.businessScope=='AI') {
+          awbPrintType = 'PRINT_HAWB_AI'
+        } else {
+          awbPrintType = 'PRINT_HAWB'
+        }
+				this.$confirm('您将保存并套打分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          cancelButtonClass: this.cancelButtonClass,
+          cancelButtonText: '导出',
+          confirmButtonText: '打印',
+          type: 'warning',
+          center: true
 				}).then(() => {
 					if (!this.checkNotNull()) {
 						return
-					}
-					let awbPrintType = '';
-					if (this.frow.bussinessScope) {
-						awbPrintType = 'PRINT_HAWB_AI'
-					} else {
-						awbPrintType = 'PRINT_HAWB'
 					}
 					this.$axios.post2('/afbase/awbPrint/downloadHAWB', {
 							awbPrintType: awbPrintType,
@@ -1142,12 +1186,111 @@
 							let errorinfo = error.response.data.messageInfo;
 							this.openError(errorinfo)
 						}.bind(this));
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消格打'
-					});
+
+        }).catch(action => {
+          if (action === 'cancel'){
+            if (!this.checkNotNull()) {
+              return
+            }
+            this.voucher.printType = '1';
+            this.voucher.awbPrintType = awbPrintType;
+            this.voucher.awbPrintId = this.ruleForm.awbPrintId;
+            this.voucher.orderUuid = this.ruleForm.orderUuid;
+            this.voucher.awbPrint = this.ruleForm;
+            this.$axios.postRequestJSONResponseBlob('/afbase/awbPrint/exportExcel', this.voucher)
+              .then(function(response) {
+                var blob = new Blob([response.data], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                });
+                var downloadElement = document.createElement('a');
+                var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                downloadElement.href = href;
+
+                downloadElement.download = this.ruleForm.awbNumber + '_' + this.ruleForm.hawbNumber + '.xlsx'; // 下载后文件名
+                document.body.appendChild(downloadElement);
+                downloadElement.click(); // 点击下载
+                document.body.removeChild(downloadElement); // 下载完成移除元素
+                window.URL.revokeObjectURL(href); // 释放掉blob对象
+              }.bind(this));
+          }
+
 				});
+			},
+			sendCheckNotNull() {
+				if (this.ruleForm.hawbNumber == null || this.ruleForm.hawbNumber == '') {
+					this.openError("请录入分单号")
+					return false
+				}
+				if (this.ruleForm.departureStation == null || this.ruleForm.departureStation == '') {
+					this.openError("请录入始发港")
+					return false
+				}
+				if (this.ruleForm.shipperAddress == null || this.ruleForm.shipperAddress == '') {
+					this.openError("请录入发货人")
+					return false
+				}
+				if (this.ruleForm.consigneeAddress == null || this.ruleForm.consigneeAddress == '') {
+					this.openError("请录入收货人")
+					return false
+				}
+				if (this.ruleForm.departureStationName == null || this.ruleForm.departureStationName == '') {
+					this.openError("请录入始发港全称")
+					return false
+				}
+				if (this.ruleForm.arrivalStation == null || this.ruleForm.arrivalStation == '') {
+					this.openError("请录入目的港")
+					return false
+				}
+				if (this.ruleForm.mawb_by1 == null || this.ruleForm.mawb_by1 == '') {
+					this.openError("请录入航班二字码")
+					return false
+				}
+				if (this.ruleForm.arrivalStationName == null || this.ruleForm.arrivalStationName == '') {
+					this.openError("请录入目的港全称")
+					return false
+				}
+				if (this.ruleForm.flightNumber == null || this.ruleForm.flightNumber == '') {
+					this.openError("请录入首程航班号")
+					return false
+				}
+				if (this.ruleForm.flightDate == null || this.ruleForm.flightDate == '') {
+					this.openError("请录入首程航班日期")
+					return false
+				}
+				if (this.ruleForm.awbCurrency == null || this.ruleForm.awbCurrency == '') {
+					this.openError("请录入币种")
+					return false
+				}
+				if (this.ruleForm.awbVolume == null || this.ruleForm.awbVolume === '') {
+					this.openError("请录入体积")
+					return false
+				}
+				if (this.ruleForm.awbPieces == null || this.ruleForm.awbPieces === '') {
+					this.openError("请录入件数")
+					return false
+				}
+				if (this.ruleForm.awbGrossWeight == null || this.ruleForm.awbGrossWeight === '') {
+					this.openError("请录入毛重")
+					return false
+				}
+				if (this.ruleForm.rateClass == null || this.ruleForm.rateClass === '') {
+					this.openError("请选择运价等级")
+					return false
+				}
+				if (this.ruleForm.totalPrepaid == null || this.ruleForm.totalPrepaid === '') {
+					this.openError("请录入预付总金额")
+					return false
+				}
+				if (this.ruleForm.totalCollect == null || this.ruleForm.totalCollect === '') {
+					this.openError("请录入到付总金额")
+					return false
+				}
+				if (this.ruleForm.awbDate == null || this.ruleForm.awbDate == '') {
+					this.openError("请录入运单日期")
+					return false
+				}
+
+				return true
 			},
 			checkNotNull() {
 				if (this.ruleForm.hawbNumber == null || this.ruleForm.hawbNumber == '') {
@@ -2672,7 +2815,6 @@
 	/*-----------------------------------------------------------------------------------------------------------------------
 emawb.css by YES@2013-09-20
 --------------------------------------------------------------------------------------------------------------------------*/
-
 	input[type=date]::-webkit-inner-spin-button {
 		visibility: hidden;
 	}
@@ -5555,5 +5697,12 @@ border-bottom: 1px solid #BBB;
 		content: '.';
 		display: block;
 		clear: both;
+	}
+  .btn-print-e-cancel {
+    background-color: #409EFF;
+    color: white;
+  }
+  	.el-button--small, .el-button--small.is-round {
+	  padding: 9px 9px !important;
 	}
 </style>

@@ -860,7 +860,9 @@
         this.aggregateChecked.weight = this.formatToKCs(planWeight.toFixed(3));
       },
       formatToKCs(data){
-        return data.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
+          if(data){
+              return data.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
+          }
       },
       setHeight() {
         this.$nextTick(() => {

@@ -181,7 +181,7 @@
 					</el-form-item>
 				</el-col>
         <el-col class="elementWidth">
-          <el-form-item label="销售确认人" prop="billConfirmId" label-width="115px">
+          <el-form-item label="账单确认人" prop="billConfirmId" label-width="115px">
             <el-select style="width: 125px;" v-model="ruleForm.billConfirmId" filterable placeholder="请选择">
               <el-option v-for="item in useroptions" :key="item.value" :label="item.label" :value="item.value">
                 <span style="float: left">{{ item.label }}</span>
@@ -263,13 +263,19 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="首次收费月份" label-width="110px" prop="startChargeTime">
-            <el-date-picker v-model="ruleForm.startChargeTime" type="month" value-format="yyyy-MM-dd" placeholder="选择月份" style="width: 125px;">
+            <el-date-picker v-model="ruleForm.startChargeTime" type="month" value-format="yyyy-MM-dd" placeholder="选择月份"
+                            style="width: 125px;">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col class="elementWidth">
           <el-form-item prop="reviewItNeed" label-width="33px">
             <el-checkbox v-model="ruleForm.reviewItNeed">需IT审核</el-checkbox>
+          </el-form-item>
+        </el-col>
+        <el-col class="elementWidth">
+          <el-form-item prop="isNewBusiness" label-width="33px">
+            <el-checkbox v-model="ruleForm.isNewBusiness">新业务</el-checkbox>
           </el-form-item>
         </el-col>
       </el-row>
@@ -365,8 +371,9 @@
           salesCollaborativeId: '',
           regionalHeadId: '',
           reviewItNeed: false,
+          isNewBusiness: false,
           startChargeTime: '',
-				},
+        },
         disabledFlag:false,
         disabledFlag2: false,
         disabledFlag1:false,
@@ -404,7 +411,7 @@
 					],
 					billConfirmId: [{
 							required: true,
-							message: '请录入销售确认人',
+							message: '请录入账单确认人',
 							trigger: 'change'
 						},
 						{
@@ -462,14 +469,21 @@
                   message: '目的港长度不超过 20',
                   trigger: ['blur', 'change']
               }],*/
-            remark: [
-              {
-                  min: 0,
-                  max: 500,
-                  message: '备注长度不超过 500',
-                  trigger: ['blur', 'change']
-              }],
-				},
+          remark: [
+            {
+              min: 0,
+              max: 500,
+              message: '备注长度不超过 500',
+              trigger: ['blur', 'change']
+            }],
+          startChargeTime: [
+            {
+              required: true,
+              message: '请输入首次收费月份',
+              trigger: 'change'
+            }
+          ]
+        },
 				isShow: false,
 				selectSingle: {
 					categoryId: "",
@@ -692,17 +706,18 @@
                       headOfficeConfirmId: this.ruleForm.headOfficeConfirmId,
                       unitPriceExcessive: this.ruleForm.unitPriceExcessive,
                       baseQuantity: this.ruleForm.baseQuantity,
-                      settlementId1: this.ruleForm.settlementId,
-                      departureStation: this.ruleForm.departureStation,
-                      aircraftClassification: this.ruleForm.aircraftClassification,
-                      serviceId: this.ruleForm.serviceId,
-                      remark: this.ruleForm.remark,
-                      arrivalDeparturType: this.ruleForm.arrivalDeparturType,
-                      itCode: this.ruleForm.itCode,
-                      salesCollaborativeId: this.ruleForm.salesCollaborativeId,
-                      regionalHeadId: this.ruleForm.regionalHeadId,
-                      reviewItNeed: this.ruleForm.reviewItNeed,
-                      startChargeTime: this.ruleForm.startChargeTime,
+                    settlementId1: this.ruleForm.settlementId,
+                    departureStation: this.ruleForm.departureStation,
+                    aircraftClassification: this.ruleForm.aircraftClassification,
+                    serviceId: this.ruleForm.serviceId,
+                    remark: this.ruleForm.remark,
+                    arrivalDeparturType: this.ruleForm.arrivalDeparturType,
+                    itCode: this.ruleForm.itCode,
+                    salesCollaborativeId: this.ruleForm.salesCollaborativeId,
+                    regionalHeadId: this.ruleForm.regionalHeadId,
+                    reviewItNeed: this.ruleForm.reviewItNeed,
+                    isNewBusiness: this.ruleForm.isNewBusiness,
+                    startChargeTime: this.ruleForm.startChargeTime,
                   }).then((response) => {
                       if(response.status == '200') {
                           this.$notify({

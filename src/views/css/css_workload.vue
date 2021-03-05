@@ -200,7 +200,7 @@
 								if ((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC' || this.query.businessScope === 'IO') && arrayC[i].prop === 'chargeWeight') {
 									arrayC[i].label = "计费重量";
 								}
-								if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE') && arrayC[i].prop === 'chargeWeight') {
+								if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE' || this.query.businessScope === 'TI') && arrayC[i].prop === 'chargeWeight') {
 									arrayC[i].label = "计费吨";
 								}
                 if((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC'|| this.query.businessScope === 'IO') && arrayC[i].prop === 'containerNumber'){
@@ -216,7 +216,7 @@
 							if ((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC' || this.query.businessScope === 'IO') && this.tableColumns[i].prop === 'chargeWeight') {
 								this.tableColumns[i].label = "计费重量";
 							}
-							if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE') && this.tableColumns[i].prop === 'chargeWeight') {
+							if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE' || this.query.businessScope === 'TI') && this.tableColumns[i].prop === 'chargeWeight') {
 								this.tableColumns[i].label = "计费吨";
 							}
               if((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC'|| this.query.businessScope === 'IO') && this.tableColumns[i].prop === 'containerNumber'){
@@ -324,7 +324,7 @@
 				}.bind(this)).catch(function(error) {
 					console.log(error);
 				});
-				if (val == 'SE' || val == 'SI' || val == 'TE') {
+				if (val == 'SE' || val == 'SI' || val == 'TE' || val == 'TI') {
 					this.containerNumberFlag = true;
 				} else {
 					this.containerNumberFlag = false;
@@ -337,10 +337,12 @@
 					this.flightDateName = '用车日期'
 				} else if (val == 'TE') {
 					this.flightDateName = '发车日期'
-				}else if(val == "IO"){
+				} else if (val == 'TI') {
+          this.flightDateName = '到达日期'
+        } else if(val == "IO"){
 				  this.flightDateName = "业务日期"
         }
-				if (val == 'SE' || val == 'SI' || val == 'TE') {
+				if (val == 'SE' || val == 'SI' || val == 'TE' || val == 'TI') {
 					this.chargeWeightName = "计费吨";
 				} else {
 					this.chargeWeightName = "计费重量";
@@ -377,7 +379,7 @@
 									if ((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC' || this.query.businessScope === 'IO') && arrayC[i].prop === 'chargeWeight') {
 										arrayC[i].label = "计费重量";
 									}
-									if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE') && arrayC[i].prop === 'chargeWeight') {
+									if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE' || this.query.businessScope === 'TI') && arrayC[i].prop === 'chargeWeight') {
 										arrayC[i].label = "计费吨";
 									}
                   if((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC'|| this.query.businessScope === 'IO') && arrayC[i].prop === 'containerNumber'){
@@ -393,7 +395,7 @@
 								if ((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC' || this.query.businessScope==="IO") && this.tableColumns[i].prop === 'chargeWeight') {
 									this.tableColumns[i].label = "计费重量";
 								}
-								if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE') && this.tableColumns[i].prop === 'chargeWeight') {
+								if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE' || this.query.businessScope === 'TI') && this.tableColumns[i].prop === 'chargeWeight') {
 									this.tableColumns[i].label = "计费吨";
 								}
                 if((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC'|| this.query.businessScope === 'IO') && this.tableColumns[i].prop === 'containerNumber'){
@@ -452,10 +454,10 @@
 						if ((this.query.businessScope === 'AE' || this.query.businessScope === 'AI' || this.query.businessScope === 'LC' || this.query.businessScope === 'IO') && excelList[i].prop === 'chargeWeight') {
 							excelList[i].label = "计费重量";
 						}
-						if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE') && excelList[i].prop === 'chargeWeight') {
+						if ((this.query.businessScope === 'SE' || this.query.businessScope === 'SI' || this.query.businessScope === 'TE' || this.query.businessScope === 'TI') && excelList[i].prop === 'chargeWeight') {
 							excelList[i].label = "计费吨";
 						}
-						if ((this.query.businessScope !== 'SE' && this.query.businessScope !== 'SI' && this.query.businessScope !== 'TE') && excelList[i].prop === 'containerNumber') {
+						if ((this.query.businessScope !== 'SE' && this.query.businessScope !== 'SI' && this.query.businessScope !== 'TE' && this.query.businessScope !== 'TI') && excelList[i].prop === 'containerNumber') {
 							this.$delete(excelList, i);
 						}
 					}
@@ -491,7 +493,10 @@
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
 				let _date = theDate.getDate();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

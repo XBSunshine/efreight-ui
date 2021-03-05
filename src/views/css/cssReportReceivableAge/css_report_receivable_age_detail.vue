@@ -92,10 +92,11 @@
 			<el-table-column header-align="center" align="left" prop="coopName" label="收款客户" width="250"></el-table-column>
 			<el-table-column align="center" prop="servicerName" label="责任客服" width="150"></el-table-column>
 			<el-table-column align="center" prop="salesName" label="责任销售" width="150"></el-table-column>
-			<el-table-column align="center" prop="etd" label="开航日期" width="120" v-if="dateFlag&&frow.businessScope!='LC'&&frow.businessScope!='TE'&&frow.businessScope!='IO'"></el-table-column>
-			<el-table-column align="center" prop="etd" label="到港日期" width="120" v-if="!dateFlag&&frow.businessScope!='LC'&&frow.businessScope!='TE'&&frow.businessScope!='IO'"></el-table-column>
+			<el-table-column align="center" prop="etd" label="开航日期" width="120" v-if="dateFlag&&frow.businessScope!='LC'&&frow.businessScope!='TE'&&frow.businessScope!='TI'&&frow.businessScope!='IO'"></el-table-column>
+			<el-table-column align="center" prop="etd" label="到港日期" width="120" v-if="!dateFlag&&frow.businessScope!='LC'&&frow.businessScope!='TE'&&frow.businessScope!='TI'&&frow.businessScope!='IO'"></el-table-column>
 			<el-table-column align="center" prop="etd" label="用车日期" width="120" v-if="frow.businessScope=='LC'"></el-table-column>
 			<el-table-column align="center" prop="etd" label="发车日期" width="120" v-if="frow.businessScope=='TE'"></el-table-column>
+      <el-table-column align="center" prop="etd" label="到达日期" width="120" v-if="frow.businessScope=='TI'"></el-table-column>
 			<el-table-column align="center" prop="etd" label="业务日期" width="120" v-if="frow.businessScope=='IO'"></el-table-column>
 			<el-table-column header-align="center" align="right" prop="functionalAmount" label="应收金额(本币)" width="150"></el-table-column>
 			<el-table-column header-align="center" align="right" prop="functionalAmountWriteoff" label="已核销金额(本币)" width="150"></el-table-column>
@@ -106,6 +107,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="ffrow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="ffrow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="ffrow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="ffrow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="ffrow"></viewVisibleTagLC>
 		<viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="ffrow"></viewVisibleTagIO>
 	</el-dialog>
@@ -117,6 +119,7 @@
 	import viewVisibleVueSE from '../../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '../../sc/si/order/main/order_view.vue'
 	import viewVisibleVueTE from '../../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '../../tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLC from '../../lc/order/main/order_view.vue'
 	import viewVisibleVueIO from '../../io/order/main/order_view.vue'
 	export default {
@@ -146,6 +149,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
 				viewVisibleIO: false,
 				ffrow: {},
@@ -164,6 +168,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
 			'viewVisibleTagIO': viewVisibleVueIO
 		},
@@ -268,6 +273,16 @@
 						this.viewVisibleTE = true;
 					}
 				}
+        if (row.businessScope === 'TI') {
+            this.ffrow.activeName = "first";
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.ffrow.ifFullscreen = true
+                this.jumpToNewPage('view', this.ffrow, '/ti_order')
+            } else {
+                this.ffrow.ifFullscreen = false
+                this.viewVisibleTI = true;
+            }
+        }
 				if (row.businessScope === 'LC') {
 					this.ffrow.activeName = "first";
 					if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {

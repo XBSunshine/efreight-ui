@@ -312,6 +312,39 @@
 				</el-row>
 				<el-row v-show="showFlag2">
 					<el-col class="elementWidth" style="margin-left: 50px;">
+						<el-form-item prop="businessType">
+							<el-input style="width:300px;margin-right: 15px;">
+							<template slot="prepend">
+								<span>业务类型</span>
+							</template>
+							<el-select
+								slot="suffix"
+								v-model="ruleForm.businessType"
+								clearable
+								placeholder=""
+								style="width: 203px; margin-right:-5px"
+							>
+								<el-option
+								v-for="item in businessTypeOptions"
+								:key="item.code"
+								:label="item.label"
+								:value="item.code"
+								>
+								</el-option>
+							</el-select>
+							</el-input>
+						</el-form-item>
+            		</el-col>
+					<el-col class="elementWidth">
+						<el-form-item label="" prop="goodsNameEn">
+							<el-input class="widthWithFive" v-model="ruleForm.goodsNameEn" @input="ruleForm.goodsNameEn=strTrim(ruleForm.goodsNameEn).toUpperCase()" auto-complete="off" style="width:775px"  :disabled="!viewFlag" show-word-limit maxlength="200" clearable>
+								<template slot="prepend">&nbsp;&nbsp;英文品名</template>
+							</el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row v-show="showFlag2">
+					<el-col class="elementWidth" style="margin-left: 50px;">
 						<el-form-item label="" prop="cargoFlowType">
 							<el-input style="width:300px;margin-right: 15px;">
 								<template slot="prepend">货物流向</template>
@@ -861,7 +894,9 @@
 						scName: '',
 						scPrintRemark: ''
 					},
-          workgroupId: '',
+					workgroupId: '',
+					businessType:'',
+					goodsNameEn:''
 				},
 				rules: {
 					coopName: [{
@@ -923,6 +958,7 @@
 
 
 				},
+				businessTypeOptions:[]
 
 			};
 		},
@@ -1838,10 +1874,11 @@
 			this.$axios.get('/afbase/awb/selectCategory?category=包装类型').then(function(response) {
 				this.packageTypeOptions = response.data.data;
 			}.bind(this));
-
-
-
-
+			this.$axios.get("/afbase/awb/selectCategory?category=业务模式").then(
+				function (response) {
+					this.businessTypeOptions = response.data.data;
+				}.bind(this)
+			);
 			this.$axios.get('/afbase/aforder/view/' + this.frow.orderId)
 				.then(function(response) {
 					this.ruleForm = response.data.data;
@@ -1858,22 +1895,22 @@
 
 				}.bind(this));
 
-     //查询用户设置小数位
-     this.$axios.get("/hrs/user/getUserAboutKeepDecimalPlaces").then((response) => {
-       if (response.data.code == 0) {
-         if (response.data.data.orderAiDigitsWeight != null) {
-           this.orderAiDigitsWeight = response.data.data.orderAiDigitsWeight
-         }
-         if (response.data.data.orderAiDigitsVolume != null) {
-           this.orderAiDigitsVolume = response.data.data.orderAiDigitsVolume
-         }
-         if (response.data.data.orderAiDigitsChargeWeight != null) {
-           this.orderAiDigitsChargeWeight = response.data.data.orderAiDigitsChargeWeight
-         }
-       } else {
-         this.openError(response.data.messageInfo)
-       }
-     });
+			//查询用户设置小数位
+			this.$axios.get("/hrs/user/getUserAboutKeepDecimalPlaces").then((response) => {
+			if (response.data.code == 0) {
+				if (response.data.data.orderAiDigitsWeight != null) {
+				this.orderAiDigitsWeight = response.data.data.orderAiDigitsWeight
+				}
+				if (response.data.data.orderAiDigitsVolume != null) {
+				this.orderAiDigitsVolume = response.data.data.orderAiDigitsVolume
+				}
+				if (response.data.data.orderAiDigitsChargeWeight != null) {
+				this.orderAiDigitsChargeWeight = response.data.data.orderAiDigitsChargeWeight
+				}
+			} else {
+				this.openError(response.data.messageInfo)
+			}
+			});
 		}
 	}
 </script>

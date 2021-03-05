@@ -421,7 +421,7 @@
 				this.data1[0].incomeAmountTaxRate = rrow.vatOutput;
 				this.data1[0].serviceId = rrow.serviceId;
 				this.data1[0].serviceName = rrow.serviceType + " - " + rrow.serviceNameCn;
- 
+
 				this.setIncomeAmountNotTax();
 			},
 			setCoop2(row2, vId) {
@@ -468,7 +468,7 @@
 					this.openError("请选择应收服务");
 					return;
 				}
-				if(this.data1[0].customerId) {
+				if(this.data1[0].customerId && this.data1[0].customerId != -1) {
 					try {
 						this.data2.forEach((row) => {
 							if(row.customerId == this.data1[0].customerId) {
@@ -644,7 +644,7 @@
 				} else {
 					this.data1[0].incomeAmount = (this.data1[0].incomeQuantity * this.data1[0].incomeUnitPrice).toFixed(2);
 				}
-        
+
         //最高
         if(obj.incomeAmountMax){
            if(obj.incomeAmountMax<this.data1[0].incomeAmount){
@@ -815,8 +815,8 @@
         if(row2.costExchangeRate){
           row2.costFunctionalAmount =  row2.costAmount * row2.costExchangeRate
         }
-        
-        
+
+
 				this.setcostFunctionalAmount(row2);
 			},
 			//本币金额

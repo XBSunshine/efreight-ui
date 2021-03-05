@@ -16,7 +16,10 @@
 							<sub class="required">&nbsp;</sub>
 							<input v-model="ruleForm.awbNumberSuffix" type="text" class="TextBox" id="mawbcodeSuffix" name="mawbcodeSuffix" readonly="readonly">
 						</div>
-						<el-button :loading="loading" style="margin-left: 750px;" type="primary" size="small" @click="saveForm" :disabled="ifDisabled">保存</el-button>
+						<div style="margin-left: 675px;display: inline;">
+						<!-- <el-button :loading="loading" type="primary" size="small" @click="newSelect" :disabled="ifDisabled">新建/查询</el-button> -->
+						<el-button :loading="loading" style="margin-left: 5px;" type="primary" size="small" @click="saveForm" :disabled="ifDisabled">保存</el-button>
+						 </div>
 					</div>
 					<div id="form-inner">
 						<div id="form-left">
@@ -98,7 +101,7 @@
 							<div id="flight">
 								<div id="airport-destination">
 									<span class="label">Airport of Destination<sub class="required">&nbsp;</sub></span>
-									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30" readonly="readonly">
+									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30">
 								</div>
 								<div id="flight-detail">
 									<div id="head-label">
@@ -540,6 +543,7 @@
 		</fee>
 		<size ref="addMission" v-if="sizeVisible" :visible.sync="sizeVisible" :frow="ffrow">
 		</size>
+		<query ref="addMission" v-if="query" :visible.sync="query" :frow="ffrow"></query>
 	</div>
 </template>
 
@@ -547,7 +551,7 @@
 	import shipperAndConsignee from '@/views/public/shipper_consignee_select'
 	import Fee from "./af_awbPrint_fee"
 	import Size from "./af_awbPrint_size"
-
+	import query from "./af_order_select"
 	export default {
 		provide() {
 			return {
@@ -558,6 +562,7 @@
 		components: {
 			'shipperAndConsignee': shipperAndConsignee,
 			'fee': Fee,
+			'query': query,
 			'size': Size
 		},
 		props: {
@@ -575,6 +580,7 @@
 				scVisible: false,
 				sizeVisible: false,
 				feeVisible: false,
+				query:false,
 				ifDisabled: false,
 				ruleForm: {
 					awbId: '',
@@ -946,6 +952,9 @@
 				}
 
 				return true
+			},
+			newSelect(){
+				this.query=true;
 			},
 			saveForm() {
 				if (!this.checkNotNull()) {

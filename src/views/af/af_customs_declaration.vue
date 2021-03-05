@@ -72,13 +72,11 @@
 			</el-pagination>
 		</div>
 		<save ref="addMission" v-if="saveVisible" :visible.sync="saveVisible" :frow="frow"></save>
-		<edit ref="addMission" v-if="editVisible" :visible.sync="editVisible" :frow="frow"></edit>
 		<setting ref="addMission" v-if="setVisible" :visible.sync="setVisible"></setting>
 	</div>
 </template>
 <script>
 	import Save from './customs_declaration/save';
-	import Edit from './customs_declaration/edit';
 	import Setting from './customs_declaration/setting'
 	import columns from './customs_declaration/column.json'
 
@@ -99,6 +97,7 @@
 					}
 				},
 				query: {
+          businessScope: 'AE',
 					awbNumber: '',
 					hawbNumber: '',
 					customsNumberPreEntry: '',
@@ -106,7 +105,6 @@
 					createTimeEnd: ''
 				},
 				saveVisible: false,
-				editVisible: false,
 				setVisible: false,
 				frow: {},
 				totalSum: null,
@@ -115,10 +113,8 @@
 		},
 		created: function() {
 			if (this.$route.query.flag) {
-				if (this.$route.query.name == 'edit') {
-					this.frow = JSON.parse(this.base64Decode(this.$route.query.frow))
-					this.editVisible = true;
-				} else if (this.$route.query.name == 'save') {
+				if (this.$route.query.name == 'edit'|| this.$route.query.name == 'save') {
+          this.frow = JSON.parse(this.base64Decode(this.$route.query.frow))
 					this.saveVisible = true;
 				}else{
 					//从数据库查询设置信息
@@ -141,7 +137,6 @@
 		},
 		components: {
 			'save': Save,
-			'edit': Edit,
 			'setting': Setting
 		},
 		methods: {
@@ -263,7 +258,7 @@
 						utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 						utftext += String.fromCharCode((c & 63) | 128);
 					}
-			
+
 				}
 				return utftext;
 			},
@@ -340,7 +335,9 @@
 				this.queryList();
 			},
 			showSave() {
-				this.jumpToNewPage("save",null)
+				this.jumpToNewPage("save",{
+          "businessScope": this.query.businessScope
+        })
 			},
 			delete() {
 				this.$confirm('你确定要删除该报关单吗?', '提示', {
@@ -436,7 +433,8 @@
 			},
 			handleCommand(command) {
 				if ("edit" == command) {
-					this.jumpToNewPage("edit",this.frow)
+          this.frow.businessScope = this.query.businessScope;
+					this.jumpToNewPage("save",this.frow)
 				} else if ("delete" == command) {
 					this.delete()
 				}

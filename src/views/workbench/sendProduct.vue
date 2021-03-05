@@ -33,13 +33,18 @@
             <el-row>
               <el-col class="elementWidth">
                 <el-form-item label="" label-width="40px">
-                	<el-upload class="el-form-item__content_send_product" :action="actionPath" :accept="accept" :data="uptoken" :before-upload="beforeAvatarUpload" :on-remove="handleRemoveChange" :on-success="handleSuccessChange" :auto-upload="true" :show-file-list="false">
-                		<!-- <span></span> -->
-                		<el-input v-model="query.fileName" placeholder="支持格式 PDF/DOC/DOCX/XLS/XLSX/RAR/ZIP/JPG/JPEG/BMP/PNG  最大 10M" auto-complete="off" disabled style="width: 880px;">
+                  <el-upload class="el-form-item__content_send_product" :action="actionPath" :accept="accept"
+                             :headers="headers" :data="upData" :before-upload="beforeAvatarUpload"
+                             :on-remove="handleRemoveChange" :on-success="handleSuccessChange" :auto-upload="true"
+                             :show-file-list="false">
+                    <!-- <span></span> -->
+                    <el-input v-model="query.fileName"
+                              placeholder="支持格式 PDF/DOC/DOCX/XLS/XLSX/RAR/ZIP/JPG/JPEG/BMP/PNG  最大 10M"
+                              auto-complete="off" disabled style="width: 880px;">
                       <template slot="prepend">上传附件</template>
-                		</el-input>
-                		<el-button size="mini" type="primary">选择</el-button>
-                	</el-upload>
+                    </el-input>
+                    <el-button size="mini" type="primary">选择</el-button>
+                  </el-upload>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -84,24 +89,27 @@
     },
 		data() {
 			return {
-				loading: false,
-        subFlag:true,
-        actionPath: 'http://up-z1.qiniu.com',
+        headers: {
+          Authorization: 'Bearer ' + window.localStorage.getItem("access_token")
+        },
+        loading: false,
+        subFlag: true,
+        actionPath: 'afbase/afProduct/uploadFile',
         accept: ".jpeg,.gif,.png,.bmp,.XLS,.XLSX,.PDF,.DOC,.DOCX,.RAR,.ZIP",
-			  uptoken: {
-				token: '',
-				key: ""
-			  },
+        upData: {
+          fileName: ""
+        },
         formData: {
-        	smallModel: [],
-				},
-				query:{
-					productName: "",
-				  productDescribe:"",
-					companyName: "",
-          fileName:"",
-          userName:""
-				},
+          smallModel: [],
+        },
+        query: {
+          productName: "",
+          productDescribe: "",
+          companyName: "",
+          fileName: "",
+          userName: "",
+          filePath: '',
+        },
         rules: {
            productName: [{
            		required: true,
@@ -128,12 +136,6 @@
           this.query.userName = username;
        }
 		},
-    mounted: function() {
-			this.$axios.get('/hrs/org/getUpToken')
-				.then(function(response) {
-					this.uptoken.token = response.data.data;
-				}.bind(this));
-		},
 		methods: {
      openSuccess() {
      	this.$notify({
@@ -159,13 +161,14 @@
                      this.$axios.post2('/afbase/afProduct/sendProductEmail', params)
                      	.then(function(response) {
                      		if(response.data.code == 0) {
-                     			this.loading = false
+                          this.loading = false
                           this.openSuccess();
-                           this.query.productName = "";
-                           this.query.productDescribe="";
-                           this.query.fileName="";
-                           this.subFlag = true;
-                     		} else {
+                          this.query.productName = "";
+                          this.query.productDescribe = "";
+                          this.query.fileName = "";
+                          this.query.filePath = "";
+                          this.subFlag = true;
+                        } else {
                      			this.loading = false
                           this.subFlag = true;
                      			let errorinfo = response.data.messageInfo;
@@ -189,24 +192,29 @@
         return str.replace(/(^\s*)|(\s*$)/g, "");
       },
       beforeAvatarUpload(file) {
-      	this.uptoken.key = "Send_product_" + new Date().getTime() + "_" + file.name.replace(/\s/g,'');
-      	const isLt10M = file.size < 10 * 1024 * 1024;
-      	if(!isLt10M) {
-      		this.$message.error('上传模板大小不能超过 10MB!');
-      	}
-      	if(isLt10M) {
-      		this.query.fileName  = "http://doc.yctop.com/" + this.uptoken.key
-      	}
-      	return isLt10M;
+        this.upData.fileName = "send_product_" + new Date().format("yyMMddhhmmss") + file.name.substring(file.name.lastIndexOf('.'));
+        ;
+        this.query.fileName = this.upData.fileName;
+
+        const isLt10M = file.size < 10 * 1024 * 1024;
+        if (!isLt10M) {
+          this.$message.error('上传模板大小不能超过 10MB!');
+        }
+        return isLt10M;
       },
       handleRemoveChange(file, fileList) {
       	var filelists = [];
-      	this.query.fileName = '';
-      	this.formData.smallModel = filelists;
+        this.query.fileName = '';
+        this.query.filePath = '';
+        this.formData.smallModel = filelists;
       },
       handleSuccessChange(response, file, fileList) { //上传成功后在图片框显示图片
-      	this.$message.success('上传成功')
-      	this.query.fileName = "http://doc.yctop.com/" + response.key;
+        if (response.code == 0) {
+          this.$message.success('上传成功')
+          this.query.filePath = response.data;
+        } else {
+          this.$message.error(response.message || '上传失败');
+        }
       },
 		}
 	}

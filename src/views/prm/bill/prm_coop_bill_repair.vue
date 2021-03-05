@@ -68,8 +68,45 @@
 					.then(function(response) {
 						if(response.data.code == 0) {
 							this.openSuccess();
-							this.findCoopBillList();
-							this.handleClose();
+							//是否自动发送账单
+                let currthis = this
+                currthis.$confirm('是否自动发送账单？', '提示', {
+                    confirmButtonText: '是',
+                    cancelButtonText: '否',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    currthis.$axios.put('/prm/coopBill/autoSendBill/' + currthis.form.createTimeStart).then((response) => {
+                        if(response.data.code == '0') {
+                            currthis.$notify({
+                                title: '成功',
+                                message: '发送成功',
+                                type: 'success'
+                            });
+                            currthis.findCoopBillList();
+                            currthis.handleClose();
+                        } else {
+                            currthis.$notify.error({
+                                title: '错误',
+                                message: response.data.messageInfo
+                            });
+                        }
+                    }).catch((error) => {
+                        currthis.$notify.error({
+                            title: '错误',
+                            message: error.response.data.messageInfo
+                        });
+                    });
+                }).catch(() => {
+                    currthis.findCoopBillList();
+                    currthis.handleClose();
+                });
+
+
+
+
+							//this.findCoopBillList();
+							//this.handleClose();
 						} else {
 							let errorinfo = response.data.messageInfo;
 							this.openError(errorinfo);

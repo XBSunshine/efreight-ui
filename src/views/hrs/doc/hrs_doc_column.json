@@ -1,0 +1,121 @@
+{
+  "info": [
+    {
+      "label": "业务范畴",
+      "prop": "businessScope",
+      "flag": "true",
+      "index": 1,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "单证类型",
+      "prop": "fileType",
+      "flag": "true",
+      "index": 2,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "单证名称",
+      "prop": "fileName",
+      "flag": "true",
+      "index": 3,
+      "width": 160,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "订单号",
+      "prop": "orderCode",
+      "flag": "true",
+      "index": 4,
+      "width": 160,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "提单号",
+      "prop": "number",
+      "flag": "true",
+      "index": 5,
+      "width": 160,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "客户单号/合约号",
+      "prop": "customerNumber",
+      "flag": "true",
+      "index": 6,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "开航/到港/发车/到达/用车/业务日期",
+      "prop": "dateTime",
+      "flag": "true",
+      "index": 7,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "客户名称",
+      "prop": "coopName",
+      "flag": "true",
+      "index": 8,
+      "width": 260,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "责任销售",
+      "prop": "salesName",
+      "flag": "true",
+      "index": 9,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "责任客服",
+      "prop": "servicerName",
+      "flag": "true",
+      "index": 10,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "责任操作",
+      "prop": "creatorName",
+      "flag": "true",
+      "index": 11,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "单证操作",
+      "prop": "fileOperator",
+      "flag": "true",
+      "index": 12,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "上传时间",
+      "prop": "createTime",
+      "flag": "true",
+      "index": 13,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    }
+  ]
+}

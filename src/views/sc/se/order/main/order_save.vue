@@ -1296,6 +1296,7 @@
 				this.ffrow.planPieces = this.ruleForm.planPieces
 				this.ffrow.planWeight = this.ruleForm.planWeight
 				this.ffrow.planVolume = this.ruleForm.planVolume
+        this.ffrow.businessScope = 'SE'
 			},
 			containerCallback(row) {
 				if (row.flag == 'replace') {

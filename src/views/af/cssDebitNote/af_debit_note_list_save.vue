@@ -152,10 +152,10 @@
 			<el-table :data="data1" border>
 
 				<el-table-column align="center" prop="debitNoteNum" label="账单编号" width="150"></el-table-column>
-				<el-table-column v-if="chenckBusCode()" align="center" prop="awbNumber" label="主单号" width="150"></el-table-column>
+				<el-table-column v-if="chenckBusCode()" align="center" prop="awbNumber" :label="awbNumberLabel" width="150"></el-table-column>
 				<el-table-column align="center" prop="orderCode" label="订单号" width="150"></el-table-column>
 				<el-table-column align="center" prop="customerNumber" label="客户单号" width="150"></el-table-column>
-				<el-table-column align="center" prop="flightDate" label="开航日期" width="150"></el-table-column>
+				<el-table-column align="center" prop="flightDate" :label="flightDateLabel" width="150"></el-table-column>
 				<el-table-column align="right" label="账单金额">
 					<template slot-scope="scope">
 						<p v-for="(item,index) in scope.row.currencyAmount.split('  ')" :key="index">
@@ -189,6 +189,8 @@
         data1: [],
         data222: [],
         currencyCodeOptions:[],
+        awbNumberLabel:'主单号',
+        flightDateLabel:'开航日期',
         orgBankConfigs:[],
         ruleForm3: {
           amountTax:'',
@@ -222,6 +224,27 @@
     inject:['queryList'],
 
     created: function(){
+      if(this.frow.selections[0].businessScope.startsWith('T')){
+         this.awbNumberLabel = "运单号";
+         if(this.frow.selections[0].businessScope=='TE'){
+           this.flightDateLabel = "发车日期";
+         }else{
+           this.flightDateLabel = "到达日期";
+         }
+      }else if(this.frow.selections[0].businessScope.startsWith('A')||this.frow.selections[0].businessScope.startsWith('S')){
+         this.awbNumberLabel = "主单号";
+         if(this.frow.selections[0].businessScope.endsWith('E')){
+           this.flightDateLabel = "开航日期";
+         }else{
+           this.flightDateLabel = "到港日期";
+         }
+      }else if(this.frow.selections[0].businessScope=='LC'){
+         this.awbNumberLabel = "";
+         this.flightDateLabel = "用车日期";
+      }else if(this.frow.selections[0].businessScope=='IO'){
+         this.awbNumberLabel = "";
+         this.flightDateLabel = "业务日期";
+      }
       this.ruleForm2.statementDate = this.getDateTime(new Date());
       this.init();
       // this.$axios.get('/afbase/coopProject/selectCurrency').then(function(response) {
@@ -273,7 +296,7 @@
 
       },
       chenckBusCode(){
-        if(this.data1[0].debitNoteNum.startsWith('IO')){
+        if(this.data1[0].debitNoteNum.startsWith('IO')||this.data1[0].debitNoteNum.startsWith('LC')){
            return false;
         }else{
           return true;

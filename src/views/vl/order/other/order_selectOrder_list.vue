@@ -47,9 +47,10 @@
 							<el-form-item>
 								<el-input style="width:204px;">
 									<template slot="prepend">
-										<span v-if="query.businessScope.endsWith('I')">到港日期</span>
+										<span v-if="query.businessScope.endsWith('I')&&query.businessScope!='TI'">到港日期</span>
 										<span v-else-if="query.businessScope.endsWith('E')&&query.businessScope!='TE'">离港日期</span>
 										<span v-else-if="query.businessScope.indexOf('TE')>-1">发车日期</span>
+										<span v-else-if="query.businessScope.indexOf('TI')>-1">到达日期</span>
 										<span v-else-if="query.businessScope.indexOf('LC')>-1">用车日期</span>
 									</template>
 									<el-date-picker slot="suffix" v-model="query.flightDateStart" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始" style="width: 135px;margin-right: -5px;">
@@ -80,9 +81,10 @@
 				<el-table-column align="center" label="订单号" width="120" prop="orderCode"></el-table-column>
 				<el-table-column v-if="query.businessScope.indexOf('LC')==-1" align="center" label="提单号" width="120" prop="awbNumber"></el-table-column>
 				<el-table-column align="center" label="客户单号" width="120" prop="customerNumber"></el-table-column>
-				<el-table-column v-if="query.businessScope.endsWith('I')" align="center" label="到港日期" width="120" prop="flightDate"></el-table-column>
+				<el-table-column v-if="query.businessScope.endsWith('I')&&query.businessScope!='TI'" align="center" label="到港日期" width="120" prop="flightDate"></el-table-column>
 				<el-table-column v-else-if="query.businessScope.endsWith('E')&&query.businessScope!='TE'" align="center" label="离港日期" width="120" prop="flightDate"></el-table-column>
 				<el-table-column v-else-if="query.businessScope.indexOf('TE')>-1" align="center" label="发车日期" width="120" prop="flightDate"></el-table-column>
+				<el-table-column v-else-if="query.businessScope.indexOf('TI')>-1" align="center" label="到达日期" width="120" prop="flightDate"></el-table-column>
 				<el-table-column v-else-if="query.businessScope.indexOf('LC')>-1" align="center" label="用车日期" width="120" prop="flightDate"></el-table-column>
 				<el-table-column align="center" label="预计信息">
 					<el-table-column align="center" label="件数" width="100" prop="planPieces"></el-table-column>
@@ -303,7 +305,7 @@
 			}).then((response) => {
 				this.businessCodes = response.data.data;
 				if (this.businessCodes) {
-					this.businessCodes = this.businessCodes.filter(businessScope => businessScope.paramText != 'VL')
+					this.businessCodes = this.businessCodes.filter(businessScope => businessScope.paramText != 'VL' && businessScope.paramText != 'IO')
 				}
 			})
 			//查询服务

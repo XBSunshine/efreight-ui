@@ -129,14 +129,6 @@
              "align":"center",
              "sortable":false
            },{
-             "label": "服务产品",
-             "prop": "businessProduct",
-             "flag":"true",
-             "index":16,
-             "width":90,
-             "align":"center",
-             "sortable":false
-             },{
              "label": "航班号",
              "prop": "expectFlight",
              "flag":"true",
@@ -177,30 +169,6 @@
             "align":"center",
             "sortable":false
           },{
-             "label": "客户代码",
-             "prop": "customerCode",
-             "flag":"true",
-             "index":22,
-             "width":80,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "客户名称",
-             "prop": "coopName",
-             "flag":"true",
-             "index":23,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "客户单号",
-             "prop": "customerNumber",
-             "flag":"true",
-             "index":24,
-             "width":120,
-             "align":"center",
-             "sortable":false
-           },{
              "label": "货物类型",
              "prop": "goodsType",
              "flag":"true",
@@ -241,94 +209,6 @@
              "align":"center",
              "sortable":false
              },{
-             "label": "库房",
-             "prop": "departureStorehouseName",
-             "flag":"true",
-             "index":30,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "提货服务",
-             "prop": "pickUpDeliveryService",
-             "flag":"true",
-             "index":31,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "库内操作",
-             "prop": "warehouseService",
-             "flag":"true",
-             "index":32,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "外场操作",
-             "prop": "outfieldService",
-             "flag":"true",
-             "index":33,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "报关服务",
-             "prop": "customsClearanceService",
-             "flag":"true",
-             "index":34,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "目的港清关",
-             "prop": "arrivalCustomsClearanceService",
-             "flag":"true",
-             "index":35,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "目的港派送",
-             "prop": "deliveryService",
-             "flag":"true",
-             "index":36,
-             "width":90,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "供应商代码",
-             "prop": "supplierCode",
-             "flag":"true",
-             "index":37,
-             "width":120,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "运单来源",
-             "prop": "awbFromName",
-             "flag":"true",
-             "index":38,
-             "width":250,
-             "align":"center",
-             "sortable":false
-           },{
-             "label": "责任销售",
-             "prop": "salesName",
-             "flag":"true",
-             "index":39,
-             "width":90,
-             "align":"left",
-             "sortable":false
-           },{
-             "label": "责任客服",
-             "prop": "servicerName",
-             "flag":"true",
-             "index":40,
-             "width":90,
-             "align":"left",
-             "sortable":false
-           },{
              "label": "责任操作",
              "prop": "creatorName",
              "flag":"true",

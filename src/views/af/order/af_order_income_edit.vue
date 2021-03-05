@@ -463,7 +463,7 @@
 					this.openError("请选择应收服务");
 					return;
 				}
-				if(this.data1[0].customerId) {
+				if(this.data1[0].customerId && this.data1[0].customerId != -1) {
 					try {
 						this.data2.forEach((row) => {
 							if(row.customerId == this.data1[0].customerId) {
@@ -496,7 +496,7 @@
 					this.openError("请录入单价");
 					return;
 				}
-				
+
 				if(this.data1[0].incomeCurrency) {
 
 				} else {
@@ -815,7 +815,7 @@
 	.blackColor input {
 		color: #606266 !important
 	}
-	
+
 	.redColor input {
 		color: red !important
 	}

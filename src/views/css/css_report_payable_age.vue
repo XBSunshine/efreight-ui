@@ -5,9 +5,9 @@
 				<el-row>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input style="width:149px;">
+							<el-input style="width:180px;">
 								<template slot="prepend">业务范畴</template>
-								<el-select slot="suffix" v-model="query.businessScope" filterable placeholder="请选择" style="width: 80px;margin-right: -5px;">
+								<el-select slot="suffix" v-model="query.businessScope" filterable placeholder="请选择" style="width: 111px;margin-right: -5px;">
 									<el-option v-for="item in businessCodes" :key="item.paramRanking" :label="item.paramText" :value="item.paramText">
 									</el-option>
 								</el-select>
@@ -37,21 +37,36 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label-width="10px">
-							<el-input style="width: 260px;" v-model="countRanges" auto-complete="off" clearable>
-								<template slot="prepend">统计区间</template>
-							</el-input>
-						</el-form-item>
-						<span style="float: left;margin-left: 80px;margin-top: -12px;font-size: smaller;color: red;">格式：正整数以';'分隔,最多五个数值</span>
-					</el-col>
-					<el-col class="elementWidth">
-						<el-form-item label-width="20px">
-							<el-button type="primary" size="small" v-on:click="findByPage" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">查询</el-button>
-							<el-button type="primary" size="small" v-on:click="exportExcelList" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF">导出</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
+          <el-col class="elementWidth">
+            <el-form-item label-width="20px">
+              <el-button type="text" size="mini" v-if="showFlag" v-on:click="showFlagSearch">收起</el-button>
+              <el-button type="text" size="mini" v-if="!showFlag" v-on:click="showFlagSearch">展开</el-button>
+              <el-button type="primary" size="small" v-on:click="findByPage" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">查询</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if=showFlag>
+          <el-col class="elementWidth">
+            <el-form-item label-width="10px">
+              <el-input style="width: 180px;" v-model="query.salesName" auto-complete="off" clearable>
+                <template slot="prepend">责任销售</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth">
+            <el-form-item label-width="10px">
+              <el-input style="width: 240px;" v-model="countRanges" auto-complete="off" clearable>
+                <template slot="prepend">统 计 区 间</template>
+              </el-input>
+            </el-form-item>
+            <span style="float: left;margin-left: 80px;margin-top: -12px;font-size: smaller;color: red;">格式：正整数以';'分隔,最多五个数值</span>
+          </el-col>
+          <el-col class="elementWidth">
+            <el-form-item label-width="39px">
+              <el-button style="margin-left: 202px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
 			</div>
 		</el-form>
 		<!-- @cell-click="handlerCellClick" -->
@@ -127,7 +142,9 @@
 					customerType: '',
 					customerName: '',
 					countRanges: '',
-					orgEditionName: ''
+					orgEditionName: '',
+          salesName: '',
+          orderPermission: '',
 				},
 				countRanges: '15;30;60;90',
 				customerType: '0',
@@ -153,7 +170,7 @@
 			let orgVersion = window.localStorage.getItem('orgVersion')
 			if (orgVersion) {
 				this.query.orgEditionName = orgVersion;
-				if (orgVersion.indexOf("专业版") >= 0 || orgVersion.indexOf("旗舰版")>-1) {
+				if (orgVersion.indexOf("专业版") >= 0 || orgVersion.indexOf("旗舰版")>-1 || orgVersion.indexOf("标准版")>-1) {
 					this.columnFlag = true;
 				}
 			}
@@ -162,6 +179,17 @@
 			'detail': Detail
 		},
 		methods: {
+      showFlagSearch() {
+          this.showFlag = !this.showFlag;
+          this.setHeight();
+      },
+      setHeight() {
+          this.$nextTick(() => {
+              let css_receivable_header = this.$refs.css_receivable_header.offsetHeight;
+              let heightS = window.innerHeight - 92 - css_receivable_header;
+              this.tableHeight = heightS + "px";
+          });
+      },
 			renderHeader(h, {
 				column,
 				$index
@@ -172,7 +200,7 @@
 						//      class:'cell'
 						//    },
 						domProps: {
-							innerHTML: column.label + "<span style='color: red;'>(此功能仅限专业版和旗舰版使用)</span>"
+							innerHTML: column.label + "<span style='color: red;'>(此功能仅限标准版,专业版和旗舰版使用)</span>"
 						}
 					})
 				])
@@ -217,6 +245,8 @@
 				this.frow.customerId = row.customer_id
 				this.frow.customerType = row.coop_type
 				this.frow.businessScope = row.business_scope
+        this.frow.salesName = this.query.salesName
+        this.frow.orderPermission = this.query.orderPermission
 
 				this.detailVisible = true;
 			},
@@ -246,7 +276,8 @@
 				} else if (this.query.businessScope.startsWith('T') || this.query.businessScope.startsWith('L') || this.query.businessScope == 'IO') {
 					controllerUrl = 'page'
 				}
-
+        let orderPermission = window.localStorage.getItem('orderPermission');//当前用户的订单权限
+        this.query.orderPermission = orderPermission;
 				this.loading = true
 				this.$axios.get2("/afbase/reportPayableAge/" + controllerUrl, this.query)
 					.then(function(response) {

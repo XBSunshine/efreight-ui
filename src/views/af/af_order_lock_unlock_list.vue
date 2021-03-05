@@ -89,7 +89,7 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth" v-if="query.businessScope!='TE' && query.businessScope!='LC'&& query.businessScope!='IO'">
+					<el-col class="elementWidth" v-if="query.businessScope!='TE' && query.businessScope!='TI' && query.businessScope!='LC'&& query.businessScope!='IO'">
 						<el-form-item>
 							<el-input style="width: 175px;" v-model="query.flightNo" clearable auto-complete="off">
 								<template v-if="query.businessScope.startsWith('A')" slot="prepend">航班号</template>
@@ -101,8 +101,9 @@
 						<el-form-item label-width="10px">
 							<el-input style="width:202px;">
 								<template v-if="query.businessScope.endsWith('E')&&query.businessScope!=='TE'" slot="prepend">离港日期</template>
-								<template v-if="query.businessScope.endsWith('I')" slot="prepend">到港日期</template>
+								<template v-if="query.businessScope.endsWith('I')&&query.businessScope!=='TI'" slot="prepend">到港日期</template>
 								<template v-if="query.businessScope=='TE'" slot="prepend">发车日期</template>
+                <template v-if="query.businessScope=='TI'" slot="prepend">到达日期</template>
 								<template v-if="query.businessScope=='LC'" slot="prepend">用车日期</template>
 								<template v-if="query.businessScope=='IO'" slot="prepend">业务日期</template>
 								<el-date-picker slot="suffix" style="width: 133px;margin-right: -5px;" v-model="query.flightDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
@@ -114,11 +115,11 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="elementWidth">
-						<el-form-item v-if="query.businessScope!='TE'&&query.businessScope!='LC'&&query.businessScope!='IO'" label-width="38px">
+						<el-form-item v-if="query.businessScope!='TE'&&query.businessScope!='TI'&&query.businessScope!='LC'&&query.businessScope!='IO'" label-width="38px">
 							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
 							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
 						</el-form-item>
-						<el-form-item v-if="query.businessScope=='TE' || query.businessScope=='LC'|| query.businessScope=='IO'" label-width="223px">
+						<el-form-item v-if="query.businessScope=='TE' || query.businessScope=='TI' || query.businessScope=='LC'|| query.businessScope=='IO'" label-width="223px">
 							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
 							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
 						</el-form-item>
@@ -194,6 +195,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="frow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="frow"></viewVisibleTagSI>
 		<viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="frow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="frow"></viewVisibleTagTI>
 		<viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="frow"></viewVisibleTagLC>
 		<viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="frow"></viewVisibleTagIO>
 	</div>
@@ -206,6 +208,7 @@
 	import viewVisibleVueSE from '../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '../sc/si/order/main/order_view.vue'
 	import viewVisibleVueTE from '../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '../tc/ti/order/main/order_view.vue'
 	import viewVisibleVueLC from '../lc/order/main/order_view.vue'
 	import viewVisibleVueIO from '../io/order/main/order_view.vue'
 	export default {
@@ -250,6 +253,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
 				viewVisibleTE: false,
+        viewVisibleTI: false,
 				viewVisibleLC: false,
 				viewVisibleIO: false,
 				lockVisible: false,
@@ -272,6 +276,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
 			'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
 			'viewVisibleTagLC': viewVisibleVueLC,
 			'viewVisibleTagIO': viewVisibleVueIO
 		},
@@ -512,7 +517,7 @@
 					tableColumns.forEach((column, index) => {
 						if (column.prop == 'awbFromName' && this.query.businessScope == 'AE') {
 							column.label = '运单来源'
-						} else if (column.prop == 'awbFromName' && (this.query.businessScope == 'SE' || this.query.businessScope == 'TE')) {
+						} else if (column.prop == 'awbFromName' && (this.query.businessScope == 'SE' || this.query.businessScope == 'TE' || this.query.businessScope == 'TI')) {
 							column.label = '订舱代理'
 						} else if (column.prop == 'awbFromName') {
 							indexDelete.push(index)
@@ -536,7 +541,11 @@
 							indexDelete.push(index);
 						}
 						if (column.prop == 'flightDate' && this.query.businessScope.endsWith('I')) {
-							column.label = '到港日期'
+              if (this.query.businessScope == 'TI') {
+                  column.label = '到达日期'
+              } else {
+                  column.label = '到港日期'
+              }
 						} else if (column.prop == 'flightDate' && this.query.businessScope.endsWith('E')) {
 							if (this.query.businessScope == 'TE') {
 								column.label = '发车日期'
@@ -918,6 +927,16 @@
 						this.viewVisibleTE = true;
 					}
 				}
+        if (row.businessScope === 'TI') {
+            this.frow.activeName = "first";
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.frow.ifFullscreen = true
+                this.jumpToNewPage('view', this.frow, '/ti_order')
+            } else {
+                this.frow.ifFullscreen = false
+                this.viewVisibleTI = true;
+            }
+        }
 				if (row.businessScope === 'LC') {
 					this.frow.activeName = "first";
 					if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {

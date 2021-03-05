@@ -53,7 +53,8 @@
 		},
 		provide() {
 			return {
-				callbackforInit: this.callback
+				callbackforInit: this.callback,
+				setValueInit: this.setValueInit,
 			}
 		},
 		data() {
@@ -68,6 +69,8 @@
 				orderCode: '',
 				orderUuid: '',
 				flightNumber: '',
+				businessScope:'',
+				tabState:false,
         getHawbInfoFlag: false,
         shareFlag:true,
         shareFlagTwo:false
@@ -78,6 +81,11 @@
 			this.orderUuid = this.frow.waybillMake.orderUuid
 			this.orderCode = this.frow.waybillMake.orderCode
 			this.flightNumber = this.frow.waybillMake.flightNumber
+			if(this.orderCode.startsWith('AE')){
+                this.businessScope="AE"
+            }else{
+            	this.businessScope="AI"
+            }
 			this.ffrow.laydate = laydate
 			this.queryMawb()
 			this.queryHawb()
@@ -122,7 +130,7 @@
       },
       getHawbInfo(){
           this.$axios.get('/afbase/awbPrint/hawbListByOrderUuid/' + this.orderUuid).then((response) => {
-              if(response.data.code == 0) {debugger
+              if(response.data.code == 0) {
                   this.data = response.data.data
                   if(this.data.length == 0){
                       this.getHawbInfoFlag = false
@@ -195,7 +203,28 @@
 					}
 				}
 			},
+			setValueInit(rrow){
+				this.orderCode= rrow.orderCode;
+				this.orderUuid=rrow.orderUuid;
+				this.awbNumber=rrow.awbNumber;
+				this.flightNumber=rrow.expectFlight;
 
+				if(this.orderCode.startsWith('AE')){
+	                this.businessScope="AE"
+	            }else{
+	            	this.businessScope="AI"
+	            }
+				this.ffrow.laydate = laydate
+				this.queryMawb()
+				this.queryHawb()
+			    this.$axios.get2('/afbase/afOrderShare/check/0'+'/订单协作/'+this.orderUuid).then((response)=> {
+			          if(response.data.data){
+			           this.shareFlagTwo = true;
+			          }
+			    }).catch((error)=> {
+			        console.log(error);
+			    });
+			},
 			queryMawb() {
 				this.$axios.get('/afbase/awbPrint/viewByOrderUuid/' + this.orderUuid).then((response) => {
 					if(response.data.code == 0) {
@@ -274,6 +303,7 @@
 				})
 				this.mawbChecked = false
 				this.ffrow.awbNumber = this.awbNumber
+				this.ffrow.businessScope = this.businessScope
 				this.ffrow.awbPrintId = id
 				this.component = null
 				this.$nextTick(() => {
@@ -289,6 +319,7 @@
 				this.ffrow.orderUuid = this.orderUuid
 				this.ffrow.awbNumber = this.awbNumber
 				this.ffrow.flightNumber = this.flightNumber
+				this.ffrow.businessScope=this.businessScope
 				this.component = hawbSave
 				this.componentName = '分单制作'
 			},

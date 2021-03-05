@@ -98,7 +98,7 @@
 							<div id="flight">
 								<div id="airport-destination">
 									<span class="label">Airport of Destination<sub class="required">*</sub></span>
-									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30" readonly="readonly">
+									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30">
 								</div>
 								<div id="flight-detail">
 									<div id="head-label">

@@ -53,28 +53,38 @@
 			<el-row v-show="showFlag">
 				<el-col class="elementWidth">
 					<el-form-item>
-						<el-input v-model="query.invoiceNum" auto-complete="off" clearable style="width:295px;">
-							<template slot="prepend">发票号码</template>
+						<el-input style="width:140px;">
+							<template slot="prepend">币种</template>
+							<el-select slot="suffix" v-model="query.currency" placeholder="请选择" style="width:99px;margin-right: -5px;">
+								<el-option v-for="item in currencys" :key="item.currencyCode" :label="item.currencyCode" :value="item.currencyCode">
+								</el-option>
+							</el-select>
 						</el-input>
 					</el-form-item>
 				</el-col>
-
 				<el-col class="elementWidth">
 					<el-form-item>
-						<el-input v-model="query.invoiceTitle" auto-complete="off" clearable style="width:290px;">
-							<template slot="prepend">发票抬头</template>
+						<el-input style="width: 210px;" v-model="query.paymentNum" clearable auto-complete="off">
+							<template slot="prepend">对账单编号</template>
+						</el-input>
+					</el-form-item>
+				</el-col>
+				<el-col class="elementWidth">
+					<el-form-item>
+						<el-input v-model="query.invoiceNum" auto-complete="off" clearable style="width:230px;">
+							<template slot="prepend">发票号码</template>
 						</el-input>
 					</el-form-item>
 				</el-col>
 				<el-col class="elementWidth">
 					<el-form-item>
 						<el-input style="width:204px;">
-							<template slot="prepend">发票日期</template>
-							<el-date-picker slot="suffix" v-model="query.invoiceDateStart" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始日期" style="width: 135px;margin-right: -5px;">
+							<template slot="prepend">申请日期</template>
+							<el-date-picker slot="suffix" v-model="query.invoiceDateStart" clearable type="date" value-format="yyyy-MM-dd 00:00:00" placeholder="开始日期" style="width: 135px;margin-right: -5px;">
 							</el-date-picker>
 						</el-input>
 						<span>-</span>
-						<el-date-picker v-model="query.invoiceDateEnd" clearable type="date" value-format="yyyy-MM-dd" placeholder="结束日期" style="width: 135px;">
+						<el-date-picker v-model="query.invoiceDateEnd" clearable type="date" value-format="yyyy-MM-dd 23:59:59" placeholder="结束日期" style="width: 135px;">
 						</el-date-picker>
 					</el-form-item>
 				</el-col>
@@ -88,29 +98,16 @@
 			<el-row v-show="showFlag">
 				<el-col class="elementWidth">
 					<el-form-item>
-						<el-input style="width:123px;">
-							<template slot="prepend">币种</template>
-							<el-select slot="suffix" v-model="query.currency" placeholder="请选择" style="width:82px;margin-right: -5px;">
-								<el-option v-for="item in currencys" :key="item.currencyCode" :label="item.currencyCode" :value="item.currencyCode">
-								</el-option>
-							</el-select>
-						</el-input>
-					</el-form-item>
-				</el-col>
-				<el-col class="elementWidth">
-					<el-form-item>
-						<el-input style="width: 240px;" v-model="query.paymentNum" clearable auto-complete="off">
-							<template slot="prepend">对账单编号</template>
-						</el-input>
-					</el-form-item>
-				</el-col>
-
-				<el-col class="elementWidth">
-					<el-form-item>
-						<el-input style="width:334px;">
+						<el-input style="width:355px;">
 							<template slot="prepend">对账单状态</template>
-							<el-select class="statusSelect" slot="suffix" multiple v-model="writeoffCompletes" style="width:251px;margin-right: -5px;">
+							<el-select class="statusSelect" slot="suffix" multiple v-model="writeoffCompletes" style="width:272px;margin-right: -5px;">
 								<el-option label="已对账" value='2'>
+								</el-option>
+								<el-option label="待收票" value='3'>
+								</el-option>
+								<el-option label="部分收票" value='4'>
+								</el-option>
+								<el-option label="收票完毕" value='5'>
 								</el-option>
 								<el-option label="部分核销" value='0'>
 								</el-option>
@@ -122,8 +119,15 @@
 				</el-col>
 				<el-col class="elementWidth">
 					<el-form-item>
-						<el-input v-model="query.creatorName" clearable auto-complete="off" clearable style="width:235px;">
+						<el-input v-model="query.creatorName" clearable auto-complete="off" clearable style="width:230px;">
 							<template slot="prepend">对账人</template>
+						</el-input>
+					</el-form-item>
+				</el-col>
+				<el-col class="elementWidth">
+					<el-form-item>
+						<el-input v-model="query.invoiceCreatorName" clearable auto-complete="off" clearable style="width:205px;">
+							<template slot="prepend">申请人</template>
 						</el-input>
 					</el-form-item>
 				</el-col>
@@ -136,12 +140,13 @@
 						<el-dropdown v-if="scope.row.paymentDate!=null" trigger="click" @command="handleCommand" @visible-change="handleChange(scope.row)">
 							<i class="el-icon-s-operation"></i>
 							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="writeoff" v-if="scope.row.writeoffComplete!==1">核销</el-dropdown-item>
+								<el-dropdown-item command="toInvoiceSave" v-if="cssCostPaymentApplicationPermission">付款申请</el-dropdown-item>
+								<el-dropdown-item command="writeoff" v-if="cssCostPaymentWriteoffPermission">核销</el-dropdown-item>
 								<el-dropdown-item command="edit" v-if="scope.row.writeoffComplete==null">编辑</el-dropdown-item>
 								<el-dropdown-item command="view">查看</el-dropdown-item>
 								<el-dropdown-item command="export">导出</el-dropdown-item>
 								<el-dropdown-item command="delete" v-if="scope.row.writeoffComplete==null">删除</el-dropdown-item>
-								<el-dropdown-item command="invoiceRemark">发票信息</el-dropdown-item>
+								<el-dropdown-item command="cancelInvoice" v-if="cssCostPaymentRevokePermission">撤销付款申请</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
 						<span v-else>合计</span>
@@ -151,7 +156,9 @@
 					<el-table-column v-if="item.label=='对账单编号'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.label=='对账单状态'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.label=='对账日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
+					<el-table-column v-if="item.label=='申请时间'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.label=='供应商'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center"></el-table-column>
+					<el-table-column v-if="item.prop=='invoiceInqurityRemark'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center"></el-table-column>
 					<el-table-column v-if="item.label=='对账单金额'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center">
 						<template slot-scope="scope">
 							<span v-if="scope.row.paymentDate!=null">
@@ -201,21 +208,26 @@
 							<span v-if="scope.row.creatorName!=null">{{scope.row.creatorName.substring(0,scope.row.creatorName.indexOf(' '))}}</span>
 						</template>
 					</el-table-column>
+					<el-table-column v-if="item.label=='申请人'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+						<template slot-scope="scope">
+							<span v-if="scope.row.invoiceCreatorName!=null">{{scope.row.invoiceCreatorName.split(' ')[0]}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column v-if="item.label=='对账时间'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable"></el-table-column>
 					<el-table-column v-if="item.label=='核销单号'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 						<template slot-scope="scope" v-if="scope.row.writeoffNum">
 							<p v-for="(item,index) in scope.row.writeoffNum.split('  ')" :key="index">
-								<a href="javascript:void(0)" @click="doView2(item.split(' ')[0])" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a>
+								<a href="javascript:void(0)" @click="doView(item.split(' ')[0])" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a>
 							</p>
 						</template>
 					</el-table-column>
-					<el-table-column v-if="item.label=='发票日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceDate">
+					<el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+						<template slot-scope="scope" v-if="scope.row.invoiceNum">
+							<p v-for="(item,index) in scope.row.invoiceNum.split('  ')" :key="index">
+								<a href="javascript:void(0)" @click="viewInvoice(item.split(' ')[0])" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a>
+							</p>
+						</template>
 					</el-table-column>
-					<el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceNum">
-					</el-table-column>
-					<el-table-column v-if="item.label=='发票抬头'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatterInvoiceTitle" header-align="center">
-					</el-table-column>
-					<el-table-column v-if="item.label=='发票备注'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center"></el-table-column>
 				</template>
 			</el-table>
 		</div>
@@ -227,11 +239,9 @@
 		<edit ref="addMission" v-if="editVisible" :visible.sync="editVisible" :frow="frow"></edit>
 		<viewdetail ref="addMission" v-if="viewVisible" :visible.sync="viewVisible" :frow="frow"></viewdetail>
 		<writeoff ref="addMission" v-if="writeoffVisible" :visible.sync="writeoffVisible" :frow="frow"></writeoff>
-		<writeoffMinus ref="addMission" v-if="writeoffMinusVisible" :visible.sync="writeoffMinusVisible" :frow="frow"></writeoffMinus>
-		<viewdetailWriteoff ref="addMission" v-if="viewWriteoffVisible" :visible.sync="viewWriteoffVisible" :frow="frow"></viewdetailWriteoff>
 		<setVisibleTag ref="addMission" v-if="setVisible" :visible.sync="setVisible"></setVisibleTag>
-		<invoiceRemark ref="addMission" v-if="invoiceRemarkVisible" :visible.sync="invoiceRemarkVisible" :frow="frow"></invoiceRemark>
 		<batchEdit ref="addMission" v-if="batchEditVisible" :visible.sync="batchEditVisible" :frow="frow"></batchEdit>
+		<invoiceSave ref="addMission" v-if="invoiceSaveVisible" :visible.sync="invoiceSaveVisible" :frow="frow"></invoiceSave>
 	</div>
 </template>
 <script>
@@ -240,11 +250,9 @@
 	import Save from './payment/af_payment_save'
 	import Edit from './payment/af_payment_edit'
 	import View from './payment/af_payment_view'
-	import Writeoff from './writeoff/af_writeoff_payment_detail_list_save'
-	import WriteoffMinus from './writeoff/af_writeoff_minus_save'
-	import ViewdetailWriteoff from './writeoff/af_writeoff_view'
-	import InvoiceRemark from './payment/af_payment_invoice_remark'
+	import Writeoff from './invoice/payment_direct_writeoff'
 	import BatchEdit from './payment/af_payment_batch_edit'
+	import InvoiceSave from './invoice/invoice_save'
 	export default {
 		data() {
 			return {
@@ -261,10 +269,8 @@
 				editVisible: false,
 				viewVisible: false,
 				saveVisible: false,
-				viewWriteoffVisible: false,
 				writeoffVisible: false,
-				writeoffMinusVisible: false,
-				invoiceRemarkVisible: false,
+				invoiceSaveVisible: false,
 				batchEditVisible: false,
 				batchEditButtonFlag: false,
 				writeoffCompletes: ['0', '2'],
@@ -280,7 +286,7 @@
 					awbNumberOrOrderCode: '',
 					creatorName: '',
 					invoiceNum: '',
-					invoiceTitle: '',
+					invoiceCreatorName: '',
 					invoiceDateStart: '',
 					invoiceDateEnd: '',
 				},
@@ -288,6 +294,9 @@
 				currencys: [],
 				showFlag: false,
 				setVisible: false,
+				cssCostPaymentApplicationPermission: false,
+				cssCostPaymentRevokePermission: false,
+				cssCostPaymentWriteoffPermission:false
 			}
 		},
 		created: function() {
@@ -296,12 +305,20 @@
 			if (buttonInfo.indexOf('af_css_payment_batch_edit') > -1) {
 				this.batchEditButtonFlag = true;
 			}
-			
+			if (buttonInfo.indexOf('css_cost_payment_application') > -1) {
+				this.cssCostPaymentApplicationPermission = true;
+			}
+			if (buttonInfo.indexOf('css_cost_payment_revoke') > -1) {
+				this.cssCostPaymentRevokePermission = true;
+			}
+			if (buttonInfo.indexOf('css_cost_payment_writeoff') > -1) {
+				this.cssCostPaymentWriteoffPermission = true;
+			}
 			//查询业务范畴
 			this.$axios.get2('/afbase/category/paramsNew', {
 				categoryName: "业务范畴"
 			}).then(function(response) {
-				this.businessScopes = response.data.data;
+				this.businessScopes = response.data.data
 			}.bind(this)).catch(function(error) {
 				console.log(error);
 			})
@@ -336,9 +353,7 @@
 			'edit': Edit,
 			'viewdetail': View,
 			'writeoff': Writeoff,
-			'writeoffMinus': WriteoffMinus,
-			'invoiceRemark': InvoiceRemark,
-			'viewdetailWriteoff': ViewdetailWriteoff,
+			'invoiceSave': InvoiceSave,
 			'batchEdit': BatchEdit
 		},
 		methods: {
@@ -347,13 +362,6 @@
 					return row.invoiceDate2;
 				} else {
 					return row.invoiceDate;
-				}
-			},
-			formatterInvoiceNum(row, column) {
-				if (row.statementId) {
-					return row.invoiceNum2;
-				} else {
-					return row.invoiceNum;
 				}
 			},
 			formatterInvoiceTitle(row, column) {
@@ -410,10 +418,12 @@
 					return ((x < y) ? -1 : (x > y) ? 1 : 0)
 				})
 			},
-			doView2(costWriteoffId) {
-				this.frow.costWriteoffId = costWriteoffId
-				this.frow.businessScope = this.query.businessScope
-				this.viewWriteoffVisible = true;
+			doView(costWriteoffId) {
+				this.openSuccess('功能开发中...敬请期待')
+				return
+			},
+			viewInvoice(invoiceId) {
+				this.openSuccess('功能开发中...敬请期待')
 			},
 			handleCommand(command) {
 				if (command == 'writeoff') {
@@ -430,6 +440,14 @@
 					this.doExport()
 				} else if (command == 'invoiceRemark') {
 					this.invoiceRemark()
+				} else if (command == 'toInvoiceSave') {
+					this.$axios.get("/afbase/cssCostInvoice/checkIfCreateInvoice/" + this.frow.paymentId).then(response => {
+						this.invoiceSaveVisible = true
+					}).catch(error => {
+						this.openError(error.response.data.messageInfo)
+					})
+				} else if (command == 'cancelInvoice') {
+					this.cancelInvoice()
 				}
 			},
 			handleChange(command) {
@@ -455,24 +473,37 @@
 				this.viewVisible = true;
 			},
 			showWriteoff() {
-				this.$axios.get('/afbase/cssPayment/' + this.frow.paymentId).then((response) => {
-					if (response.data.code == 0) {
-						this.frow = response.data.data
-						if (response.data.data.amountPaymentNoWriteoff < 0) {
-							this.writeoffMinusVisible = true
-						} else {
-							this.writeoffVisible = true
-						}
-					} else {
-						this.openError(response.data.messageInfo)
-					}
+				this.$axios.get('/afbase/cssPayment/checkIfCanWriteoff/' + this.frow.paymentId + '/' + this.frow.rowUuid).then((response) => {
+					this.writeoffVisible = true
 				}).catch((error) => {
-					this.openError('服务器有问题，请稍后再试')
+					this.openError(error.response.data.messageInfo)
 				});
 
 			},
 			invoiceRemark() {
 				this.invoiceRemarkVisible = true
+			},
+			cancelInvoice() {
+				this.$confirm('请确认 是否撤销付款申请？', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning',
+					center: true
+				}).then(() => {
+					this.$axios.deletes('/afbase/cssCostInvoice/' + this.frow.paymentId + '/' + this.frow.rowUuid)
+						.then((response) => {
+							this.openSuccess("保存成功");
+							this.queryList();
+						}).catch((error) => {
+							let errorinfo = error.response.data.messageInfo;
+							this.openError(errorinfo)
+						})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});
+				});
 			},
 			openError(info) {
 				this.$notify({
@@ -636,7 +667,9 @@
 				let _year = theDate.getFullYear();
 				let _month = theDate.getMonth();
 				let _date = theDate.getDate();
-				// _month = _month + 1;
+				if (_month == 0) {
+					return (_year - 1) + "-12-01"
+				}
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

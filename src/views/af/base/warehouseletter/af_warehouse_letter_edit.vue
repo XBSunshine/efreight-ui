@@ -214,16 +214,16 @@
 		inject: ['queryList'],
 		methods: {
 			beforeAvatarUpload(file) {
-				this.uptoken.key = window.localStorage.getItem("orgCode") + '_' + new Date().getTime() + "_" + file.name;
-				const isLt10M = file.size < 10 * 1024 * 1024;
-				if(!isLt10M) {
-					this.$message.error('上传模板大小不能超过 10MB!');
-				}
-				if(isLt10M) {
-					this.ruleForm.shipperTemplateFile = "http://doc.yctop.com/" + this.uptoken.key
-				}
-				return isLt10M;
-			},
+        this.uptoken.key = this.buildUploadFileKey(file);
+        const isLt10M = file.size < 10 * 1024 * 1024;
+        if (!isLt10M) {
+          this.$message.error('上传模板大小不能超过 10MB!');
+        }
+        if (isLt10M) {
+          this.ruleForm.shipperTemplateFile = "http://doc.yctop.com/" + this.uptoken.key
+        }
+        return isLt10M;
+      },
 			handleRemoveChange(file, fileList) {
 				var filelists = [];
 				this.ruleForm.showName = '';
@@ -234,7 +234,7 @@
 				this.ruleForm.showName = file.name;
 			},
       beforeAvatarUploadExcel(file) {
-          this.uptoken.key = window.localStorage.getItem("orgCode") + '_' + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildUploadFileKey(file);
           const isLt10M = file.size < 10 * 1024 * 1024;
           if(!isLt10M) {
               this.$message.error('上传模板大小不能超过 10MB!');
@@ -335,7 +335,7 @@
         this.currentRowIndex = rowIndex;
       },
       beforeUpload(file){
-        this.uptoken.key = window.localStorage.getItem("orgCode") + '_warehouse_letter_' + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildRowUploadFileKey(file);
         const isLt10M = file.size < 10 * 1024 * 1024;
         if(!isLt10M) {
           this.$message.error('上传模板大小不能超过 10MB!');
@@ -343,7 +343,7 @@
         return isLt10M;
       },
       beforeUploadPdf(file){
-          this.uptoken.key = window.localStorage.getItem("orgCode") + '_warehouse_letter_' + new Date().getTime() + "_" + file.name;
+        this.uptoken.key = this.buildRowUploadFileKey(file);
           const isLt10M = file.size < 10 * 1024 * 1024;
           if(!isLt10M) {
               this.$message.error('上传模板大小不能超过 10MB!');
@@ -380,16 +380,26 @@
           }
           return true;
       },
-      removeExcel(rowIndex, row){
+      removeExcel(rowIndex, row) {
 
-          this.airlineShipperLetterData[rowIndex].templateFileExcel = "";
-          this.airlineShipperLetterData[rowIndex].templateNameExcel = "";
+        this.airlineShipperLetterData[rowIndex].templateFileExcel = "";
+        this.airlineShipperLetterData[rowIndex].templateNameExcel = "";
       },
-      removePdf(rowIndex, row){
-          this.airlineShipperLetterData[rowIndex].templateFilePdf = "";
-          this.airlineShipperLetterData[rowIndex].templateNamePdf = "";
+      removePdf(rowIndex, row) {
+        this.airlineShipperLetterData[rowIndex].templateFilePdf = "";
+        this.airlineShipperLetterData[rowIndex].templateNamePdf = "";
       },
-		},
+      buildUploadFileKey(file) {
+        return 'public/shipper_letter/' + (this.ruleForm.apCode || '') + "_" + new Date().format("yyMMddhhmmss") + "_" + file.name;
+      },
+      buildRowUploadFileKey(file) {
+        let code = (this.airlineShipperLetterData[this.currentRowIndex].carrierPrefix || '');
+        if (code.length > 0) {
+          code = code + "_";
+        }
+        return 'public/shipper_letter/' + (this.ruleForm.apCode || '') + "_" + code + new Date().format("yyMMddhhmmss") + "_" + file.name;
+      }
+    },
 		created() {
 		  this.loadData(this.frow.warehouseLetterId);
 		}

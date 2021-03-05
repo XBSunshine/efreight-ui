@@ -65,7 +65,7 @@
 					</el-form-item>
 				</el-col>
 				<el-col class="elementWidth">
-					<el-form-item v-if="frow.viewFlag">
+					<el-form-item v-if="frow.viewFlag&&frow.finishFlag">
 						<el-button  type="primary" size="mini" @click="onSave" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">保存</el-button>
 						<el-button type="primary" size="mini" @click="setNull" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">重置</el-button>
 						<el-button type="primary" size="mini" v-on:click="doBatchImport" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">EXCEL导入</el-button>
@@ -89,7 +89,7 @@
 					<el-col class="elementWidth">
 						<el-form-item >
 							<el-button type="primary" size="mini" v-on:click="querylist" style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">查询</el-button>
-							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;" type="primary" size="mini" v-on:click="sendGoodsName" v-if="frow.viewFlag">发送品名清单</el-button>
+							<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;" type="primary" size="mini" v-on:click="sendGoodsName" v-if="frow.viewFlag&&frow.finishFlag">发送品名清单</el-button>
 						</el-form-item>
 					</el-col>
 		</el-row>
@@ -103,7 +103,7 @@
             
             <el-table-column align="center" prop="quantity" label="件数" width="150"></el-table-column>
             <el-table-column align="center" prop="reportIssueNo" label="鉴定编号" ></el-table-column>
-            <el-table-column align="center" label="操作" width="100" v-if="frow.viewFlag">
+            <el-table-column align="center" label="操作" width="100" v-if="frow.viewFlag&&frow.finishFlag">
                 <template slot-scope="scope" >
                     <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
                 </template>
@@ -281,6 +281,9 @@
 		methods: {
 			doBatchImport() {
 				this.ffrow.orderId = this.frow.orderId
+				this.ffrow.orderCode=this.frow.orderCode;
+				this.ffrow.orderUuid=this.frow.orderUuid;
+				this.ffrow.pageName=this.frow.pageName;
 		        this.batchImport = true;
 		    },
 			renderHeader(cerateElement, { column }) {
@@ -311,6 +314,9 @@
 					quantity:'',
 					reportIssueNo:'',
 					orderId:this.frow.orderId,
+					orderCode:this.frow.orderCode,
+					orderUuid:this.frow.orderUuid,
+					pageName:this.frow.pageName,
 					orgId:'',
 					orgCode:'',
 					orgName:'',
@@ -362,12 +368,16 @@
 				}	
 				this.$refs['identifyForm'].validate((valid) => {
 					if (valid) {
+						that.identifyForm.orderCode=this.frow.orderCode;
+						that.identifyForm.orderUuid=this.frow.orderUuid;
+						that.identifyForm.pageName=this.frow.pageName;
 						that.$axios.post2("/afbase/goodsName/"+urlStr, that.identifyForm)
 						.then(function(response) {
 							if (response.data.code == 0) {
 								that.openSuccess();
 								that.querylist();
-								
+								//刷新日志tab
+								this.frow.updateLogTab = true;
 							}else {
 								that.openError(response.data.messageInfo);
 							}
@@ -499,7 +509,9 @@
 				this.$axios.post("/afbase/send/doSendGoodsName/"+this.frow.orderId+"/"+this.frow.orderUuid+"/"+this.frow.awbNumber).then(function (response) {
 		            if (response.data.code == 0) {
 		                if(response.data.data.status=='success'){
-		                  this.openSuccess('发送成功');
+						  this.openSuccess('发送成功');
+						  //刷新日志tab
+						  this.frow.updateLogTab = true;
 			            }else{
 			                  this.openError(response.data.data.message);
 			            }
@@ -801,12 +813,14 @@
 			},
 		},
 		created() {
-			
+			if (!this.frow.pageName) {
+				this.frow.pageName='AE订单';
+			}
 			this.identifyForm.orderId = this.frow.orderId;
-			this.querylist();
-			
-			
-			
+			this.identifyForm.orderCode=this.frow.orderCode;
+			this.identifyForm.orderUuid=this.frow.orderUuid;
+			this.identifyForm.pageName=this.frow.pageName;
+			this.querylist();		
 		}
 	}
 </script>

@@ -189,41 +189,57 @@
 							<el-col :span="8" class="table_col_right table_col_bottom" style="height: 30px;line-height: 30;"></el-col>
 						</el-row>
 						<el-row class="table_col_left table_col_right table_col_bottom">
-							<el-col>
-								<el-row style="margin-top: 20px;margin-bottom: 20px;">
-									<el-col class="elementWidth" style="width:85px;margin-left:10px;text-align: center;">UN or ID No.</el-col>
-									<el-col class="elementWidth" style="margin-left:15px;width:240px;text-align: center;">Proper Shipping Name</el-col>
-									<el-col class="elementWidth" style="margin-left:15px;width:120px;text-align: center;">Class or Division (SubsidiaryRisk)</el-col>
-									<el-col class="elementWidth" style="margin-left:15px;width:120px;text-align: center;">Packing Group</el-col>
-									<el-col class="elementWidth" style="margin-left:15px;width:180px;text-align: center;">Quantity and type of packing</el-col>
-									<el-col class="elementWidth" style="margin-left:15px;width:120px;text-align: center;">PackingInst</el-col>
-									<el-col class="elementWidth" style="margin-left:15px;width:120px;text-align: center;">Authorization</el-col>
-								</el-row>
-								<el-row style="margin-bottom: 10px;" v-for="(row,index) in dgdPrintList" :key="index">
-									<el-col class="elementWidth" style="margin-left:10px">
-										<el-input v-model="row.unIdNo" style="width:85px" maxlength="50"></el-input>
-									</el-col>
-									<el-col class="elementWidth" style="margin-left:15px">
-										<el-input v-model="row.properShippingName" style="width:240px" maxlength="200"></el-input>
-									</el-col>
-									<el-col class="elementWidth" style="margin-left:15px">
-										<el-input v-model="row.classOrDivision" style="width:120px" maxlength="50"></el-input>
-									</el-col>
-									<el-col class="elementWidth" style="margin-left:15px">
-										<el-input v-model="row.packingGroup" style="width:120px" maxlength="50"></el-input>
-									</el-col>
-									<el-col class="elementWidth" style="margin-left:15px">
-										<el-input v-model="row.quantityAndTypeOfPacking" style="width:180px" maxlength="100"></el-input>
-									</el-col>
-									<el-col class="elementWidth" style="margin-left:15px">
-										<el-input v-model="row.packingInst" style="width:120px" maxlength="50"></el-input>
-									</el-col>
-									<el-col class="elementWidth" style="margin-left:15px">
-										<el-input v-model="row.authorization" style="width:120px" maxlength="50"></el-input>
-									</el-col>
-								</el-row>
-							</el-col>
-						</el-row>
+              <el-table :data="dgdPrintList">
+                <el-table-column width="40" align="center">
+                  <template slot="header" slot-scope="scope">
+                    <i class="iconfont el-icon-myyuanquanjiahao" @click="addTemplate"
+                       style="cursor: pointer;size: b5;color: #409EFF;"></i>
+                  </template>
+                  <template slot-scope="scope">
+                    <i class="iconfont el-icon-myjianhao" @click="deleteTemplate(scope.$index,scope.row)"
+                       style="cursor: pointer;size: b5;color: #409EFF;"></i>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="UN or ID No." width="100px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.unIdNo" type="textarea" rows="1" maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Proper Shipping Name" width="240px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.properShippingName" type="textarea" rows="1"
+                              maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Class or Division (SubsidiaryRisk)" width="120px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.classOrDivision" type="textarea" rows="1" maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Packing Group" width="120px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.packingGroup" type="textarea" rows="1" maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Quantity and type of packing" width="120px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.quantityAndTypeOfPacking" type="textarea" rows="1"
+                              maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="PackingInst" width="120px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.packingInst" type="textarea" rows="1" maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Authorization" width="120px">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.authorization" type="textarea" rows="1" maxlength="500"></el-input>
+                  </template>
+                </el-table-column>
+              </el-table>
+
+            </el-row>
 						<el-row class="table_col_left table_col_right table_col_bottom">
 							<div style="margin-left: 20px;margin-bottom: 10px;margin-top: 10px;">Additional Handing Information</div>
 							<el-form-item label=" " label-width="20px">
@@ -319,6 +335,7 @@
 				ruleForm: {
 					awbNumber: '',
 					orderId: '',
+					orderCode: '',
 					orderUuid: '',
 					shipperPrint: '',
 					consigneePrint: '',
@@ -404,6 +421,7 @@
 							this.frow.dgdMake.awbNumber = response.data.data.awbNumber
 							this.frow.dgdMake.orderUuid = response.data.data.orderUuid
 							this.frow.dgdMake.orderId = response.data.data.orderId
+							this.frow.dgdMake.orderCode = response.data.data.orderCode
 							this.frow.dgdMake.departureStationPrint = response.data.data.departureWarehouseName
 							this.frow.dgdMake.arrivalStationPrint = response.data.data.departureStorehouseName
 							this.frow.dgdMake.handlingInfo = response.data.data.handlingInfo
@@ -427,6 +445,7 @@
 							this.ruleForm.awbNumber = response.data.data.awbNumber
 							this.ruleForm.orderUuid = response.data.data.orderUuid
 							this.ruleForm.orderId = response.data.data.orderId
+							this.ruleForm.orderCode = response.data.data.orderCode
 							this.ruleForm.departureStationPrint = response.data.data.departureWarehouseName
 							this.ruleForm.arrivalStationPrint = response.data.data.departureStorehouseName
 							this.ruleForm.handlingInfo = response.data.data.handlingInfo
@@ -584,6 +603,7 @@
 						if(response.data.code == 0) {
 							this.ruleForm = response.data.data
 							this.ruleForm.awbNumber = this.frow.dgdMake.awbNumber
+							this.ruleForm.orderCode = this.frow.dgdMake.orderCode
 							this.dgdPrintList = this.ruleForm.dgdPrintList
 							this.create = false
 						} else {
@@ -605,6 +625,7 @@
 					awbNumber: this.frow.dgdMake.awbNumber,
 					orderId: this.frow.dgdMake.orderId,
 					orderUuid: this.frow.dgdMake.orderUuid,
+					orderCode: this.frow.dgdMake.orderCode,
 					shipperPrint: this.frow.dgdMake.shipperPrint,
 					consigneePrint: this.frow.dgdMake.consigneePrint,
 					pageNumber: '1',
@@ -619,30 +640,6 @@
 				}
 
 				this.dgdPrintList = []
-				for(let i = 0; i < 5; i++) {
-					if(i == 0) {
-						this.dgdPrintList.push({
-							'unIdNo': '',
-							'properShippingName': this.frow.dgdMake.goodsNameEn,
-							'classOrDivision': '',
-							'packingGroup': '',
-							'quantityAndTypeOfPacking': this.frow.dgdMake.pieces,
-							'packingInst': '',
-							'authorization': ''
-						})
-					} else {
-						this.dgdPrintList.push({
-							'unIdNo': '',
-							'properShippingName': '',
-							'classOrDivision': '',
-							'packingGroup': '',
-							'quantityAndTypeOfPacking': '',
-							'packingInst': '',
-							'authorization': ''
-						})
-					}
-				}
-
 			},
 			getCurrDateAndCurrMonthLastDay() {
 				//获取当前日期
@@ -659,11 +656,13 @@
 				return datas
 			},
 			printG() {
-				this.$confirm('只能打印保存后的数据，确定要继续么?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+				this.$confirm('只能格打保存后的数据，确定要继续么?', '提示', {
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          cancelButtonText: '导出',
+          confirmButtonText: '打印',
+          type: 'warning',
+          center: true
 				}).then(() => {
 					this.$axios.get('/afbase/dgdPrint/printG/' + this.ruleForm.dgdPrintId)
 						.then((response) => {
@@ -676,16 +675,38 @@
 							let errorinfo = error.response.data.messageInfo;
 							this.openError(errorinfo);
 						});
-				}).catch(() => {
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.$axios.post3('/afbase/dgdPrint/exportExcel/' + this.ruleForm.dgdPrintId+'/G').then((response) => {
+              var blob = new Blob([response.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+              });
+                var downloadElement = document.createElement('a');
+                var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                downloadElement.href = href;
+
+                var awbNumberTitle = this.ruleForm.awbNumber;
+                if(!awbNumberTitle){
+                  awbNumberTitle = this.ruleForm.orderCode;
+                }
+                downloadElement.download = awbNumberTitle + '_' + this.ruleForm.dgdPrintId + '_DGD_FORMAT.xlsx'; // 下载后文件名
+                document.body.appendChild(downloadElement);
+                downloadElement.click(); // 点击下载
+                document.body.removeChild(downloadElement); // 下载完成移除元素
+                window.URL.revokeObjectURL(href); // 释放掉blob对象
+            });
+          }
 
 				});
 			},
 			printT() {
-				this.$confirm('只能打印保存后的数据，确定要继续么?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+				this.$confirm('只能套打保存后的数据，确定要继续么?', '提示', {
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          cancelButtonText: '导出',
+          confirmButtonText: '打印',
+          type: 'warning',
+          center: true
 				}).then(() => {
 					this.$axios.get('/afbase/dgdPrint/printT/' + this.ruleForm.dgdPrintId)
 						.then((response) => {
@@ -698,7 +719,28 @@
 							let errorinfo = error.response.data.messageInfo;
 							this.openError(errorinfo);
 						});
-				}).catch(() => {
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.$axios.post3('/afbase/dgdPrint/exportExcel/' + this.ruleForm.dgdPrintId+'/T').then((response) => {
+              var blob = new Blob([response.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+              });
+
+                var downloadElement = document.createElement('a');
+                var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                downloadElement.href = href;
+
+                var awbNumberTitle = this.ruleForm.awbNumber;
+                if(!awbNumberTitle){
+                  awbNumberTitle = this.ruleForm.orderCode;
+                }
+                downloadElement.download = awbNumberTitle + '_' + this.ruleForm.dgdPrintId + '_DGD.xlsx'; // 下载后文件名
+                document.body.appendChild(downloadElement);
+                downloadElement.click(); // 点击下载
+                document.body.removeChild(downloadElement); // 下载完成移除元素
+                window.URL.revokeObjectURL(href); // 释放掉blob对象
+            });
+          }
 
 				});
 			},
@@ -717,28 +759,36 @@
 			setShipperConsigneePrint(rrow) {
 				if(rrow.scType === 1) {
 					this.ruleForm.consigneePrint = rrow.scPrintRemark;
-				} else {
-					this.ruleForm.shipperPrint = rrow.scPrintRemark;
-				}
+        } else {
+          this.ruleForm.shipperPrint = rrow.scPrintRemark;
+        }
 
-			},
-			init() {
-				for(let i = 0; i < 5; i++) {
-					this.dgdPrintList.push({
-						'unIdNo': '',
-						'properShippingName': '',
-						'classOrDivision': '',
-						'packingGroup': '',
-						'quantityAndTypeOfPacking': '',
-						'packingInst': '',
-						'authorization': ''
-					})
-				}
-				this.queryOrderByOrderUuid()
-				this.queryUserEnName()
-				this.queryList()
-			}
-		},
+      },
+      init() {
+        this.addTemplate();
+        this.queryOrderByOrderUuid()
+        this.queryUserEnName()
+        this.queryList()
+      },
+      addTemplate() {
+        if (this.dgdPrintList.length >= 5) {
+          return;
+        }
+        let item = {
+          unIdNo: '',
+          properShippingName: '',
+          classOrDivision: '',
+          packingGroup: '',
+          quantityAndTypeOfPacking: '',
+          packingInst: '',
+          authorization: '',
+        }
+        this.dgdPrintList.push(item);
+      },
+      deleteTemplate(rowIndex, row) {
+        this.dgdPrintList.splice(rowIndex, 1);
+      },
+    },
 		created() {
 			this.init()
 		}

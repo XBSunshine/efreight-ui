@@ -3,11 +3,12 @@
 		<el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
 			<el-row>
 				<el-col class="elementWidth">
-					<el-form-item label="附件名称" prop="fileName" required label-width="115px">
-						<el-input v-model="ruleForm.fileName" auto-complete="off" clearable style="width:465px" >
-						</el-input>
-					</el-form-item>
-				</el-col>
+          <el-form-item label="附件名称" prop="fileName" required label-width="115px">
+            <el-input v-model="ruleForm.fileName" auto-complete="off"
+                      @change="ruleForm.fileName=strTrim(ruleForm.fileName)" clearable style="width:465px">
+            </el-input>
+          </el-form-item>
+        </el-col>
 			</el-row>
 			<el-row>
 				<el-col class="elementWidth">
@@ -173,27 +174,17 @@
 				} else {}
 			},
 			beforeAvatarUpload3(file) {
-				let now = new Date()
-				let year = now.getFullYear()
-				let month = now.getMonth() + 1
-				if (month < 10) {
-					month = '0' + month
-				}
-        let day = now.getDate();
-        if (day < 10) {
-        	day = "0" + day;
+        this.uptoken.key = this.buildUploadFileKey(file);
+        const isLt10M = file.size < 10 * 1024 * 1024;
+        if (!isLt10M) {
+          this.$message.error('上传模板大小不能超过 10MB!');
         }
-				this.uptoken.key = "Css_financial_expense_" + year.toString().substring(2) + month+day+"_"+ this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
-				const isLt10M = file.size < 10 * 1024 * 1024;
-				if (!isLt10M) {
-					this.$message.error('上传模板大小不能超过 10MB!');
-				}
-				if (isLt10M) {
+        if (isLt10M) {
 
-					this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
-					this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
-				}
-				return isLt10M;
+          this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
+          this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+        }
+        return isLt10M;
 			},
 			handleSuccessChange3(response, file, fileList) { //上传成功后在图片框显示图片
 				this.$message.success('上传成功')
@@ -468,16 +459,20 @@
 				return output
 			},
 
-			str2rstrUTF8(input) {
-				return unescape(encodeURIComponent(input))
-			},
+      str2rstrUTF8(input) {
+        return unescape(encodeURIComponent(input))
+      },
 
-			hexMD5(s) {
-				return this.rstr2hex(this.rawMD5(s))
-			},
-			rawMD5(s) {
-				return this.rstrMD5(this.str2rstrUTF8(s))
-			}
-		}
+      hexMD5(s) {
+        return this.rstr2hex(this.rawMD5(s))
+      },
+      rawMD5(s) {
+        return this.rstrMD5(this.str2rstrUTF8(s))
+      },
+      buildUploadFileKey(file) {
+        let orgUuid = localStorage.getItem("orgUuid");
+        return 'org/css/' + orgUuid + "/financial_expense_" + this.hexMD5(new Date().format("yyMMddhhmmss")) + file.name.substring(file.name.lastIndexOf('.'));
+      }
+    }
 	}
 </script>

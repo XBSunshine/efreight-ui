@@ -729,7 +729,7 @@
 <script>
 	import CustomerSelect from '@/views/public/customer_select'
 	import ShipperConsignee from '../public/order_shipperConsignee_select'
-	import Container from '../public/order_container_edit'
+	import Container from '@/views/sc/se/order/public/order_container_edit'
 	export default {
 		props: {
 			visible: {
@@ -954,10 +954,34 @@
 				});
 			},
 			editContainerList() {
-				this.containerVisible = true
-				this.ffrow.containerDetails = this.ruleForm.containerDetails
+        this.containerVisible = true
+        let temp = JSON.stringify(this.ruleForm.containerDetails)
+        this.ffrow.containerDetails = JSON.parse(temp)
+        this.ffrow.planPieces = this.ruleForm.planPieces
+        this.ffrow.planWeight = this.ruleForm.planWeight
+        this.ffrow.planVolume = this.ruleForm.planVolume
+        this.ffrow.businessScope = 'SI'
 			},
 			containerCallback(row) {
+        if (row.flag == 'replace') {
+          this.ruleForm.planPieces = row.totalPieces
+          if (row.totalVolume) {
+            let t = row.totalVolume.split('.');
+            if (t.length > 1) {
+              this.ruleForm.planVolume = t[0] + "." + t[1].substr(0, this.orderSeDigitsVolume);
+            } else {
+              this.ruleForm.planVolume = parseFloat(row.totalVolume).toFixed(this.orderSeDigitsVolume);
+            }
+          }
+          if (row.totalWeight) {
+            let t = row.totalWeight.split('.');
+            if (t.length > 1) {
+              this.ruleForm.planWeight = t[0] + "." + t[1].substr(0, this.orderSeDigitsWeight);
+            } else {
+              this.ruleForm.planWeight = parseFloat(row.totalWeight).toFixed(this.orderSeDigitsWeight);
+            }
+          }
+        }
 				this.ruleForm.containerList = row.val
 				this.ruleForm.containerNumber = row.total
 				this.ruleForm.containerDetails = row.containerDetails

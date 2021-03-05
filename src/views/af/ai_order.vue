@@ -1024,7 +1024,7 @@
       },
       doSave(){
         this.$axios.post2('/afbase/aforder/ai/saveShippers', this.ruleForm)
-          .then(function(response) {debugger
+          .then(function(response) {
             if (response.data.code == 0) {
               this.openSuccess();
               this.shipperLetterVisible = false
@@ -1417,7 +1417,10 @@
 				var _year = theDate.getFullYear();
 				var _month = theDate.getMonth();
 				var _date = theDate.getDate();
-				// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
 				if (_month < 10) {
 					_month = "0" + _month;
 				}

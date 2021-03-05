@@ -579,6 +579,13 @@
 				scVisible: false,
 				sizeVisible: false,
 				feeVisible: false,
+        voucher: {
+          awbPrintType: 'PRINT_HAWB',
+          awbPrintId:'',
+          awbUuid:'',
+          printType: '2',
+          awbPrint: {}
+        },
 				ruleForm: {
 					awbId: '',
 					awbUuid: '',
@@ -876,10 +883,13 @@
 			},
 			printG() {
 				this.$confirm('您将保存并格打分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          cancelButtonClass: this.cancelButtonClass,
+          cancelButtonText: '导出',
+          confirmButtonText: '打印',
+          type: 'warning',
+          center: true
 				}).then(() => {
 					if(!this.checkNotNull()) {
 						return
@@ -898,18 +908,39 @@
 							this.openError(errorinfo)
 						}.bind(this));
 				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消格打'
-					});
+          if (!this.checkNotNull()) {
+            return
+          }
+          this.voucher.printType = '2';
+          this.voucher.awbPrintId = this.ruleForm.awbPrintId;
+          this.voucher.awbUuid = this.ruleForm.awbUuid;
+          this.voucher.awbPrint = this.ruleForm;
+          this.$axios.postRequestJSONResponseBlob('/afbase/awbPrint/exportExcel', this.voucher)
+            .then(function(response) {
+              var blob = new Blob([response.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+              });
+              var downloadElement = document.createElement('a');
+              var href = window.URL.createObjectURL(blob); // 创建下载的链接
+              downloadElement.href = href;
+
+              downloadElement.download = this.ruleForm.awbNumber + '_' + this.ruleForm.hawbNumber + '_FORMAT.xlsx'; // 下载后文件名
+              document.body.appendChild(downloadElement);
+              downloadElement.click(); // 点击下载
+              document.body.removeChild(downloadElement); // 下载完成移除元素
+              window.URL.revokeObjectURL(href); // 释放掉blob对象
+            }.bind(this));
 				});
 			},
 			printT() {
-				this.$confirm('您将保存并格打分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+				this.$confirm('您将保存并套打分单' + this.ruleForm.hawbNumber + ', 是否继续?', '提示', {
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          cancelButtonClass: this.cancelButtonClass,
+          cancelButtonText: '导出',
+          confirmButtonText: '打印',
+          type: 'warning',
+          center: true
 				}).then(() => {
 					if(!this.checkNotNull()) {
 						return
@@ -927,11 +958,33 @@
 							let errorinfo = error.response.data.messageInfo;
 							this.openError(errorinfo)
 						}.bind(this));
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消格打'
-					});
+
+        }).catch(action => {
+          if (action === 'cancel'){
+            if (!this.checkNotNull()) {
+              return
+            }
+
+            this.voucher.printType = '1';
+            this.voucher.awbPrintId = this.ruleForm.awbPrintId;
+            this.voucher.awbUuid = this.ruleForm.awbUuid;
+            this.voucher.awbPrint = this.ruleForm;
+            this.$axios.postRequestJSONResponseBlob('/afbase/awbPrint/exportExcel', this.voucher)
+              .then(function(response) {
+                var blob = new Blob([response.data], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                });
+                var downloadElement = document.createElement('a');
+                var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                downloadElement.href = href;
+
+                downloadElement.download = this.ruleForm.awbNumber + '_' + this.ruleForm.hawbNumber + '.xlsx'; // 下载后文件名
+                document.body.appendChild(downloadElement);
+                downloadElement.click(); // 点击下载
+                document.body.removeChild(downloadElement); // 下载完成移除元素
+                window.URL.revokeObjectURL(href); // 释放掉blob对象
+              }.bind(this));
+          }
 				});
 			},
 			checkNotNull() {

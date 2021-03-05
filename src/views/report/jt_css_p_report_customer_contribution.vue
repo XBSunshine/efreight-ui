@@ -75,6 +75,7 @@
 							   <el-option v-if="query.businessScope=='AE'||query.businessScope=='SE'" label="开航日期" value="开航日期"></el-option>
                  <el-option v-if="query.businessScope=='AI'||query.businessScope=='SI'" label="到港日期" value="到港日期"></el-option>
                  <el-option v-if="query.businessScope=='TE'" label="发车日期" value="发车日期"></el-option>
+                 <el-option v-if="query.businessScope=='TI'" label="到达日期" value="到达日期"></el-option>
                  <el-option v-if="query.businessScope=='LC'" label="用车日期" value="用车日期"></el-option>
                  <el-option v-if="query.businessScope=='IO'" label="业务日期" value="业务日期"></el-option>
                  <el-option label="财务日期" value="财务日期"></el-option>
@@ -183,6 +184,7 @@
 		<viewVisibleTagSE ref="addMission" v-if="viewVisibleSE" :visible.sync="viewVisibleSE" :frow="frow"></viewVisibleTagSE>
 		<viewVisibleTagSI ref="addMission" v-if="viewVisibleSI" :visible.sync="viewVisibleSI" :frow="frow"></viewVisibleTagSI>
     <viewVisibleTagTE ref="addMission" v-if="viewVisibleTE" :visible.sync="viewVisibleTE" :frow="frow"></viewVisibleTagTE>
+    <viewVisibleTagTI ref="addMission" v-if="viewVisibleTI" :visible.sync="viewVisibleTI" :frow="frow"></viewVisibleTagTI>
     <viewVisibleTagLC ref="addMission" v-if="viewVisibleLC" :visible.sync="viewVisibleLC" :frow="frow"></viewVisibleTagLC>
     <viewVisibleTagIO ref="addMission" v-if="viewVisibleIO" :visible.sync="viewVisibleIO" :frow="frow"></viewVisibleTagIO>
 	</div>
@@ -195,6 +197,7 @@
 	import viewVisibleVueSE from '../sc/se/order/main/order_view.vue'
 	import viewVisibleVueSI from '../sc/si/order/main/order_view.vue'
   import viewVisibleVueTE from '../tc/te/order/main/order_view.vue'
+  import viewVisibleVueTI from '../tc/ti/order/main/order_view.vue'
   import viewVisibleVueLC from '../lc/order/main/order_view.vue'
   import viewVisibleVueIO from '../io/order/main/order_view.vue'
   import showListVueView from '.././css/customerContribution/css_p_report_customer_contribution_detail.vue'
@@ -235,6 +238,7 @@
 				viewVisibleSE: false,
 				viewVisibleSI: false,
         viewVisibleTE: false,
+        viewVisibleTI: false,
         viewVisibleLC: false,
         viewVisibleIO: false,
 				lockVisible: false,
@@ -255,6 +259,7 @@
 			'viewVisibleTagSE': viewVisibleVueSE,
 			'viewVisibleTagSI': viewVisibleVueSI,
       'viewVisibleTagTE': viewVisibleVueTE,
+      'viewVisibleTagTI': viewVisibleVueTI,
       'viewVisibleTagLC': viewVisibleVueLC,
       'viewVisibleTagIO': viewVisibleVueIO,
       'viewVisibleTagList':showListVueView
@@ -278,7 +283,10 @@
       getDateDay(theDate) {
       	let _year = theDate.getFullYear();
       	let _month = theDate.getMonth();
-      	// _month = _month + 1;
+        if (_month === 0) {
+            _year = parseInt(_year) - 1;
+            _month = 12;
+        }
       	if (_month < 10) {
       		_month = "0" + _month;
       	}
@@ -312,6 +320,9 @@
            }
            if(this.query.businessScope=='TE'){
              this.query.countType = '发车日期'
+           }
+           if(this.query.businessScope=='TI'){
+             this.query.countType = '到达日期'
            }
            if(this.query.businessScope=='LC'){
              this.query.countType = '用车日期'
@@ -746,6 +757,15 @@
               this.showView(row)
           	}.bind(this));
         }
+        if(this.query.businessScope=='TI'){
+            this.$axios.get2("/sc/tcOrder/te/page?size=" + 10 + "&current=" + 1, a)
+                .then(function(response) {
+                    row.orderUuid = response.data.data.records[0].orderUuid;
+                    row.orderId = response.data.data.records[0].orderId;
+                    row.businessScope = row.business_scope;
+                    this.showView(row)
+                }.bind(this));
+        }
         if(this.query.businessScope=='LC'){
           this.$axios.get2("/sc/lcOrder?size=" + 10 + "&current=" + 1, a)
           	.then(function(response) {
@@ -844,6 +864,16 @@
         		this.frow.ifFullscreen = false
         		this.viewVisibleTE = true;
         	}
+        }
+        if (row.businessScope === 'TI') {
+            this.frow.activeName = "first";
+            if (localStorage.getItem("orderEditNewPage") && localStorage.getItem("orderEditNewPage") == 'true') {
+                this.frow.ifFullscreen = true
+                this.jumpToNewPage('view', this.frow, '/ti_order')
+            } else {
+                this.frow.ifFullscreen = false
+                this.viewVisibleTI = true;
+            }
         }
         if (row.businessScope === 'LC') {
         	this.frow.activeName = "first";

@@ -7,8 +7,9 @@
           	<el-form-item>
           		<el-input style="width:160px;">
           			<template slot="prepend"><font style="color: red;">*</font>业务范畴</template>
-          			<el-select slot="suffix" v-model="query.businessScope" disabled placeholder="请选择" style="width:94px;margin-right: -5px;">
+          			<el-select slot="suffix" v-model="query.businessScope" @change="businessScopeChange" placeholder="请选择" style="width:94px;margin-right: -5px;">
                   <el-option label="TE" value="TE"></el-option>
+                  <el-option label="TI" value="TI"></el-option>
           			</el-select>
           		</el-input>
           	</el-form-item>
@@ -59,7 +60,10 @@
         <el-col class="elementWidth">
           <el-form-item label-width="10px">
             <el-input v-model="query.exitPort" @input="query.exitPort=query.exitPort.toUpperCase()" auto-complete="off" clearable style="width:200px;">
-              <template slot="prepend">出境口岸</template>
+              <template slot="prepend">
+                <span v-if="query.businessScope=='TE'">出境口岸</span>
+                <span v-if="query.businessScope=='TI'">进境口岸</span>
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
@@ -103,7 +107,8 @@
         <el-table-column prop="containerMethod" align="center" label="装箱方式" width="100"></el-table-column>
 
         <el-table-column prop="departureStation" align="center" label="起运地" width="80"></el-table-column>
-        <el-table-column prop="exitPort" align="center" label="出境口岸" width="80"></el-table-column>
+        <el-table-column prop="exitPort" align="center" :label="caliber" width="80"></el-table-column>
+
         <el-table-column prop="transitStation" align="center" label="中转地" width="80"></el-table-column>
         <el-table-column prop="arrivalStation" align="center" label="目的地" width="80"></el-table-column>
         <el-table-column prop="transitDays" align="center" label="转运天数" width="120"></el-table-column>
@@ -144,6 +149,7 @@
     },
 		data() {
 			return {
+        caliber: '出境口岸',
 				loading: false,
 				addButtonFlag:true,
         showFlag:false,
@@ -215,6 +221,14 @@
 				this.frow = row;
 				this.currRow = row;
 			},
+      businessScopeChange() {
+        if (this.query.businessScope == 'TI') {
+          this.caliber = '进境口岸';
+        } else {
+          this.caliber = '出境口岸';
+        }
+
+      },
 			showsave() {
         this.frow.businessScope = this.query.businessScope;
 				this.saveVisible = true;
@@ -231,22 +245,29 @@
         }
 			  this.loading = true;
 				this.$axios.get2("/sc/tcProduct/page?size=" + this.pageConf.pageSize + "&current=" + this.pageConf.pageCode, this.query).then((response)=> {
-					this.data1 = response.data.data.records;
-					this.pageConf.totalPage = response.data.data.total;
-					if(this.data1.length == 0) {
-						let current = Math.ceil(this.pageConf.totalPage / this.pageConf.pageSize);
-						that.queryList2(current);
-					}else{
-				     	this.loading = false;
-					}
+
+          if (response.data.code == 0) {
+            this.data1 = response.data.data.records;
+            this.pageConf.totalPage = response.data.data.total;
+            if(this.data1.length == 0) {
+              let current = Math.ceil(this.pageConf.totalPage / this.pageConf.pageSize);
+              that.queryList2(current);
+            }else{
+              this.loading = false;
+            }
+          }else {
+            this.loading = false
+            this.openError(response.data.messageInfo)
+          }
+
 				}).catch(function(error) {
 					console.log(error);
 				});
 			},
 			queryList2(current) {
 				this.$axios.get2("/sc/tcProduct/page?size=" + this.pageConf.pageSize + "&current=" + current, this.query).then((response)=> {
-					this.data1 = response.data.data.records;
-					this.pageConf.totalPage = response.data.data.total;
+            this.data1 = response.data.data.records;
+            this.pageConf.totalPage = response.data.data.total;
 				}).catch(function(error) {
 					console.log(error);
 				});

@@ -226,7 +226,8 @@ export default {
 
     },
     getUploadKey(fileSuffix) {
-      return (this.config.businessIdentity || 'cropper') + "_" + new Date().getTime() + "_" + this.config.autoCropWidth + "x" + this.config.autoCropHeight + fileSuffix;
+      let orgUuid = localStorage.getItem("orgUuid");
+      return "org/config/" + orgUuid + "/" + (this.config.businessIdentity || '') + "_" + this.config.autoCropWidth + "_" + this.config.autoCropHeight + "_" + new Date().format("yyMMddhhmmss") + fileSuffix;
     }
   },
   created() {

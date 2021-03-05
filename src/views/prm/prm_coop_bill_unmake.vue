@@ -139,6 +139,7 @@
                     billStatus: '',
                     serviceName: '',
                     coopName: '',
+                    acturalChargeAll: '',
                 },
                 saveVisible:false,
                 currRow: '',
@@ -349,6 +350,16 @@
                 });
             },
             confirmBill(){
+                //计算所有明细实收金额总和
+                if(this.data1.length > 0){
+                    let auchargeAll = 0;
+                    for(let i=0;i<this.data1.length;i++){
+                        if(this.data1[i].acturalCharge){
+                            auchargeAll=auchargeAll+parseFloat(this.data1[i].acturalCharge);
+                        }
+                    }
+                    this.query.acturalChargeAll=auchargeAll;
+                }
                  //判断 如果 账单明细 的 数量、折后金额 与 原始 数量、原始 金额 不一致 则由 总部确认
                 this.$axios.post('/prm/coopBill/checkIfModify', this.query).then((response) => {
                     if(response.data.code == '0') {

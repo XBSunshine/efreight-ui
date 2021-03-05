@@ -16,11 +16,14 @@
 							<sub class="required">&nbsp;</sub>
 							<input v-model="ruleForm.awbNumberSuffix" type="text" class="TextBox" id="mawbcodeSuffix" name="mawbcodeSuffix" readonly="readonly">
 						</div>
-						<div class="horizontal" style="position: relative;left: 388px;top: 5px;">
+						<div class="horizontal" style="position: relative;left: 205px;top: 5px;">
 							<span class="label">HAWB Number<sub class="required">&nbsp;</sub></span>
 							<input v-model="ruleForm.hawbNumber" style="width: 150px;" type="text" class="TextBox" id="hawbNumber" name="hawbNumber" maxlength="50" @change="ruleForm.hawbNumber=strTrim(ruleForm.hawbNumber).toUpperCase()">
 						</div>
-						<el-button :loading="loading" style="margin-left: 650px;" type="primary" size="small" @click="saveForm">保存</el-button>
+						<div style="margin-left: 210px;display: inline;">
+							<!-- <el-button :loading="loading" type="primary" size="small" @click="newSelect" v-if="frow.businessScope=='AE'">新建/查询</el-button> -->
+							<el-button :loading="loading" style="margin-left: 5px;" type="primary" size="small" @click="saveForm">保存</el-button>
+						</div>
 					</div>
 					<div id="form-inner">
 						<div id="form-left">
@@ -102,7 +105,7 @@
 							<div id="flight">
 								<div id="airport-destination">
 									<span class="label">Airport of Destination<sub class="required">&nbsp;</sub></span>
-									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30" readonly="readonly">
+									<input v-model="ruleForm.arrivalStationName" type="text" id="destination_name" name="destination_name" class="TextBox" maxlength="30">
 								</div>
 								<div id="flight-detail">
 									<div id="head-label">
@@ -543,6 +546,7 @@
 		</fee>
 		<size ref="addMission" v-if="sizeVisible" :visible.sync="sizeVisible" :frow="ffrow">
 		</size>
+		<query ref="addMission" v-if="query" :visible.sync="query" :frow="ffrow"></query>
 	</div>
 </template>
 
@@ -550,6 +554,7 @@
 	import shipperAndConsignee from '@/views/public/shipper_consignee_select'
 	import Fee from "./af_awbPrint_fee"
 	import Size from "./af_awbPrint_size"
+	import query from "./af_order_select"
 	export default {
 		provide() {
 			return {
@@ -560,6 +565,7 @@
 		components: {
 			'shipperAndConsignee': shipperAndConsignee,
 			'fee': Fee,
+			'query': query,
 			'size': Size
 		},
 		props: {
@@ -574,6 +580,7 @@
 				scVisible: false,
 				sizeVisible: false,
 				feeVisible: false,
+				query:false,
 				ruleForm: {
 					awbId: '',
 					awbUuid: '',
@@ -723,7 +730,7 @@
 		inject: ['callbackforInit'],
 		created: function() {
       let awbPrintType='';
-      if(this.frow.bussinessScope){
+      if(this.frow.businessScope){
           awbPrintType = 'CREATE_HAWB_AI'
       }else{
           awbPrintType = 'CREATE_HAWB'
@@ -784,7 +791,7 @@
 		},
 		methods: {
 			init() {
-        if(this.frow.bussinessScope){
+        if(this.frow.businessScope){
             this.ruleForm.hawbNumber = this.frow.hawbNumber;
         }
 				if (this.frow.awbNumber) {
@@ -876,6 +883,9 @@
 					type: 'error',
 					position: 'bottom-right'
 				});
+			},
+			newSelect(){
+				this.query=true;
 			},
 			saveForm() {
 				if (this.ruleForm.hawbNumber == null || this.ruleForm.hawbNumber == '') {

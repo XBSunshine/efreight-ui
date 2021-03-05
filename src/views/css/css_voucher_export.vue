@@ -33,10 +33,9 @@
 							</el-col>
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.awbNumber" clearable auto-complete="off">
+									<el-input style="width: 240px;" v-model="query.invoiceNum" clearable auto-complete="off">
 										<template slot="prepend">
-											<span v-if="query.businessScope=='IO'||query.businessScope=='LC'||query.businessScope=='TE'">客户单号/订单号</span>
-											<span v-else>提单号/订单号</span>
+											<span>发票号</span>
 										</template>
 									</el-input>
 								</el-form-item>
@@ -44,12 +43,12 @@
 							<el-col class="elementWidth">
 								<el-form-item>
 									<el-input style="width:204px;">
-										<template slot="prepend">锁账日期</template>
-										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.lockDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
+										<template slot="prepend">发票日期</template>
+										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.invoiceDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
 										</el-date-picker>
 									</el-input>
 									<span>-</span>
-									<el-date-picker style="width: 135px;" v-model="query.lockDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
+									<el-date-picker style="width: 135px;" v-model="query.invoiceDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
 									</el-date-picker>
 								</el-form-item>
 							</el-col>
@@ -97,28 +96,24 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
-						<el-row v-show="showFlag">
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.coopName" clearable auto-complete="off">
-										<template slot="prepend">订单客户</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-						</el-row>
 					</div>
 				</el-form>
-				<el-table v-loading="loading" :data="data" border :summary-method="getSummaries" show-summary stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
+				<el-row style="margin-bottom: 10px;margin-left: 5px;">
+					<el-col class="elementWidth">
+						<div>勾选合计：</div>
+					</el-col>
+					<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth" v-for="item,index in checkedAmountSum" :key="index">
+						<span v-if="item.indexOf('CNY')>-1">{{item}}</span>
+						<span v-else style="color: red;">{{item}}</span>
+					</el-col>
+				</el-row>
+				<el-table v-loading="loading" :data="data" border :summary-method="getSummaries" :cell-style="addCellStyle" show-summary stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
 					<el-table-column fixed type="selection" align="center" width="50">
 					</el-table-column>
 					<template v-for="(item,index) in tableColumns">
-						<el-table-column v-if="item.prop=='voucherCreatorName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
+						<el-table-column v-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
 						</el-table-column>
-						<el-table-column v-else-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
-						</el-table-column>
-						<el-table-column v-else-if="item.prop=='incomeFunctionalAmount'||item.prop=='costFunctionalAmount'" header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
-						</el-table-column>
-						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
 						</el-table-column>
 					</template>
 				</el-table>
@@ -161,10 +156,9 @@
 							</el-col>
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.awbNumber" clearable auto-complete="off">
+									<el-input style="width: 240px;" v-model="query.invoiceNum" clearable auto-complete="off">
 										<template slot="prepend">
-											<span v-if="query.businessScope=='IO'||query.businessScope=='LC'||query.businessScope=='TE'">客户单号/订单号</span>
-											<span v-else>提单号/订单号</span>
+											<span>发票号</span>
 										</template>
 									</el-input>
 								</el-form-item>
@@ -172,12 +166,12 @@
 							<el-col class="elementWidth">
 								<el-form-item>
 									<el-input style="width:204px;">
-										<template slot="prepend">锁账日期</template>
-										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.lockDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
+										<template slot="prepend">发票日期</template>
+										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.invoiceDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
 										</el-date-picker>
 									</el-input>
 									<span>-</span>
-									<el-date-picker style="width: 135px;" v-model="query.lockDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
+									<el-date-picker style="width: 135px;" v-model="query.invoiceDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
 									</el-date-picker>
 								</el-form-item>
 							</el-col>
@@ -225,28 +219,24 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
-						<el-row v-show="showFlag">
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.coopName" clearable auto-complete="off">
-										<template slot="prepend">订单客户</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-						</el-row>
 					</div>
 				</el-form>
-				<el-table v-loading="loading" :data="data" border :summary-method="getSummaries" show-summary stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
+				<el-row style="margin-bottom: 10px;margin-left: 5px;">
+					<el-col class="elementWidth">
+						<div>勾选合计：</div>
+					</el-col>
+					<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth" v-for="item,index in checkedAmountSum" :key="index">
+						<span v-if="item.indexOf('CNY')>-1">{{item}}</span>
+						<span v-else style="color: red;">{{item}}</span>
+					</el-col>
+				</el-row>
+				<el-table v-loading="loading" :data="data" border :summary-method="getSummaries" :cell-style="addCellStyle" show-summary stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
 					<el-table-column fixed type="selection" align="center" width="50">
 					</el-table-column>
 					<template v-for="(item,index) in tableColumns">
-						<el-table-column v-if="item.prop=='voucherCreatorName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
+						<el-table-column v-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
 						</el-table-column>
-						<el-table-column v-else-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
-						</el-table-column>
-						<el-table-column v-else-if="item.prop=='incomeFunctionalAmount'||item.prop=='costFunctionalAmount'" header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
-						</el-table-column>
-						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
 						</el-table-column>
 					</template>
 				</el-table>
@@ -289,11 +279,8 @@
 							</el-col>
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.awbNumber" clearable auto-complete="off">
-										<template slot="prepend">
-											<span v-if="query.businessScope=='IO'||query.businessScope=='LC'||query.businessScope=='TE'">客户单号/订单号</span>
-											<span v-else>提单号/订单号</span>
-										</template>
+									<el-input style="width: 240px;" v-model="query.writeoffNum" clearable auto-complete="off">
+										<template slot="prepend">核销单号</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
@@ -322,48 +309,14 @@
 						<el-row v-show="showFlag">
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.coopName" clearable auto-complete="off">
+									<el-input style="width: 294px;" v-model="query.customerName" clearable auto-complete="off">
 										<template slot="prepend">收款客户</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.debitnoteNumber" clearable auto-complete="off">
-										<template slot="prepend">账单/清单号</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width:204px;">
-										<template slot="prepend">凭证日期</template>
-										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.voucherDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
-										</el-date-picker>
-									</el-input>
-									<span>-</span>
-									<el-date-picker style="width: 135px;" v-model="query.voucherDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
-									</el-date-picker>
-								</el-form-item>
-							</el-col>
-							<el-col class="elementWidth">
-								<el-form-item label-width="38px">
-									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
-									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
-								</el-form-item>
-							</el-col>
-						</el-row>
-						<el-row v-show="showFlag">
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.writeoffNumber" clearable auto-complete="off">
-										<template slot="prepend">核销单号</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.invoiceNumber" clearable auto-complete="off">
+									<el-input style="width: 240px;" v-model="query.invoiceNum" clearable auto-complete="off">
 										<template slot="prepend">发票号</template>
 									</el-input>
 								</el-form-item>
@@ -380,12 +333,18 @@
 									</el-date-picker>
 								</el-form-item>
 							</el-col>
+							<el-col class="elementWidth">
+								<el-form-item label-width="38px">
+									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
+									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
+								</el-form-item>
+							</el-col>
 						</el-row>
 						<el-row v-show="showFlag">
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.writeoffCreatorName" clearable auto-complete="off">
-										<template slot="prepend">核销人</template>
+									<el-input style="width: 294px;" v-model="query.voucherNumber" clearable auto-complete="off">
+										<template slot="prepend">凭证号</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
@@ -396,20 +355,37 @@
 									</el-input>
 								</el-form-item>
 							</el-col>
+							<el-col class="elementWidth">
+								<el-form-item>
+									<el-input style="width:204px;">
+										<template slot="prepend">凭证日期</template>
+										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.voucherDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
+										</el-date-picker>
+									</el-input>
+									<span>-</span>
+									<el-date-picker style="width: 135px;" v-model="query.voucherDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
+									</el-date-picker>
+								</el-form-item>
+							</el-col>
 						</el-row>
 					</div>
 				</el-form>
+				<el-row style="margin-bottom: 10px;margin-left: 5px;">
+					<el-col class="elementWidth">
+						<div>勾选合计：</div>
+					</el-col>
+					<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth" v-for="item,index in checkedAmountSum" :key="index">
+						<span v-if="item.indexOf('CNY')>-1">{{item}}</span>
+						<span v-else style="color: red;">{{item}}</span>
+					</el-col>
+				</el-row>
 				<el-table v-loading="loading" :data="data" :summary-method="getSummaries" :cell-style="addCellStyle" show-summary border stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
 					<el-table-column fixed type="selection" align="center" width="50">
 					</el-table-column>
 					<template v-for="(item,index) in tableColumns">
-						<el-table-column v-if="item.prop=='voucherCreatorName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
+						<el-table-column v-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
 						</el-table-column>
-						<el-table-column v-else-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
-						</el-table-column>
-						<el-table-column v-else-if="item.prop=='writeoffAmount'" header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
-						</el-table-column>
-						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
 						</el-table-column>
 					</template>
 				</el-table>
@@ -452,11 +428,8 @@
 							</el-col>
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.awbNumber" clearable auto-complete="off">
-										<template slot="prepend">
-											<span v-if="query.businessScope=='IO'||query.businessScope=='LC'||query.businessScope=='TE'">客户单号/订单号</span>
-											<span v-else>提单号/订单号</span>
-										</template>
+									<el-input style="width: 240px;" v-model="query.writeoffNum" clearable auto-complete="off">
+										<template slot="prepend">核销单号</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
@@ -485,48 +458,14 @@
 						<el-row v-show="showFlag">
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.coopName" clearable auto-complete="off">
+									<el-input style="width: 294px;" v-model="query.customerName" clearable auto-complete="off">
 										<template slot="prepend">供应商</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.debitnoteNumber" clearable auto-complete="off">
-										<template slot="prepend">对账单编号</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width:204px;">
-										<template slot="prepend">凭证日期</template>
-										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.voucherDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
-										</el-date-picker>
-									</el-input>
-									<span>-</span>
-									<el-date-picker style="width: 135px;" v-model="query.voucherDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
-									</el-date-picker>
-								</el-form-item>
-							</el-col>
-							<el-col class="elementWidth">
-								<el-form-item label-width="38px">
-									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
-									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
-								</el-form-item>
-							</el-col>
-						</el-row>
-						<el-row v-show="showFlag">
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.writeoffNumber" clearable auto-complete="off">
-										<template slot="prepend">核销单号</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-							<el-col class="elementWidth">
-								<el-form-item>
-									<el-input style="width: 240px;" v-model="query.invoiceNumber" clearable auto-complete="off">
+									<el-input style="width: 240px;" v-model="query.invoiceNum" clearable auto-complete="off">
 										<template slot="prepend">发票号</template>
 									</el-input>
 								</el-form-item>
@@ -543,12 +482,18 @@
 									</el-date-picker>
 								</el-form-item>
 							</el-col>
+							<el-col class="elementWidth">
+								<el-form-item label-width="38px">
+									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
+									<el-button style="margin-left: 4px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="exportExcelList">导出</el-button>
+								</el-form-item>
+							</el-col>
 						</el-row>
 						<el-row v-show="showFlag">
 							<el-col class="elementWidth">
 								<el-form-item>
-									<el-input style="width: 294px;" v-model="query.writeoffCreatorName" clearable auto-complete="off">
-										<template slot="prepend">核销人</template>
+									<el-input style="width: 294px;" v-model="query.voucherNumber" clearable auto-complete="off">
+										<template slot="prepend">凭证号</template>
 									</el-input>
 								</el-form-item>
 							</el-col>
@@ -559,20 +504,37 @@
 									</el-input>
 								</el-form-item>
 							</el-col>
+							<el-col class="elementWidth">
+								<el-form-item>
+									<el-input style="width:204px;">
+										<template slot="prepend">凭证日期</template>
+										<el-date-picker slot="suffix" style="width: 135px;margin-right: -5px;" v-model="query.voucherDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
+										</el-date-picker>
+									</el-input>
+									<span>-</span>
+									<el-date-picker style="width: 135px;" v-model="query.voucherDateEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期">
+									</el-date-picker>
+								</el-form-item>
+							</el-col>
 						</el-row>
 					</div>
 				</el-form>
+				<el-row style="margin-bottom: 10px;margin-left: 5px;">
+					<el-col class="elementWidth">
+						<div>勾选合计：</div>
+					</el-col>
+					<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth" v-for="item,index in checkedAmountSum" :key="index">
+						<span v-if="item.indexOf('CNY')>-1">{{item}}</span>
+						<span v-else style="color: red;">{{item}}</span>
+					</el-col>
+				</el-row>
 				<el-table v-loading="loading" :data="data" :summary-method="getSummaries" :cell-style="addCellStyle" show-summary border stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
 					<el-table-column fixed type="selection" align="center" width="50">
 					</el-table-column>
 					<template v-for="(item,index) in tableColumns">
-						<el-table-column v-if="item.prop=='voucherCreatorName'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
+						<el-table-column v-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
 						</el-table-column>
-						<el-table-column v-else-if="item.prop=='voucherNumber'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :sort-method="sortVoucherNumber">
-						</el-table-column>
-						<el-table-column v-else-if="item.prop=='writeoffAmount'" header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
-						</el-table-column>
-						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+						<el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatter_column">
 						</el-table-column>
 					</template>
 				</el-table>
@@ -706,6 +668,14 @@
 						</el-row>
 					</div>
 				</el-form>
+				<el-row style="margin-bottom: 10px;margin-left: 5px;">
+					<el-col class="elementWidth">
+						<div>勾选合计：</div>
+					</el-col>
+					<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth">
+						<span>{{expenseAmountSum}}</span>
+					</el-col>
+				</el-row>
 				<el-table v-loading="loading" :data="data" :summary-method="getSummaries" show-summary border stripe highlight-current-row @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
 					<el-table-column fixed type="selection" align="center" width="50">
 					</el-table-column>
@@ -797,24 +767,20 @@
 					activeName: 'income',
 					businessScope: 'AE',
 					voucherStatus: 'false',
+					voucherNumber: '',
 					voucherDateStart: '',
 					voucherDateEnd: '',
-					invoiceDateStart: '',
+					invoiceDateStart: this.getCurrMonthFirstDay(),
 					invoiceDateEnd: '',
 					writeoffDateStart: this.getCurrMonthFirstDay(),
-					writeoffDateEnd: this.getDateTime(new Date()),
+					writeoffDateEnd: '',
 					expenseReportDateStart: this.getCurrMonthFirstDay(),
 					expenseReportDateEnd: this.getDateTime(new Date()),
-					lockDateStart: this.getCurrMonthFirstDay(),
-					lockDateEnd: this.getDateTime(new Date()),
-					awbNumber: '',
-					coopName: '',
 					customerName: '',
 					voucherCreatorName: '',
-					writeoffNumber: '',
-					invoiceNumber: '',
+					writeoffNum: '',
+					invoiceNum: '',
 					writeoffCreatorName: '',
-					debitnoteNumber: '',
 					expenseReportNum: '',
 					expensesUse: '',
 					expenseCreatorName: '',
@@ -837,7 +803,9 @@
 				buttonLoading: false,
 				showFlag: false,
 				total: null,
-				tableHeight: '550px'
+				tableHeight: '550px',
+				checkedAmountSum: [],
+				expenseAmountSum:''
 			}
 		},
 		provide() {
@@ -913,7 +881,7 @@
 					} else {
 						return "";
 					}
-				} else if (column.property == 'incomeFunctionalAmount' || column.property == 'costFunctionalAmount' || column.property == 'writeoffAmount' || column.property == 'expenseAmount') {
+				} else if (column.property == 'amount' || column.property == 'writeoffAmount' || column.property == 'expenseAmount') {
 					if (row[column.property] || row[column.property] === 0) {
 						return row[column.property + 'Str']
 					} else {
@@ -958,47 +926,35 @@
 				try {
 					tableColumns.forEach((column, index) => {
 						if (this.query.activeName == 'income') {
-							if (column.prop == 'awbNumber' && (this.query.businessScope == 'TE' || this.query.businessScope == 'LC' || this.query.businessScope == 'IO')) {
-								indexDelete.push(index)
-							}
-							if (column.prop == 'coopName') {
-								column.label = '客户名称'
-							}
 							if (column.prop == 'customerName') {
 								column.label = '收款客户'
 							}
-							if (column.prop == 'costFunctionalAmount' ||column.prop == 'writeoffNumber' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'currency' || column.prop == 'invoiceDate' || column.prop == 'invoiceNumber' || column.prop == 'invoiceTitle' || column.prop == 'invoiceRemark' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark'|| column.prop == 'financialAccount'|| column.prop == 'bankFinancialAccount') {
+							if (column.prop == 'writeoffNum' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount' || column.prop == 'bankFinancialAccount') {
 								indexDelete.push(index)
 							}
-						}else if (this.query.activeName == 'cost') {
-							if (column.prop == 'awbNumber' && (this.query.businessScope == 'TE' || this.query.businessScope == 'LC' || this.query.businessScope == 'IO')) {
-								indexDelete.push(index)
-							}
-							if (column.prop == 'coopName') {
-								column.label = '客户名称'
-							}
+						} else if (this.query.activeName == 'cost') {
 							if (column.prop == 'customerName') {
 								column.label = '供应商'
 							}
-							if (column.prop == 'incomeFunctionalAmount' ||column.prop == 'writeoffNumber' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'currency' || column.prop == 'invoiceDate' || column.prop == 'invoiceNumber' || column.prop == 'invoiceTitle' || column.prop == 'invoiceRemark' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark'|| column.prop == 'financialAccount'|| column.prop == 'bankFinancialAccount') {
+							if (column.prop == 'invoiceTitle' || column.prop == 'writeoffNum' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount' || column.prop == 'bankFinancialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.query.activeName == 'incomeWriteoff') {
-							if (column.prop == 'coopName') {
+							if (column.prop == 'customerName') {
 								column.label = '收款客户'
 							}
-							if (column.prop == 'customerName'||column.prop == 'orderCode' || column.prop == 'awbNumber' || column.prop == 'customerNumber' || column.prop == 'coopCode' || column.prop == 'lockDate' || column.prop == 'incomeFunctionalAmount' || column.prop == 'costFunctionalAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark'|| column.prop == 'financialAccount') {
+							if (column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.query.activeName == 'costWriteoff') {
-							if (column.prop == 'coopName') {
+							if (column.prop == 'customerName') {
 								column.label = '供应商'
 							}
-							if (column.prop == 'customerName'||column.prop == 'orderCode' || column.prop == 'awbNumber' || column.prop == 'customerNumber' || column.prop == 'coopCode' || column.prop == 'lockDate' || column.prop == 'incomeFunctionalAmount' || column.prop == 'costFunctionalAmount' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark'|| column.prop == 'financialAccount') {
+							if (column.prop == 'invoiceTitle' || column.prop == 'expenseReportStatus' || column.prop == 'expenseReportNum' || column.prop == 'expenseReportDate' || column.prop == 'expenseCreatorName' || column.prop == 'approvalFinancialUserName' || column.prop == 'expenseAmount' || column.prop == 'expensesUse' || column.prop == 'expenseReportRemark' || column.prop == 'financialAccount') {
 								indexDelete.push(index)
 							}
 						} else if (this.query.activeName == 'feeWriteoff') {
-							if (column.prop == 'customerName'||column.prop == 'writeoffNumber' || column.prop == 'writeoffDate' || column.prop == 'coopName' || column.prop == 'writeoffAmount' || column.prop == 'currency' || column.prop == 'invoiceDate' || column.prop == 'invoiceNumber' || column.prop == 'invoiceTitle' || column.prop == 'invoiceRemark' || column.prop == 'orderCode' || column.prop == 'awbNumber' || column.prop == 'customerNumber' || column.prop == 'coopCode' || column.prop == 'lockDate' || column.prop == 'incomeFunctionalAmount' || column.prop == 'costFunctionalAmount') {
+							if (column.prop == 'customerName' || column.prop == 'writeoffNum' || column.prop == 'writeoffDate' || column.prop == 'writeoffAmount' || column.prop == 'invoiceDate' || column.prop == 'invoiceNum' || column.prop == 'invoiceTitle'|| column.prop == 'amount'|| column.prop == 'invoiceType') {
 								indexDelete.push(index)
 							}
 						}
@@ -1028,10 +984,21 @@
 					this.openError('选择项凭证号不一致')
 					return
 				}
+				let voucherDateList = this.voucher.checkedList.map(row => row.voucherDate)
+				if (voucherDateList.every(val => val != null && val !== '')) {
+					if (Array.from(new Set(voucherDateList)).length != 1) {
+						this.openError("选择项凭证日期不在同一个月份")
+						return
+					}
+				} else if (voucherDateList.some(val => val == null || val === '') && voucherDateList.some(val => val != null && val !== '')) {
+					this.openError('选择项凭证日期不在同一个月份')
+					return
+				}
+
 				this.voucher.voucherDate = this.getDateTime(new Date())
 				this.voucher.voucherIsDetail = 0
-				this.$axios.get('/afbase/cssVoucherExport/getMaxVoucherNumber/'+this.getDateTime(new Date()).substr(0,7)).then((response) => {
-					if (response.data.code == 0&&response.data.data) {
+				this.$axios.get('/afbase/cssVoucherExport/getMaxVoucherNumber/' + this.getDateTime(new Date()).substr(0, 7)).then((response) => {
+					if (response.data.code == 0 && response.data.data) {
 						this.voucher.voucherNumber = response.data.data
 					} else {
 						this.voucher.voucherNumber = '1'
@@ -1126,7 +1093,7 @@
 				this.query.columnStrs = ''
 				if (this.query.activeName == 'income') {
 					this.query.type = 0
-				}else if (this.query.activeName == 'cost') {
+				} else if (this.query.activeName == 'cost') {
 					this.query.type = 1
 				} else if (this.query.activeName == 'incomeWriteoff') {
 					this.query.type = 2
@@ -1137,6 +1104,7 @@
 				}
 				this.setHeight()
 				//从数据库查询设置信息
+				this.loading = true
 				let pageName = '财务结算管理/凭证导出/' + this.query.activeName + (this.query.activeName == 'feeWriteoff' ? '' : '/' + this.query.businessScope)
 				this.$axios.get2("/hrs/user/getUserPageSet?pageName=" + pageName)
 					.then(function(response) {
@@ -1147,7 +1115,6 @@
 							this.tableColumns = this.sortBykey(columns.cssVoucherExport, 'index');
 						}
 						this.setLabel(this.tableColumns)
-						this.loading = true
 						this.$axios.get2("/afbase/cssVoucherExport?size=" + this.pageConf.pageSize + "&current=" + this.pageConf.pageCode,
 								this.query)
 							.then((response) => {
@@ -1173,7 +1140,10 @@
 								this.total = response.data.data;
 								this.getSummaries();
 							});
-					}.bind(this));
+					}.bind(this)).catch(error => {
+						this.loading = false
+						this.openError(error.response.data.messageInfo)
+					})
 			},
 			findByPage2(current) {
 				this.$axios.get2("/afbase/cssVoucherExport?size=" + this.pageConf.pageSize + "&current=" + current, this.query)
@@ -1246,7 +1216,7 @@
 				this.findByPage();
 			},
 			formatQWF(data) {
-				return data.toFixed(3).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
+				return data.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
 			},
 			getSummaries(param) {
 				const sums = [];
@@ -1255,55 +1225,28 @@
 				if (loaclJsonArray) {
 					for (let i = 0; i < loaclJsonArray.length; i++) {
 						if (this.total != null) {
-							if (this.query.activeName == 'income') {
-								if (loaclJsonArray[i].prop === "incomeFunctionalAmount") {
-									sums[i + 1] = this.total.incomeFunctionalAmountStr
-								}
-							}else if (this.query.activeName == 'cost') {
-								if (loaclJsonArray[i].prop === "costFunctionalAmount") {
-									sums[i + 1] = this.total.costFunctionalAmountStr
-								}
-							} else if (this.query.activeName == 'incomeWriteoff') {
-								if (loaclJsonArray[i].prop === "writeoffAmount") {
-									let el = < div / >
-										el.children = []
-									sums[i + 1] = (() => {
-										this.total.writeoffAmountStr.split('  ').forEach(item => {
-											if (item.indexOf('CNY') > -1) {
-												let p = < p / >
-													p.text = item
-												el.children.push(p)
-											} else {
-												let p = < p style = "color:red;" / >
-													p.text = item
-												el.children.push(p)
-											}
-										})
-										return el
-									})()
-								}
-							} else if (this.query.activeName == 'costWriteoff') {
-								if (loaclJsonArray[i].prop === "writeoffAmount") {
-									let el = < div / >
-										el.children = []
-									sums[i + 1] = (() => {
-										this.total.writeoffAmountStr.split('  ').forEach(item => {
-											if (item.indexOf('CNY') > -1) {
-												let p = < p / >
-													p.text = item
-												el.children.push(p)
-											} else {
-												let p = < p style = "color:red;" / >
-													p.text = item
-												el.children.push(p)
-											}
-										})
-										return el
-									})()
-								}
-							} else if (this.query.activeName == 'feeWriteoff') {
+							if (this.query.activeName == 'feeWriteoff') {
 								if (loaclJsonArray[i].prop === "expenseAmount") {
 									sums[i + 1] = this.total.expenseAmountStr
+								}
+							} else {
+								if (loaclJsonArray[i].prop === "amount" || loaclJsonArray[i].prop === "writeoffAmount") {
+									let el = < div / >
+										el.children = []
+									sums[i + 1] = (() => {
+										this.total[loaclJsonArray[i].prop + 'Str'].split('  ').forEach(item => {
+											if (item.indexOf('CNY') > -1) {
+												let p = < p / >
+													p.text = item
+												el.children.push(p)
+											} else {
+												let p = < p style = "color:red;" / >
+													p.text = item
+												el.children.push(p)
+											}
+										})
+										return el
+									})()
 								}
 							}
 						}
@@ -1320,11 +1263,81 @@
 				});
 			},
 			handleSelectionChange(val) {
-				this.voucher.checkedList = val;
+				this.voucher.checkedList = val
+				//计算选中合计
+				if (this.query.activeName == 'feeWriteoff') {
+                    let expenseAmountSum = 0
+					val.forEach(item => {
+						if (item.expenseAmount) {
+							expenseAmountSum+=item.expenseAmount
+						}
+					})
+					this.expenseAmountSum = this.formatQWF(expenseAmountSum)
+				} else {
+					let checkedAmountSumMap = {}
+					if (this.query.activeName == 'income') {
+						val.forEach(item => {
+							if (item.amount) {
+								if (checkedAmountSumMap[item.currency]) {
+									checkedAmountSumMap[item.currency] = checkedAmountSumMap[item.currency] + item.amount
+								} else {
+									checkedAmountSumMap[item.currency] = item.amount
+								}
+							}
+						})
+						this.checkedAmountSum = []
+						for (let key in checkedAmountSumMap) {
+							this.checkedAmountSum.push(this.formatQWF(checkedAmountSumMap[key]) + ' (' + key + ')')
+						}
+					} else if (this.query.activeName == 'cost') {
+						val.forEach(item => {
+							if (item.amount) {
+								if (checkedAmountSumMap[item.currency]) {
+									checkedAmountSumMap[item.currency] = checkedAmountSumMap[item.currency] + item.amount
+								} else {
+									checkedAmountSumMap[item.currency] = item.amount
+								}
+							}
+						})
+						this.checkedAmountSum = []
+						for (let key in checkedAmountSumMap) {
+							this.checkedAmountSum.push(this.formatQWF(checkedAmountSumMap[key]) + ' (' + key + ')')
+						}
+					} else if (this.query.activeName == 'incomeWriteoff') {
+						val.forEach(item => {
+							if (item.writeoffAmount) {
+								if (checkedAmountSumMap[item.currency]) {
+									checkedAmountSumMap[item.currency] = checkedAmountSumMap[item.currency] + item.writeoffAmount
+								} else {
+									checkedAmountSumMap[item.currency] = item.writeoffAmount
+								}
+							}
+						})
+						this.checkedAmountSum = []
+						for (let key in checkedAmountSumMap) {
+							this.checkedAmountSum.push(this.formatQWF(checkedAmountSumMap[key]) + ' (' + key + ')')
+						}
+					} else if (this.query.activeName == 'costWriteoff') {
+						val.forEach(item => {
+							if (item.writeoffAmount) {
+								if (checkedAmountSumMap[item.currency]) {
+									checkedAmountSumMap[item.currency] = checkedAmountSumMap[item.currency] + item.writeoffAmount
+								} else {
+									checkedAmountSumMap[item.currency] = item.writeoffAmount
+								}
+							}
+						})
+						this.checkedAmountSum = []
+						for (let key in checkedAmountSumMap) {
+							this.checkedAmountSum.push(this.formatQWF(checkedAmountSumMap[key]) + ' (' + key + ')')
+						}
+					}
+				}
+
 			},
 			addCellStyle(data) {
 				let k = '';
-				if (data.row.currency != 'CNY' && (data.column.property === "currency" || data.column.property === "writeoffAmount")) {
+				if (data.row.currency != 'CNY' && (data.column.property === "amount" || data.column.property === "writeoffAmount")) {
 					k = "color:red;"
 				}
 				return k;

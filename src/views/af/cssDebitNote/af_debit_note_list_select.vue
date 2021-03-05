@@ -16,7 +16,7 @@
           </el-form-item>
         </el-col>
         <el-col class="elementWidth">
-          <el-form-item label="主单号" label-width="60px">
+          <el-form-item :label="awbNumberLabel" label-width="60px">
             <el-input style="width: 135px;margin-left: -5px;" v-model="query.awbNumber" clearable auto-complete="off">
             </el-input>
           </el-form-item>
@@ -27,19 +27,19 @@
             </el-input>
           </el-form-item>
         </el-col>
-        
+
         <el-col class="elementWidth">
           <el-form-item label-width="40px">
             <el-button type="text" size="mini" v-if=showFlag v-on:click="showFlag=false">收起</el-button>
             <el-button type="text" size="mini" v-if=!showFlag v-on:click="showFlag=true">展开</el-button>
             <el-button style="padding: 9px 7px;margin-left: 0px;" type="primary" size="small" @click="queryList2">查询</el-button>
-            
+
           </el-form-item>
         </el-col>
       </el-row>
       <el-row v-show="showFlag">
         <el-col class="elementWidth">
-          <el-form-item label="开航日期">
+          <el-form-item :label="flightDateLabel">
             <el-date-picker style="width: 135px" v-model="query.flightDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
             </el-date-picker>
             <span>-</span>
@@ -70,10 +70,10 @@
         <el-table-column type="selection" fixed width="40">
         </el-table-column>
         <el-table-column prop="debitNoteNum" label="账单编号" width="150" ></el-table-column>
-        <el-table-column prop="awbNumber" label="主单号" width="150"></el-table-column>
+        <el-table-column prop="awbNumber" v-if="chenckBusCode()" :label="awbNumberLabel" width="150"></el-table-column>
         <el-table-column prop="orderCode" label="订单号" width="150"></el-table-column>
         <el-table-column prop="customerNumber" label="客户单号" width="150"></el-table-column>
-        <el-table-column prop="flightDate" label="开航日期" width="150"></el-table-column>
+        <el-table-column prop="flightDate" :label="flightDateLabel" width="150"></el-table-column>
         <el-table-column align="right" label="账单金额" >
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.currencyAmount.split('  ')" :key="index">
@@ -85,7 +85,7 @@
         <el-table-column align="right" prop="functionalAmount" label="本币金额" :formatter="formatterNumber3"></el-table-column>
       </el-table>
     </div>
-    <div style="margin:10px 10px 10px 10px;">   
+    <div style="margin:10px 10px 10px 10px;">
       <el-button type="primary" size="small" v-on:click="doSelect">确定</el-button>
       <el-button type="primary" size="small" v-on:click="handleClose" >取消</el-button>
     </div>
@@ -107,6 +107,8 @@
         data3: [],
         showFlag: false,
         selections2: [],
+        awbNumberLabel:'主单号',
+        flightDateLabel:'开航日期',
         query: {
           businessScope: '',
           debitNoteNum: '',
@@ -125,6 +127,27 @@
      inject:['setData1'],
 
     created: function(){
+      if(this.frow.businessScope.startsWith('T')){
+         this.awbNumberLabel = "运单号";
+         if(this.frow.businessScope=='TE'){
+           this.flightDateLabel = "发车日期";
+         }else{
+           this.flightDateLabel = "到达日期";
+         }
+      }else if(this.frow.businessScope.startsWith('A')||this.frow.businessScope.startsWith('S')){
+         this.awbNumberLabel = "主单号";
+         if(this.frow.businessScope.endsWith('E')){
+           this.flightDateLabel = "开航日期";
+         }else{
+           this.flightDateLabel = "到港日期";
+         }
+      }else if(this.frow.businessScope=='LC'){
+         this.awbNumberLabel = "";
+         this.flightDateLabel = "用车日期";
+      }else if(this.frow.businessScope=='IO'){
+         this.awbNumberLabel = "";
+         this.flightDateLabel = "业务日期";
+      }
       this.query.amountTaxRate=this.frow.amountTaxRate;
       this.query.customerName=this.frow.customerName;
       this.query.debitNoteIds=this.frow.debitNoteIds;
@@ -133,6 +156,13 @@
     },
 
     methods: {
+      chenckBusCode() {
+      	if (this.query.businessScope == 'IO' ||this.query.businessScope == 'LC') {
+      		return false;
+      	} else {
+      		return true;
+      	}
+      },
       queryList2() {
         this.$axios.get2('/afbase/debitNote/select2', this.query).then(function(response){
           this.data3=response.data.data;
@@ -162,7 +192,7 @@
         this.selections2 = val;
       },
       getDateTime(theDate) {
-        // theDate.setDate(theDate.getDate()-30);            
+        // theDate.setDate(theDate.getDate()-30);
         var _year = theDate.getFullYear();
         var _month = theDate.getMonth();
         var _date = theDate.getDate();
@@ -188,10 +218,10 @@
         }
       },
       formatterName1(row, column) {
-          return "汇率:";    
+          return "汇率:";
       },
       formatterName2(row, column) {
-          return "本币:";    
+          return "本币:";
       },
       formatterNumber2(row, column) {
         if(row.incomeAmount === '' || row.incomeAmount === 'null' || row.incomeAmount == null) {
@@ -246,10 +276,10 @@
         if(row2.exchangeRate==='' || row2.amount===''){
           row2.functionalAmount=0;
         }else{
-          row2.functionalAmount=row2.exchangeRate*row2.amount;        
+          row2.functionalAmount=row2.exchangeRate*row2.amount;
         }
         this.setTotalCost();
-        // this.setcostAmountNotTax(row2);    
+        // this.setcostAmountNotTax(row2);
       },
       //本币金额求和
       setTotalCost(){
@@ -282,9 +312,9 @@
         }else{
           row2.amountTax=(row2.functionalAmount-row2.amountNotTax).toFixed(2);
         }
-        
+
       },
-      
+
       getNumber(data) {
         return data.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
       },
@@ -296,13 +326,13 @@
               row2.exchangeRate = t[0]+ "." + t[1].substr(0, 4);
             }
         }
-        
+
       },
       handleClose() {
         this.$emit('update:visible', false);
       }
 
-//--------------------- 
+//---------------------
 
     }
   }

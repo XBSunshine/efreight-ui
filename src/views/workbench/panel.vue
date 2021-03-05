@@ -2,7 +2,7 @@
   <div id="panel">
     <el-row>
       <!-- 左侧内容 -->
-      <el-col :span="17" >
+      <el-col :span="16" >
         <el-row>
           <el-col :span="16">
             <el-row >
@@ -56,7 +56,60 @@
         </el-row>
         <!-- 统计表格 -->
         <el-row class="padding-top">
-          <el-col>
+          <el-col :span="16">
+            <el-card class="box-card" id="panel-system-notify">
+              <div slot="header" class="clearfix"><span class="tab-title">公告</span></div>
+              <div v-for="notice in this.systemNotices" :key="notice.noticeId" class="system_notify">
+                <span><div class="spot1"></div>{{notice.noticeTitle}}</span>
+                <el-tag v-if="notice.noticeType == 'XTGX'">更新</el-tag>
+                <el-tag v-if="notice.noticeType == 'HDTG'" type="warning">推广</el-tag>
+                <el-tag v-if="notice.noticeType == 'XTWH'" type="danger">维护</el-tag>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="8" class="padding-left">
+            <el-image :src="activity.image"  class="activity-image" @click="jumpTo('/investigate')">
+              <div slot="placeholder" class="image-slot">
+                加载中<span class="dot">...</span>
+              </div>
+            </el-image>
+              <el-card class="box-card" style="">
+   <!--             <div slot="header" class="clearfix"><span class="tab-title">使用帮助</span></div>
+                <el-row>
+                  <el-col :span="12" v-for="help in this.systemHelp" :key="help.id" class="system_help">
+                    <a href="javascript:void(0)" >
+                      <span v-if="help.name == '查看全部'" style="color: #277FFF" @click="jumpTo('/tutorial')">{{help.name}}</span>
+                      <span v-else-if="help.name == '在线询报价'" style="color:#c0c4cc">{{help.name}}</span>
+                      <span v-else-if="help.name == '送货地图导航'" style="color:#c0c4cc">{{help.name}}</span>
+                      <span v-else-if="help.name == '经营分析表'" style="color:#c0c4cc">{{help.name}}</span>
+                      <span v-else style="color:#666" @click="playVideo(help.url)">{{help.name}}</span>
+                    </a>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>-->
+                <div class="system_other_title tab-title">使用帮助</div>
+                <el-row style="margin-top: 10px">
+                  <el-col :span="12">
+                    <div class="system_other_item" @click="jumpTo('/tutorial')">
+                      <el-image :src="icons.video" class="system_other_icon"></el-image><span> 视频教学</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <div class="system_other_item" @click="openUserMan">
+                      <el-image :src="icons.i002" class="system_other_icon"></el-image><span> 用户手册</span>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row style="margin-top: 10px">
+                  <el-col :span="12">
+                    <div class="system_other_item" @click="guide">
+                      <el-image :src="icons.i001" class="system_other_icon"></el-image><span> 新手引导</span>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-card>
+          </el-col>
+          <!--<el-col>
             <div>
               <el-tabs type="border-card" id="panel-charts-tabs" class="panel-charts" @tab-click="handlerTabClick" :before-leave="handlerBeforeLeave" v-model="actionTab">
                 <el-tab-pane :label="tabItem.label" v-for="tabItem in tabDIC" :key="tabItem.key" :name="tabItem.key">
@@ -65,12 +118,36 @@
               </el-tabs>
               <el-button type="text" class="tab-more-btn" @click="handlerMore">更多</el-button>
             </div>
-          </el-col>
+          </el-col>-->
         </el-row>
       </el-col>
       <!-- 右侧内容 -->
-      <el-col :span="7" class="padding-left">
-        <el-row>
+      <el-col :span="8" class="padding-left">
+        <el-card class="box-card" id="panel-active-index-card">
+          <!--<el-row>
+            <el-col :span="18" class="ac_index1">生态云网络成员</el-col>
+            <el-col :span="6" align="right" class="ac_index1">活跃指数</el-col>
+          </el-row>-->
+          <div slot="header" class="clearfix"> <span class="tab-title1">生态云网络成员</span><span class="tab-title2">活跃指数</span></div>
+          <!--<div slot="header" class="clearfix" align="right">  </div>-->
+          <!--<div v-for="item in topActiveIndex" :key="item.orgId" class="system_notify" :style="frequentUsedStyle">
+            <span><div class=""></div>{{item.orgName}}</span>
+            <span align="right"><div class=""></div>{{item.activeIndex}}</span>
+          </div>active_index-->
+          <div>
+            <div v-for="item in topActiveIndex" :key="item.orgId" class="system_notify" >
+              <el-row>
+                <el-col :span="3" class="rank1" v-if="item.rankNumber===1"><el-image :src="icons.rank1"></el-image></el-col>
+                <el-col :span="3" class="rank1" v-if="item.rankNumber===2"><el-image :src="icons.rank2"></el-image></el-col>
+                <el-col :span="3" class="rank1" v-if="item.rankNumber===3"><el-image :src="icons.rank3"></el-image></el-col>
+                <el-col :span="3" class="rank" v-if="item.rankNumber!==1&&item.rankNumber!==2&&item.rankNumber!==3">NO.{{item.rankNumber}}</el-col>
+                <el-col :span="15" class="org_name"><div class=""></div>{{item.orgName}}</el-col>
+                <el-col :span="6" align="right" class="ac_index">{{item.activeIndex}}</el-col>
+              </el-row>
+            </div>
+          </div>
+        </el-card>
+        <!--<el-row>
           <el-card class="box-card" id="panel-system-notify">
             <div slot="header" class="clearfix"><span class="tab-title">公告</span></div>
             <div v-for="notice in this.systemNotices" :key="notice.noticeId" class="system_notify">
@@ -80,8 +157,8 @@
               <el-tag v-if="notice.noticeType == 'XTWH'" type="danger">维护</el-tag>
             </div>
           </el-card>
-        </el-row>
-        <el-row class="padding-top">
+        </el-row>-->
+<!--        <el-row class="padding-top">
           <el-image :src="activity.image"  class="activity-image" @click="jumpTo('/investigate')">
             <div slot="placeholder" class="image-slot">
               加载中<span class="dot">...</span>
@@ -117,7 +194,7 @@
               </el-col>
             </el-row>
           </el-card>
-        </el-row>
+        </el-row>-->
       </el-col>
     </el-row>
 
@@ -179,6 +256,15 @@
     font-weight:500;
     color:rgba(74,74,74,1);
   }
+  #panel .tab-title1 {
+    font-size:16px;
+    font-weight:500;
+  }
+  #panel .tab-title2 {
+    font-size:16px;
+    font-weight:500;
+    float: right;
+  }
   #panel .el-card__body{
     padding: calc(2vh);
   }
@@ -193,6 +279,13 @@
     border:1px solid #EEEEEE;
     margin-bottom: calc(1.4vh);
     cursor: pointer;
+  }
+
+  #panel .active_index{
+    padding: calc(0.9vh) calc(1.9vh);
+    border-radius:4px;
+    border:1px solid #EEEEEE;
+    margin-bottom: calc(1.4vh);
   }
 
   #panel .frequent_used:hover{
@@ -219,11 +312,17 @@
     #panel .activity-image{
       height: unset;
     }
+    #panel #panel-active-index-card{
+      height: calc(89.5vh);
+    }
     #panel #panel-frequent-used-card{
       min-height: calc(39.5vh);
     }
-    #panel #panel-system-notify{
+    /*#panel #panel-system-notify{
       min-height: calc(30.5vh);
+    }*/
+    #panel #panel-system-notify{
+      height: calc(48vh);
     }
     #panel .system_notify{
       margin-bottom: calc(2vh);
@@ -238,13 +337,20 @@
       height: calc(37.5vh);
     }
     #panel .activity-image{
-      height: 170px;
+      height: 140px;
+    }
+    #panel #panel-active-index-card{
+      height: calc(88.5vh);
     }
     #panel #panel-frequent-used-card{
-      min-height: calc(47.5vh);
+      min-height: calc(45.5vh);
     }
-    #panel #panel-system-notify{
+
+    /*#panel #panel-system-notify{
       min-height: calc(21vh);
+    }*/
+    #panel #panel-system-notify{
+      height: calc(40.5vh);
     }
     #panel .system_notify{
       margin-bottom: calc(1vh);
@@ -271,10 +377,48 @@
     font-weight:400;
     color:rgba(74,74,74,1);
   }
+  #panel .spot1 {
+    width: 6px;
+    height: 6px;
+    background: rgb(192, 196, 204);
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: -55px;
+    position: relative;
+    top: -2px;
+    font-size:14px;
+    font-weight:400;
+    color:rgba(74,74,74,1);
+  }
   #panel .access_time{
     font-size:12px;
     font-weight:400;
     color:rgba(153,153,153,1);
+  }
+  #panel .ac_index{
+    font-size:12px;
+    font-weight:400;
+    color:rgba(39,127,255,1);
+    line-height: 26px;
+  }
+  #panel .ac_index1{
+    font-size:16px;
+    font-weight:500;
+    line-height: 26px;
+  }
+   #panel .org_name{
+     line-height: 26px;
+     overflow:hidden;
+     white-space: nowrap;
+     text-overflow: ellipsis;
+   }
+  #panel .rank{
+    color:#f56c6c;
+    line-height: 26px;
+  }
+  #panel .rank1{
+    padding-left: 6px;
   }
   #panel .system_notify{
     font-size:14px;
@@ -311,7 +455,7 @@
   }
 
   #panel .system_other_title{
-    line-height:22px;
+    line-height:30px;
   }
   #panel .system_other_item{
     font-size:14px;
@@ -361,6 +505,10 @@
   import i001 from "../../assets/images/icon/i001.png";
   import i002 from "../../assets/images/icon/i002.png";
   import step0 from "../../assets/images/step/step0.png";
+  import rank1 from "../../assets/images/icon/rank1.png";
+  import rank2 from "../../assets/images/icon/rank2.png";
+  import rank3 from "../../assets/images/icon/rank3.png";
+  import video from "../../assets/images/icon/video.png";
 
   import IntroJs from 'intro.js';
   import 'intro.js/introjs.css';
@@ -382,6 +530,7 @@
             { label: "海运出口", key: "SE" },
             { label: "海运进口", key: "SI" },
             { label: "铁路出口", key: "TE" },
+            { label: "铁路进口", key: "TI" },
             { label: "陆运运输", key: "LC" },
             { label: "其它业务", key: "IO" },
           ],
@@ -471,6 +620,27 @@
               },
             },
             "TE": {
+              tooltip: {
+                formatter: function(params) {
+                  return params['seriesName'] + "：" + params['value'];
+                }
+              },
+              color: ['#277FFF', '#F9970E', '#d293e1'],
+              legend: {
+                data: ['票数', '计费(吨)', '标箱量'],
+                left: 'right'
+              },
+              xAxis: {
+                data: []
+              },
+              yAxis: {},
+              series: [],
+              grid: {
+                top: 30,
+                bottom: 20,
+              },
+            },
+            "TI": {
               tooltip: {
                 formatter: function(params) {
                   return params['seriesName'] + "：" + params['value'];
@@ -689,6 +859,7 @@
             { id: 5, name: "飞机机型", image: t005, style:'margin-top: 10px', jumpUri: '/af_aircraft', },
           ],
           topAccess: [],
+          topActiveIndex: [],
           systemNotices: [],
           activity: {
             image: a001,
@@ -705,6 +876,10 @@
           icons: {
             i001: i001,
             i002: i002,
+            rank1: rank1,
+            rank2: rank2,
+            rank3: rank3,
+            video: video,
           },
           introConfig: {
             option: {
@@ -797,6 +972,19 @@
               this.openError("加载最近访问数据失败");
             }.bind)
         },
+        //加载签约公司活跃指数
+        loadTopActiveIndex(){
+            this.$axios.get("/hrs/userAccessRecord/topActiveIndex").then(function(response) {
+                if (response.data.code == 0) {
+                    this.topActiveIndex = response.data.data || [];
+                } else {
+                    this.openError(response.data.messageInfo || '加载数据失败');
+                }
+            }.bind(this))
+                .catch(function(error) {
+                    this.openError("加载签约公司活跃指数失败");
+                }.bind)
+        },
         /**
          * 加载系统公告
          */
@@ -804,12 +992,12 @@
           this.$axios.get2('/hrs/notice').then(function(response) {
             if (0 == response.data.code) {
               this.systemNotices = response.data.data;
-              let srcLen = this.systemNotices.length;
+              /*let srcLen = this.systemNotices.length;
               if (srcLen > this.showNoticeCount) {
                 for (let i = 0; i < srcLen - this.showNoticeCount; i++) {
                   this.systemNotices.pop();
                 }
-              }
+              }*/
             } else {
               this.openError(response.data.messageInfo || '加载系统公告');
             }
@@ -1224,6 +1412,8 @@
         this.loadSystemNotices();
         //帮助文档
         this.loadHelpDoc();
+        //活跃指数
+        this.loadTopActiveIndex();
         //引导X按键关闭事件
         window.exitIntro = function() {
           IntroJs().exit();
@@ -1232,7 +1422,7 @@
       mounted() {
         //加载统计数据
         this.actionTab = this.getCacheActionTab() || this.actionTab;
-        this.loadData(this.actionTab);
+        //this.loadData(this.actionTab);
         //弹出新手指引
         if (!this.isFinishIntro()) {
           this.guide();

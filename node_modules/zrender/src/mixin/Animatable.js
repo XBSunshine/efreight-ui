@@ -1,5 +1,5 @@
 import Animator from '../animation/Animator';
-import log from '../core/log';
+import logError from '../core/log';
 import {
     isString,
     isFunction,
@@ -9,7 +9,7 @@ import {
 } from '../core/util';
 
 /**
- * @alias modue:zrender/mixin/Animatable
+ * @alias module:zrender/mixin/Animatable
  * @constructor
  */
 var Animatable = function () {
@@ -62,7 +62,7 @@ Animatable.prototype = {
         }
 
         if (!target) {
-            log(
+            logError(
                 'Property "'
                 + path
                 + '" is not existed in element '

@@ -522,27 +522,27 @@
 			formatToFloat(item) {
 				if(!item) {
 					return
-				}
-				this.ruleForm[item] = this.ruleForm[item].replace(/[^0123456789.]/g, "");
-				let t = this.ruleForm[item].split('.');
-				if(t.length > 1) {
-					this.ruleForm[item] = t[0] + "." + t[1].substr(0, 2);
-				}
-			}
-		}
-	}
+        }
+        this.ruleForm[item] = this.ruleForm[item].replace(/[^0123456789.]/g, "");
+        let t = this.ruleForm[item].split('.');
+        if (t.length > 1) {
+          this.ruleForm[item] = t[0] + "." + t[1].substr(0, 2);
+        }
+      }
+    }
+  }
 </script>
-<style type="text/css">
+<style type="text/css" scoped>
 
-  .afTactSave .el-input__icon {
-    line-height: 30px !important;
-  }
+.afTactSave .el-input__icon {
+  line-height: 30px !important;
+}
 
-  .afTactSave .el-form-item__content {
-    line-height: 30px !important;
-  }
+.afTactSave .el-form-item__content {
+  line-height: 30px !important;
+}
 
-  .afTactSave .el-input-group__prepend {
+.afTactSave .el-input-group__prepend {
     padding: 0 6px;
   }
   .widthOne{

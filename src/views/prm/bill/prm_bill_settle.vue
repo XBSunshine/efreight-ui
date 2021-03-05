@@ -55,13 +55,13 @@
                 </el-form-item>
               </el-col>
               <el-col class="elementWidth">
-                <el-form-item label="账单责任人" label-width="95px">
+                <el-form-item label="销售负责人" label-width="95px">
                   <el-input v-model="query.billConfirmName" clearable style="width: 148px;">
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col class="elementWidth">
-                <el-form-item label="销售负责人" label-width="95px">
+                <el-form-item label="客户负责人" label-width="95px">
                   <el-input v-model="query.saleConfirmName" clearable style="width: 157px;">
                   </el-input>
                 </el-form-item>
@@ -123,10 +123,21 @@
               </el-col>
               <el-col class="elementWidth">
                 <el-form-item label="二级科目" label-width="80px">
-                  <el-select style="width: 284px;" v-model="query.serviceNameTwo" filterable placeholder="请选择" multiple size="small">
-                    <el-option v-for="item in servicetwooptions" :key="item.serviceId" :label="item.serviceName" :value="item.serviceId">
+                  <el-select style="width: 284px;" v-model="query.serviceNameTwo" filterable placeholder="请选择" multiple
+                             size="small">
+                    <el-option v-for="item in servicetwooptions" :key="item.serviceId" :label="item.serviceName"
+                               :value="item.serviceId">
                       <span style="float: left">{{ item.serviceName }}</span>
                     </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col class="elementWidth">
+                <el-form-item label="新业务" label-width="85px">
+                  <el-select style="width: 115px" v-model="query.isNewBusiness" placeholder="请选择" size="small">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="是" value="true"></el-option>
+                    <el-option label="否" value="false"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -166,9 +177,9 @@
         </el-table-column>
         <el-table-column align="center" prop="statementStatus" label="账单状态" width="90">
         </el-table-column>
-        <el-table-column align="center" prop="saleConfirmName" label="销售负责人" width="90">
+        <el-table-column align="center" prop="saleConfirmName" label="客户负责人" width="90">
         </el-table-column>
-        <el-table-column align="center" prop="billConfirmName" label="账单责任人" width="90">
+        <el-table-column align="center" prop="billConfirmName" label="销售负责人" width="90">
         </el-table-column>
         <el-table-column align="center" prop="salesCollaborativeName" label="协同销售人" width="90">
         </el-table-column>
@@ -178,7 +189,13 @@
         </el-table-column>
         <el-table-column align="center" prop="invoiceWriteoffDate" label="核销日期" width="85" :formatter="formatstopDate1">
         </el-table-column>
-        <el-table-column align="center" prop="startChargeTime" label="首次收费月份" width="100" :formatter="formatStartChargeTime">
+        <el-table-column align="center" prop="startChargeTime" label="首次收费月份" width="100"
+                         :formatter="formatStartChargeTime">
+        </el-table-column>
+        <el-table-column align="center" label="新业务" width="60">
+          <template slot-scope="scope">
+            <i class="iconfont el-icon-myduihao" style="color: red;" v-show="scope.row.isNewBusiness"></i>
+          </template>
         </el-table-column>
         <el-table-column align="center" prop="validBeginDate" label="生效日期" width="85">
         </el-table-column>
@@ -186,7 +203,7 @@
         </el-table-column>
         <el-table-column align="center" prop="itCode" label="IT编码" width="100">
         </el-table-column>
-			</el-table>
+      </el-table>
 			 <el-col :span="24" class="pagination">
          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[10, 30, 50]" :page-size.sync="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalNum">
          </el-pagination>
@@ -225,7 +242,8 @@
           invoiceWriteoffDateEnd: '',
           paymentMethod: '',
           serviceNameTwo: '',
-				},
+          isNewBusiness: '',
+        },
         serviceoptions: [],
         servicetwooptions: [],
 				frow: {},
@@ -391,19 +409,19 @@
               departureStation: this.query.departureStation,
               billConfirmName: this.query.billConfirmName,
               saleConfirmName: this.query.saleConfirmName,
-              billConfirmName: this.query.billConfirmName,
               statementStatus: this.query.statementStatus,
-              statementDate_begin: this.query.statementDate_begin,
-              statementDate_end: this.query.statementDate_end,
-              validBeginDate: this.query.validBeginDate,
-              validEndDate: this.query.validEndDate,
-              invoiceWriteoffDateBegin: this.query.invoiceWriteoffDateBegin,
-              invoiceWriteoffDateEnd: this.query.invoiceWriteoffDateEnd,
-              serviceNameOne: this.query.serviceNameOne.toString(),
-              serviceNameTwo: this.query.serviceNameTwo.toString(),
-              paymentMethod: this.query.paymentMethod,
-              currentPage: this.currentPage,
-              pageSize: this.pageSize
+            statementDate_begin: this.query.statementDate_begin,
+            statementDate_end: this.query.statementDate_end,
+            validBeginDate: this.query.validBeginDate,
+            validEndDate: this.query.validEndDate,
+            invoiceWriteoffDateBegin: this.query.invoiceWriteoffDateBegin,
+            invoiceWriteoffDateEnd: this.query.invoiceWriteoffDateEnd,
+            serviceNameOne: this.query.serviceNameOne.toString(),
+            serviceNameTwo: this.query.serviceNameTwo.toString(),
+            paymentMethod: this.query.paymentMethod,
+            currentPage: this.currentPage,
+            pageSize: this.pageSize,
+            isNewBusiness: this.query.isNewBusiness
           }, {
               headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
@@ -432,7 +450,7 @@
             departureStation: this.query.departureStation,
             billConfirmName: this.query.billConfirmName,
             saleConfirmName: this.query.saleConfirmName,
-            billConfirmName: this.query.billConfirmName,
+            isNewBusiness: this.query.isNewBusiness,
             statementStatus: this.query.statementStatus,
             statementDate_begin: this.query.statementDate_begin,
             statementDate_end: this.query.statementDate_end,
@@ -500,22 +518,22 @@
             coopName1 = this.query.coopName.toUpperCase();
         }
 				let params = {
-            "coopName": coopName1,
-            "billTemplate": this.query.billTemplate,
-            "departureStation": this.query.departureStation,
-            "billConfirmName": this.query.billConfirmName,
-            "saleConfirmName": this.query.saleConfirmName,
-            "billConfirmName": this.query.billConfirmName,
-            "statementStatus": this.query.statementStatus,
-            "statementDate_begin": this.query.statementDate_begin,
-            "statementDate_end": this.query.statementDate_end,
-            "validBeginDate": this.query.validBeginDate,
-            "validEndDate": this.query.validEndDate,
-            "serviceNameOne": this.query.serviceNameOne.toString(),
-            "invoiceWriteoffDateBegin": this.query.invoiceWriteoffDateBegin,
-            "invoiceWriteoffDateEnd": this.query.invoiceWriteoffDateEnd,
-            "paymentMethod": this.query.paymentMethod,
-            "serviceNameTwo": this.query.serviceNameTwo.toString(),
+          "coopName": coopName1,
+          "billTemplate": this.query.billTemplate,
+          "departureStation": this.query.departureStation,
+          "billConfirmName": this.query.billConfirmName,
+          "saleConfirmName": this.query.saleConfirmName,
+          "isNewBusiness": this.query.isNewBusiness,
+          "statementStatus": this.query.statementStatus,
+          "statementDate_begin": this.query.statementDate_begin,
+          "statementDate_end": this.query.statementDate_end,
+          "validBeginDate": this.query.validBeginDate,
+          "validEndDate": this.query.validEndDate,
+          "serviceNameOne": this.query.serviceNameOne.toString(),
+          "invoiceWriteoffDateBegin": this.query.invoiceWriteoffDateBegin,
+          "invoiceWriteoffDateEnd": this.query.invoiceWriteoffDateEnd,
+          "paymentMethod": this.query.paymentMethod,
+          "serviceNameTwo": this.query.serviceNameTwo.toString(),
 
 				}
 				this.$axios.post3('/prm/coopBill/exportSettleExcel', params)

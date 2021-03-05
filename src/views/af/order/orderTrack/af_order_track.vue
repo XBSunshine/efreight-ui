@@ -518,7 +518,7 @@
 			},
 			callHawbPrint(row) {
 				let awbPrintType = '';
-				if (this.frow.bussinessScope == 'AI') {
+				if (this.frow.businessScope == 'AI') {
 					awbPrintType = 'PRINT_HAWB_AI'
 				} else {
 					awbPrintType = 'PRINT_HAWB'

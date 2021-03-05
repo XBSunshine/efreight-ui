@@ -71,7 +71,7 @@
     	try {
     		tableColumns.forEach((column, index) => {
           if(column.prop == 'awb_number'){
-             if(this.frow.businessScope=='TE'){
+             if(this.frow.businessScope=='TE' || this.frow.businessScope=='TI'){
                 column.label = "运单号码";
              }else if(this.frow.businessScope=='LC'||this.frow.businessScope=='IO'){
                  indexDelete.push(index);
@@ -104,6 +104,8 @@
              }
            }else if(this.frow.businessScope=='TE'){
              column.label = "发车日期";
+           }else if(this.frow.businessScope=='TI'){
+             column.label = "到达日期";
            }else if(this.frow.businessScope=='LC'){
              column.label = "用车日期";
            }else if(this.frow.businessScope=='IO'){
@@ -114,7 +116,7 @@
          if(column.prop =='awb_from'){
             if(this.frow.businessScope=='AE'){
               column.label = "运单来源";
-            }else if(this.frow.businessScope=='TE'){
+            }else if(this.frow.businessScope=='TE' || this.frow.businessScope=='TI'){
               column.label = "订舱代理";
             }else{
               indexDelete.push(index);
@@ -122,7 +124,7 @@
          }
          //航线
          if(column.prop == 'routing_name'){
-           if(this.frow.businessScope == "TE" || this.frow.businessScope == "LC" ||this.frow.businessScope == "IO" ){
+           if(this.frow.businessScope == "TE" || this.frow.businessScope == "TI" || this.frow.businessScope == "LC" ||this.frow.businessScope == "IO" ){
              indexDelete.push(index);
            }
          }
