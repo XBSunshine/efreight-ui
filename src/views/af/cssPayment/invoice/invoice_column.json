@@ -92,7 +92,7 @@
 		"prop": "applyRemark",
 		"flag": "true",
 		"index": 11,
-		"width": 240,
+		"width": 180,
 		"align": "center",
 		"sortable": false
 	}, {
@@ -116,8 +116,16 @@
 		"prop": "invoiceRemark",
 		"flag": "true",
 		"index": 14,
-		"width": 240,
+		"width": 180,
 		"align": "center",
+		"sortable": false
+	}, {
+		"label": "附件",
+		"prop": "filesList",
+		"flag": "true",
+		"index": 15,
+		"width": 150,
+		"align": "left",
 		"sortable": false
 	}]
 }

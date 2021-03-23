@@ -5,9 +5,9 @@
 				<el-row>
 					<el-col class="elementWidth">
 						<el-form-item label="" label-width="10px">
-							<el-input style="width:280px;">
+							<el-input style="width:180px;">
 								<template slot="prepend">业务范畴</template>
-								<el-select slot="suffix" v-model="query.businessScope"  style="width:211px;margin-right: -5px;">
+								<el-select slot="suffix" v-model="query.businessScope"  style="width:112px;margin-right: -5px;">
 									<el-option v-for="item in businessCodes" :key="item.paramRanking" :label="item.paramText" :value="item.paramText">
 									</el-option>
 								</el-select>
@@ -63,7 +63,7 @@
 				<el-row v-show="showFlag">
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input class="widthWithThree" v-model="query.creatorName" maxlength="50" auto-complete="off" clearable style="width:280px;">
+							<el-input class="widthWithThree" v-model="query.creatorName" maxlength="50" auto-complete="off" clearable style="width:180px;">
 								<template slot="prepend">申请人</template>
 							</el-input>
 						</el-form-item>
@@ -71,15 +71,15 @@
 
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input class="widthWithThree" v-model="query.invoiceNum" maxlength="50" auto-complete="off" clearable style="width:300px;" >
+							<el-input class="widthWithThree" v-model="query.invoiceNum" maxlength="50" auto-complete="off" clearable style="width:260px;" >
 								<template slot="prepend">发票号</template>
 							</el-input>
 						</el-form-item>
 					</el-col>
           <el-col class="elementWidth">
           	<el-form-item label-width="10px">
-          		<el-input class="widthWithThree" v-model="query.businessNum" maxlength="50" auto-complete="off" clearable style="width:210px;" >
-          			<template slot="prepend">账单/清单号</template>
+          		<el-input class="widthWithThree" v-model="query.invoiceTitle" maxlength="50" auto-complete="off" clearable style="width:250px;" >
+          			<template slot="prepend">发票抬头</template>
           		</el-input>
           	</el-form-item>
           </el-col>
@@ -106,7 +106,7 @@
 				<el-row v-show="showFlag">
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
-							<el-input class="widthWithThree" v-model="query.openInvoiceUserName" maxlength="50" auto-complete="off" clearable style="width:280px;">
+							<el-input class="widthWithThree" v-model="query.openInvoiceUserName" maxlength="50" auto-complete="off" clearable style="width:180px;">
 								<template slot="prepend">开票人</template>
 							</el-input>
 						</el-form-item>
@@ -129,6 +129,13 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
+          <el-col class="elementWidth">
+          	<el-form-item label-width="10px">
+          		<el-input class="widthWithThree" v-model="query.businessNum" maxlength="50" auto-complete="off" clearable style="width:210px;" >
+          			<template slot="prepend">账单/清单号</template>
+          		</el-input>
+          	</el-form-item>
+          </el-col>
 					<el-col class="elementWidth">
 						<el-form-item label-width="10px">
 							<el-input style="width:210px;">
@@ -166,6 +173,7 @@
                 <el-dropdown-item v-if="reviewInvoiceFlag" command="reviewInvoice" >核销</el-dropdown-item>
                 <el-dropdown-item v-if="deleteInvoiceFlag" command="deleteInvoice" >删除</el-dropdown-item>
                 <el-dropdown-item v-if="cancelInvoiceFlag" command="cancelInvoice" >退回</el-dropdown-item>
+                <el-dropdown-item v-if="invoiceFilesFlag"  command="invoiceFiles" >附件</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
 					</template>
@@ -205,6 +213,13 @@
             		<span>{{nameFormat(scope.row.openInvoiceUserName)}}</span>
             </template>
           </el-table-column>
+          <el-table-column  v-else-if="item.label=='附件'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" >
+            <template slot-scope="scope" v-if="scope.row.files">
+                <p v-for="(item,index) in scope.row.files.split('  ')" :key="index">
+                  <a href="javascript:void(0)" @click="orderFileView(item.split(' ')[0])" style="color: #137DFA;text-decoration: underline;">{{item.split(' ')[1]}}</a>
+                </p>
+            </template>
+          </el-table-column>
           <el-table-column  v-else :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" >
           </el-table-column>
 				</template>
@@ -218,6 +233,7 @@
     <invoiceVisibleTag ref="addMission" v-if="invoiceVisible" :visible.sync="invoiceVisible" :frow="frow"></invoiceVisibleTag>
     <reviewVisibleTag ref="addMission" v-if="reviewVisible" :visible.sync="reviewVisible" :frow="frow"></reviewVisibleTag>
     <settingVisibleTag ref="addMission" v-if="settingVisible" :visible.sync="settingVisible" :frow="frow"></settingVisibleTag>
+    <invoiceFilesTag ref="addMission" v-if="invoiceFilesVisible" :visible.sync="invoiceFilesVisible" :frow="frow"></invoiceFilesTag>
 	</div>
 </template>
 <script>
@@ -225,6 +241,7 @@
   import invoice from './openInvoiceTwo.vue'
   import review from './invoice_writeoff.vue'
   import setting from './invoice_list_setting.vue'
+  import invoiceFiles from './invoice_files.vue'
 	export default {
 		data() {
 			return {
@@ -248,6 +265,8 @@
         reviewInvoiceFlag:false,
         deleteInvoiceFlag:false,
         cancelInvoiceFlag:false,
+        invoiceFilesFlag:false,
+        invoiceFilesVisible:false,
         columnStrs:'',
 				frow: {},
 				query: {
@@ -266,6 +285,7 @@
 					orderAwbNumber:'',
 					invoiceDateStart:'',
 					invoiceDateEnd:'',
+          invoiceTitle:'',
           columnStrs:''
 				},
 				businessCodes: [],
@@ -287,7 +307,10 @@
       if (buttonInfo.indexOf('af-invoicep-cencel') > -1) {
       	this.cancelInvoiceFlag = true;
       }
-      
+      if (buttonInfo.indexOf('af-invoicep-files') > -1) {
+      	this.invoiceFilesFlag = true;
+      }
+
 			//查询业务范畴
 			this.$axios.get2('/afbase/category/paramsNew', {
 				categoryName: "业务范畴"
@@ -329,9 +352,13 @@
 		components: {
       'invoiceVisibleTag':invoice,
       'reviewVisibleTag':review,
-      'settingVisibleTag':setting
+      'settingVisibleTag':setting,
+      'invoiceFilesTag':invoiceFiles
 		},
 		methods: {
+      orderFileView(fileUrl) {
+      	window.open(fileUrl)
+      },
       handleSelectionChange(val){
         let  map = new Map();
           if(val&&val.length>0){
@@ -475,6 +502,15 @@
            // }
          }
      },
+     invoiceFiles(){
+       if(this.frow.invoiceDetailId){
+          this.frow.businessType='invoice';
+          this.frow.invoiceDetailWriteoffId = null;
+          this.invoiceFilesVisible = true;
+       }else{
+         this.openError("您好，开票后才可上传发票附件。")
+       }
+     },
 			cellWidth(newWidth, oldWidth, column, event) {
 				let strColumn = JSON.stringify(this.tableColumns);
 				let userId = window.localStorage.getItem('userId');
@@ -553,6 +589,8 @@
            this.reviewInvoice();
         }else if(command == 'deleteInvoice'){
            this.deleteInvoice(this.frow);
+        }else if(command == 'invoiceFiles'){
+           this.invoiceFiles();
         }
 
 			},

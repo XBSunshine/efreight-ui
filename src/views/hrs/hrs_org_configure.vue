@@ -130,6 +130,37 @@
           </el-row>
           <el-row>
             <el-col class="elementWidth">
+              <el-form-item label="公司名片设置" id="companyForm"></el-form-item>
+            </el-col>
+            <el-col class="elementWidth">
+              <el-form-item label="" label-width="0px">
+                <el-button type="text" size="small" v-if="companyCardSettings" v-on:click="companyCardSettings = false">
+                  收起<i class="el-icon-arrow-down"></i></el-button>
+                <el-button type="text" size="small" v-if="!companyCardSettings"
+                           v-on:click=" companyCardSettings = true">
+                  展开<i class="el-icon-arrow-up"></i></el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <div v-if="companyCardSettings">
+            <el-row :gutter="6" style="margin-left: 18px; width: 1090px">
+              <el-form-item>
+                <el-input v-model="ruleForm.companyProfile" type="textarea" :rows="5" show-word-limit maxlength="500"
+                          placeholder="公司简介"/>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="ruleForm.companyAdvantage" type="textarea" :rows="5" show-word-limit maxlength="500"
+                          placeholder="优势介绍"/>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="ruleForm.companyContactInfo" type="textarea" :rows="3" show-word-limit
+                          maxlength="200" placeholder="联系方式"/>
+              </el-form-item>
+            </el-row>
+          </div>
+
+          <el-row>
+            <el-col class="elementWidth">
               <el-form-item label="银行账号设置"></el-form-item>
             </el-col>
             <el-col class="elementWidth">
@@ -775,7 +806,10 @@ export default {
         financialVoucherOutType: '',
         orderConfig: [],
         orgBankConfigList: [],
-        groupId:'',
+        groupId: '',
+        companyProfile: '',
+        companyAdvantage: '',
+        companyContactInfo: '',
       },
       backData: {
         stopDate: '',
@@ -957,6 +991,7 @@ export default {
           shippingMethod: [], //运输方式
         },
       },
+      companyCardSettings: false,
       bankAccountSettings: false,
       bankAccountTemplate: {
         titleCn: null,
@@ -1342,7 +1377,9 @@ export default {
 	}
 </script>
 <style >
-
+  #companyForm label.el-form-item__label{
+    color: red;
+  }
   .org_config{
     padding-top: 10px;
     padding-bottom: 10px;

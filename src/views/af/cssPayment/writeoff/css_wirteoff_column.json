@@ -103,5 +103,13 @@
 		"width": 150,
 		"align": "center",
 		"sortable": false
+	}, {
+		"label": "附件",
+		"prop": "filesList",
+		"flag": "true",
+		"index": 13,
+		"width": 150,
+		"align": "left",
+		"sortable": false
 	}]
 }

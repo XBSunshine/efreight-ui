@@ -10,11 +10,11 @@
 
       <i style="display: inline; position: relative; top: 50px; left: 0px;font-size:22px; color: blue" class="el-icon-s-custom"></i>
       <p style="display: inline; position: relative; top: 50px; left: -10px;font-size:18px">华东大区</p>
-      <p style="display: inline; position: relative; top: 50px; left: -40px;">汤先生</p>
+      <p style="display: inline; position: relative; top: 50px; left: -40px;">虞先生</p>
 
       <i style="display: inline; position: relative; top: 50px; left: 75px;font-size:22px; color: blue" class="el-icon-s-custom"></i>
       <p style="display: inline; position: relative; top: 50px; left: 65px;font-size:18px">华南大区</p>
-      <p style="display: inline; position: relative; top: 50px; left: 35px;">刘女士</p>
+      <p style="display: inline; position: relative; top: 50px; left: 35px;">李先生</p>
     </div>
     <div>
       <i style="display: inline; position: relative; top: 100px; left: 72px;font-size:22px; color: blue" class="el-icon-phone-outline"></i>
@@ -23,11 +23,11 @@
 
       <i style="display: inline; position: relative; top: 100px; left: 52px;font-size:22px; color: blue" class="el-icon-phone-outline"></i>
       <p style="display: inline; position: relative; top: 100px; left: 42px;font-size:18px">联系电话</p>
-      <p style="display: inline; position: relative; top: 100px; left: 12px; color: #ee9526;font-size:25px">13816024224</p>
+      <p style="display: inline; position: relative; top: 100px; left: 12px; color: #ee9526;font-size:25px">15802121216</p>
 
       <i style="display: inline; position: relative; top: 100px; left: 25px;font-size:22px; color: blue" class="el-icon-phone-outline"></i>
       <p style="display: inline; position: relative; top: 100px; left: 15px;font-size:18px">联系电话</p>
-      <p style="display: inline; position: relative; top: 100px; left: -15px; color: #ee9526;font-size:25px">13533862076</p>
+      <p style="display: inline; position: relative; top: 100px; left: -15px; color: #ee9526;font-size:25px">13401117367</p>
     </div>
 
     <div>
@@ -37,11 +37,11 @@
 
       <i style="display: inline; position: relative; top: 150px; left: 25px;font-size:22px; color: blue" class="el-icon-message"></i>
       <p style="display: inline; position: relative; top: 150px; left: 15px;font-size:18px">电子邮箱</p>
-      <p style="display: inline; position: relative; top: 150px; left: -15px;">tangjl@efreight.cn</p>
+      <p style="display: inline; position: relative; top: 150px; left: -15px;">yuqi@efreight.cn</p>
 
       <i style="display: inline; position: relative; top: 150px; left: 20px;font-size:22px; color: blue" class="el-icon-message"></i>
       <p style="display: inline; position: relative; top: 150px; left: 10px;font-size:18px">电子邮箱</p>
-      <p style="display: inline; position: relative; top: 150px; left: -20px;">liumq@efreight.cn</p>
+      <p style="display: inline; position: relative; top: 150px; left: -20px;">liyifan@efreight.cn</p>
     </div>
  <!--   <div>
       <div style="display: inline; position: relative; top: -100px"><img src="../assets/images/undev1.png"></div>

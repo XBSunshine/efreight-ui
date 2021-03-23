@@ -1,11 +1,11 @@
 <template>
 	<div class="warp-main">
 		<el-row v-loading="loading" element-loading-text="拼命加载中">
-			<el-col class="toolbar" style="padding-bottom: 0;">
-				<el-form :inline="false" :model="query" class="demo-ruleForm">
+			<!--<el-col class="toolbar" style="padding-bottom: 0;">-->
+				<el-form :inline="false" :model="query" label-width="100px" class="prm_bill_settle">
 					<div>
 						<el-row>
-              <el-col class="elementWidth">
+    <!--          <el-col class="elementWidth">
                 <el-form-item label="期间" label-width="85px">
                   <el-date-picker v-model="query.statementDate_begin"  type="month" value-format="yyyy-MM" placeholder="" style="width: 135px;">
                   </el-date-picker>
@@ -13,20 +13,51 @@
                   <el-date-picker v-model="query.statementDate_end"  type="month" value-format="yyyy-MM" placeholder="" style="width: 135px;">
                   </el-date-picker>
                 </el-form-item>
-              </el-col>
-              <!--<el-col class="elementWidth">
-                <el-form-item label="-" label-width="25px">
-                  <el-date-picker v-model="query.statementDate_end"  type="month" value-format="yyyy-MM" placeholder="" style="width: 135px;">
+              </el-col>-->
+
+              <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:162px;">
+                    <template slot="prepend">期间</template>
+                    <el-date-picker slot="suffix" v-model="query.statementDate_begin" clearable type="month" value-format="yyyy-MM"
+                                    placeholder="开始" style="width: 113px;margin-right: -5px;">
+                    </el-date-picker>
+                  </el-input>
+                  <span>-</span>
+                  <el-date-picker v-model="query.statementDate_end" clearable type="month" value-format="yyyy-MM" placeholder="结束"
+                                  style="width: 113px;">
                   </el-date-picker>
                 </el-form-item>
-              </el-col>-->
+              </el-col>
               <el-col class="elementWidth">
-                <el-form-item label="客户" label-width="55px">
-                  <el-input v-model="query.coopName" clearable style="width: 307px;">
+                <el-form-item label-width="10px">
+                  <el-input style="width: 406px;" v-model="query.coopName" auto-complete="off" clearable>
+                    <template slot="prepend">客&emsp;&emsp;户</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:200px;">
+                    <template slot="prepend">业务区域</template>
+                    <el-select slot="suffix" v-model="query.billTemplate" style="width: 131px;margin-right: -5px;" clearable>
+                      <el-option label="全部"   value=""></el-option>
+                      <el-option label="华北" value="BJS"></el-option>
+                      <el-option label="华南" value="CAN"></el-option>
+                      <el-option label="华东" value="SHA"></el-option>
+                      <el-option label="总部" value="EFT"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+<!--              <el-col class="elementWidth">
+                <el-form-item label="客户" label-width="55px">
+                  <el-input v-model="query.coopName" clearable style="width: 307px;">
+                  </el-input>
+                </el-form-item>
+              </el-col>-->
+   <!--           <el-col class="elementWidth">
                 <el-form-item label="业务区域" label-width="85px">
                   <el-select v-model="query.billTemplate" style="width: 115px;">
                     <el-option label="全部"   value=""></el-option>
@@ -37,36 +68,70 @@
                     <el-option label="总部" value="EFT"></el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="20px">
+                  <el-button type="text" size="mini" v-if="showFlag" v-on:click="showFlag=false">收起</el-button>
+                  <el-button type="text" size="mini" v-if="!showFlag" v-on:click="showFlag=true">展开</el-button>
+                  <el-button type="primary" size="small" v-on:click="findCoopBillSettleList"
+                             style="margin-left: 2px;padding-left: 8px;padding-right: 8px;">查询
+                  </el-button>
+                </el-form-item>
+              </el-col>
+
+              <!--<el-col class="elementWidth">
                 <el-form-item style="margin-left: 21px;">
                   <el-button type="text" size="medium" v-if=showFlag v-on:click="showFlag=false">收起</el-button>
                   <el-button type="text" size="medium" v-if=!showFlag v-on:click="showFlag=true">展开</el-button>
                   <el-button type="primary" size="small" v-on:click="findCoopBillSettleList">查询</el-button>
                   <el-button type="primary" size="small" @click="exportExcel">导出</el-button>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
 						</el-row>
 						<el-row v-show="showFlag">
-              <el-col class="elementWidth">
+              <!--<el-col class="elementWidth">
                 <el-form-item label="口岸" label-width="85px">
                   <el-input v-model="query.departureStation" clearable style="width: 150px;">
                   </el-input>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width: 162px;" v-model="query.departureStation" auto-complete="off" clearable>
+                    <template slot="prepend">口岸</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!--<el-col class="elementWidth">
                 <el-form-item label="销售负责人" label-width="95px">
                   <el-input v-model="query.billConfirmName" clearable style="width: 148px;">
                   </el-input>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="12px">
+                  <el-input style="width: 202px;" v-model="query.billConfirmName" auto-complete="off" clearable>
+                    <template slot="prepend">销售负责人</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+          <!--    <el-col class="elementWidth">
                 <el-form-item label="客户负责人" label-width="95px">
                   <el-input v-model="query.saleConfirmName" clearable style="width: 157px;">
                   </el-input>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="12px">
+                  <el-input style="width: 314px;" v-model="query.saleConfirmName" auto-complete="off" clearable>
+                    <template slot="prepend">客户负责人</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+    <!--          <el-col class="elementWidth">
                 <el-form-item label="账单状态" label-width="85px">
                   <el-select v-model="query.statementStatus" clearable placeholder="请选择" style="width: 115px;">
                     <el-option label="全部" value=""></el-option>
@@ -79,11 +144,38 @@
                     <el-option label="账单已核销" value="账单已核销"></el-option>
                   </el-select>
                 </el-form-item>
+              </el-col>-->
+
+              <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:200px;">
+                    <template slot="prepend">账单状态</template>
+                    <el-select slot="suffix" v-model="query.statementStatus" style="width: 131px;margin-right: -5px;" clearable>
+                      <el-option label="全部" value=""></el-option>
+                      <el-option label="数据未填充" value="数据未填充"></el-option>
+                      <el-option label="数据已填充" value="数据已填充"></el-option>
+                      <el-option label="待总部确认" value="待总部确认"></el-option>
+                      <el-option label="账单已发送" value="账单已发送"></el-option>
+                      <el-option label="客户已确认" value="客户已确认"></el-option>
+                      <el-option label="发票已开具" value="发票已开具"></el-option>
+                      <el-option label="账单已核销" value="账单已核销"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col class="elementWidth">
+                <el-form-item label-width="39px">
+                  <el-button style="margin-left: 13px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF" type="primary" size="small" v-on:click="setting">设置</el-button>
+                  <el-button
+                             style="margin-left: 12px;padding-left: 8px;padding-right: 8px;background-color:#FFF;color:#409EFF"
+                             type="primary" size="small" v-on:click="exportExcel">导出
+                  </el-button>
+                </el-form-item>
               </el-col>
 
 						</el-row>
             <el-row v-show="showFlag">
-              <el-col class="elementWidth">
+ <!--             <el-col class="elementWidth">
                 <el-form-item label="有效日期" label-width="85px">
                   <el-date-picker v-model="query.validBeginDate"  type="date" value-format="yyyy-MM-dd" placeholder="" style="width: 135px;">
                   </el-date-picker>
@@ -91,8 +183,24 @@
                   <el-date-picker v-model="query.validEndDate"  type="date" value-format="yyyy-MM-dd" placeholder="" style="width: 135px;">
                   </el-date-picker>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:201px;">
+                    <template slot="prepend">有效日期</template>
+                    <el-date-picker slot="suffix" v-model="query.validBeginDate" clearable type="date" value-format="yyyy-MM-dd"
+                                    placeholder="开始" style="width: 133px;margin-right: -5px;">
+                    </el-date-picker>
+                  </el-input>
+                  <span>-</span>
+                  <el-date-picker v-model="query.validEndDate" clearable type="date" value-format="yyyy-MM-dd" placeholder="结束"
+                                  style="width: 133px;">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+
+   <!--           <el-col class="elementWidth">
                 <el-form-item label="核销日期" label-width="85px">
                   <el-date-picker v-model="query.invoiceWriteoffDateBegin"  type="date" value-format="yyyy-MM-dd" placeholder="" style="width: 134px;">
                   </el-date-picker>
@@ -100,8 +208,23 @@
                   <el-date-picker v-model="query.invoiceWriteoffDateEnd"  type="date" value-format="yyyy-MM-dd" placeholder="" style="width: 132px;">
                   </el-date-picker>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:201px;">
+                    <template slot="prepend">核销日期</template>
+                    <el-date-picker slot="suffix" v-model="query.invoiceWriteoffDateBegin" clearable type="date" value-format="yyyy-MM-dd"
+                                    placeholder="开始" style="width: 133px;margin-right: -5px;">
+                    </el-date-picker>
+                  </el-input>
+                  <span>-</span>
+                  <el-date-picker v-model="query.invoiceWriteoffDateEnd" clearable type="date" value-format="yyyy-MM-dd" placeholder="结束"
+                                  style="width: 133px;">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+    <!--          <el-col class="elementWidth">
                 <el-form-item label="结算方式" label-width="85px">
                   <el-select v-model="query.paymentMethod" clearable placeholder="请选择" style="width: 115px;">
                     <el-option label="全部" value=""></el-option>
@@ -109,10 +232,22 @@
                     <el-option label="到付" value="到付"></el-option>
                   </el-select>
                 </el-form-item>
+              </el-col>-->
+              <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:200px;">
+                    <template slot="prepend">结算方式</template>
+                    <el-select slot="suffix" v-model="query.paymentMethod" style="width: 131px;margin-right: -5px;" clearable>
+                      <el-option label="全部" value=""></el-option>
+                      <el-option label="预付" value="预付"></el-option>
+                      <el-option label="到付" value="到付"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
               </el-col>
             </el-row>
             <el-row v-show="showFlag">
-              <el-col class="elementWidth">
+<!--              <el-col class="elementWidth">
                 <el-form-item label="一级科目" label-width="85px">
                   <el-select style="width: 282px;" v-model="query.serviceNameOne" filterable placeholder="请选择" multiple size="small">
                     <el-option v-for="item in serviceoptions" :key="item.serviceId" :label="item.serviceName" :value="item.serviceId">
@@ -120,8 +255,21 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:346px;">
+                    <template slot="prepend">一级科目</template>
+                    <el-select slot="suffix" v-model="query.serviceNameOne" style="width: 278px;margin-right: -5px;" filterable multiple>
+                      <el-option v-for="item in serviceoptions" :key="item.serviceId" :label="item.serviceName" :value="item.serviceId">
+                        <span style="float: left">{{ item.serviceName }}</span>
+                      </el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+<!--              <el-col class="elementWidth">
                 <el-form-item label="二级科目" label-width="80px">
                   <el-select style="width: 284px;" v-model="query.serviceNameTwo" filterable placeholder="请选择" multiple
                              size="small">
@@ -131,8 +279,22 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
+              </el-col>-->
               <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:347px;">
+                    <template slot="prepend">二级科目</template>
+                    <el-select slot="suffix" v-model="query.serviceNameTwo" style="width: 279px;margin-right: -5px;" filterable multiple>
+                      <el-option v-for="item in servicetwooptions" :key="item.serviceId" :label="item.serviceName"
+                                 :value="item.serviceId">
+                        <span style="float: left">{{ item.serviceName }}</span>
+                      </el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+        <!--      <el-col class="elementWidth">
                 <el-form-item label="新业务" label-width="85px">
                   <el-select style="width: 115px" v-model="query.isNewBusiness" placeholder="请选择" size="small">
                     <el-option label="全部" value=""></el-option>
@@ -140,80 +302,119 @@
                     <el-option label="否" value="false"></el-option>
                   </el-select>
                 </el-form-item>
+              </el-col>-->
+
+              <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-input style="width:200px;">
+                    <template slot="prepend">新业务</template>
+                    <el-select slot="suffix" v-model="query.isNewBusiness" style="width: 137px;margin-right: -5px;" clearable>
+                      <el-option label="全部" value=""></el-option>
+                      <el-option label="是" value="true"></el-option>
+                      <el-option label="否" value="false"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col class="elementWidth">
+                <el-form-item label-width="10px">
+                  <el-checkbox @change="setZeroFlag" v-model="query.showZeroFlag">不显示0元账单</el-checkbox>
+                </el-form-item>
               </el-col>
             </el-row>
 					</div>
 				</el-form>
-			</el-col>
 
-			<el-table :indent="8" :data="data1" style="width: 100%;margin-bottom: 20px;"  border :summary-method="getSummaries" show-summary>
-        <!--<el-table-column align="center" prop="billNumber" label="序号" width="80" fixed>
-        </el-table-column>-->
+			<el-table :indent="8" :data="data1" style="width: 100%;margin-bottom: 20px;"  border :summary-method="getSummaries" show-summary :cell-class-name="addPullRightClass" :cell-style="addCellStayle" @header-dragend="cellWidth">
         <el-table-column align="center" prop="statementDate" label="期间" width="80" fixed>
         </el-table-column>
         <el-table-column align="left" prop="coopName" label="客户名称" width="280" fixed>
         </el-table-column>
-        <el-table-column align="left" prop="statementName" label="分组名称" width="250">
-        </el-table-column>
-        <el-table-column align="left" prop="serviceNameOne" label="一级科目" width="180">
-        </el-table-column>
-        <el-table-column align="left" prop="serviceNameTwo" label="二级科目" width="180">
-          <template slot-scope="scope">
-            <span v-if="scope.row.billStatus=='数据未填充'" style="color:red">{{ formatter22(scope.row) }}</span>
-            <span v-else>{{ formatter22(scope.row) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="departureStation" label="口岸" width="80">
-        </el-table-column>
-        <el-table-column align="center" prop="settlementType" label="结算周期/计费模式" width="150" :formatter="settlementTypeFormat">
-        </el-table-column>
-        <el-table-column align="center" prop="fillNumber" label="数量" width="80" :formatter="fillNumberFormat">
-        </el-table-column>
-        <el-table-column align="center" prop="unitPrice" label="单价" width="80">
-        </el-table-column>
-        <el-table-column align="center" prop="acturalCharge" label="金额" width="100" :formatter="acturalChargeFormat">
-        </el-table-column>
-        <el-table-column align="center" prop="billTemplate" label="业务区域" width="70">
-        </el-table-column>
-        <el-table-column align="center" prop="statementStatus" label="账单状态" width="90">
-        </el-table-column>
-        <el-table-column align="center" prop="saleConfirmName" label="客户负责人" width="90">
-        </el-table-column>
-        <el-table-column align="center" prop="billConfirmName" label="销售负责人" width="90">
-        </el-table-column>
-        <el-table-column align="center" prop="salesCollaborativeName" label="协同销售人" width="90">
-        </el-table-column>
-        <el-table-column align="center" prop="confirmCustomerTime" label="客户确认时间" width="160">
-        </el-table-column>
-        <el-table-column align="center" prop="invoiceWriteoffUserName" label="核销人" width="80">
-        </el-table-column>
-        <el-table-column align="center" prop="invoiceWriteoffDate" label="核销日期" width="85" :formatter="formatstopDate1">
-        </el-table-column>
-        <el-table-column align="center" prop="startChargeTime" label="首次收费月份" width="100"
-                         :formatter="formatStartChargeTime">
-        </el-table-column>
-        <el-table-column align="center" label="新业务" width="60">
-          <template slot-scope="scope">
-            <i class="iconfont el-icon-myduihao" style="color: red;" v-show="scope.row.isNewBusiness"></i>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="validBeginDate" label="生效日期" width="85">
-        </el-table-column>
-        <el-table-column align="center" prop="validEndDate" label="截止日期" width="85">
-        </el-table-column>
-        <el-table-column align="center" prop="itCode" label="IT编码" width="100">
-        </el-table-column>
+        <template v-for="(item,index) in tableColumns">
+<!--          <el-table-column align="left" prop="statementName" label="分组名称" width="250">
+          </el-table-column>
+          <el-table-column align="left" prop="serviceNameOne" label="一级科目" width="180">
+          </el-table-column>-->
+          <el-table-column v-if="item.label=='二级科目'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+            <template slot-scope="scope">
+              <span v-if="scope.row.billStatus=='数据未填充'" style="color:red">{{ formatter22(scope.row) }}</span>
+              <span v-else>{{ formatter22(scope.row) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-else-if="item.label=='结算周期/计费模式'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="settlementTypeFormat">
+          </el-table-column>
+          <el-table-column v-else-if="item.label=='数量'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="fillNumberFormat">
+          </el-table-column>
+          <el-table-column v-else-if="item.label=='金额'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="acturalChargeFormat">
+          </el-table-column>
+          <el-table-column v-else-if="item.label=='核销日期'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatstopDate1">
+          </el-table-column>
+          <el-table-column v-else-if="item.label=='首次收费月份'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" :formatter="formatStartChargeTime">
+          </el-table-column>
+          <el-table-column v-else-if="item.label=='新业务'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+            <template slot-scope="scope">
+              <i class="iconfont el-icon-myduihao" style="color: red;" v-show="scope.row.isNewBusiness"></i>
+            </template>
+          </el-table-column>
+          <el-table-column v-else header-align="center" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
+          </el-table-column>
+
+
+
+
+<!--          <el-table-column align="center" prop="departureStation" label="口岸" width="80">
+          </el-table-column>
+          <el-table-column align="center" prop="settlementType" label="结算周期/计费模式" width="150" :formatter="settlementTypeFormat">
+          </el-table-column>
+          <el-table-column align="center" prop="fillNumber" label="数量" width="80" :formatter="fillNumberFormat">
+          </el-table-column>
+          <el-table-column align="center" prop="unitPrice" label="单价" width="80">
+          </el-table-column>
+          <el-table-column align="center" prop="acturalCharge" label="金额" width="100" :formatter="acturalChargeFormat">
+          </el-table-column>
+          <el-table-column align="center" prop="billTemplate" label="业务区域" width="70">
+          </el-table-column>
+          <el-table-column align="center" prop="statementStatus" label="账单状态" width="90">
+          </el-table-column>
+          <el-table-column align="center" prop="saleConfirmName" label="客户负责人" width="90">
+          </el-table-column>
+          <el-table-column align="center" prop="billConfirmName" label="销售负责人" width="90">
+          </el-table-column>
+          <el-table-column align="center" prop="salesCollaborativeName" label="协同销售人" width="90">
+          </el-table-column>
+          <el-table-column align="center" prop="confirmCustomerTime" label="客户确认时间" width="160">
+          </el-table-column>
+          <el-table-column align="center" prop="invoiceWriteoffUserName" label="核销人" width="80">
+          </el-table-column>
+          <el-table-column align="center" prop="invoiceWriteoffDate" label="核销日期" width="85" :formatter="formatstopDate1">
+          </el-table-column>
+          <el-table-column align="center" prop="startChargeTime" label="首次收费月份" width="100"
+                           :formatter="formatStartChargeTime">
+          </el-table-column>
+          <el-table-column align="center" label="新业务" width="60">
+            <template slot-scope="scope">
+              <i class="iconfont el-icon-myduihao" style="color: red;" v-show="scope.row.isNewBusiness"></i>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="validBeginDate" label="生效日期" width="85">
+          </el-table-column>
+          <el-table-column align="center" prop="validEndDate" label="截止日期" width="85">
+          </el-table-column>
+          <el-table-column align="center" prop="itCode" label="IT编码" width="100">
+          </el-table-column>-->
+        </template>
       </el-table>
 			 <el-col :span="24" class="pagination">
          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[10, 30, 50]" :page-size.sync="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalNum">
          </el-pagination>
 			</el-col>
 		</el-row>
-
+    <setVisibleTag ref="addMission" v-if="setVisible" :visible.sync="setVisible" :frow="frow"></setVisibleTag>
 	</div>
 </template>
 <script>
-	// import API from '../../api/api_enterprise'
+    import setVisibleVue from '../billSettle/prm_bill_settle_setting.vue'
+    import columns from '../billSettle/prm_bill_settle_column.json'
 	export default {
 		data() {
 			return {
@@ -223,9 +424,11 @@
 				showFlag: false,
 				data1: [],
         data2: [],
+        tableColumns: [],
         currentPage: 1,
         pageSize: 10,
         totalNum: 0,
+        acturalChargeTotal: '',
 				query: {
           coopName: '',
           billTemplate: '',
@@ -243,13 +446,24 @@
           paymentMethod: '',
           serviceNameTwo: '',
           isNewBusiness: '',
+          showZeroFlag: true,
+          columnStrs: '',
         },
         serviceoptions: [],
         servicetwooptions: [],
 				frow: {},
-				currRow: ''
+				currRow: '',
+        setVisible: false,
 			}
 		},
+    components: {
+        'setVisibleTag': setVisibleVue,
+    },
+    provide() {
+        return {
+            findCoopBillSettleList: this.findCoopBillSettleList
+        }
+    },
 		created: function() {
         let buttonInfo = window.localStorage.getItem('buttonInfo')
         if (buttonInfo.indexOf('sys_coop_export')>-1) {
@@ -257,7 +471,7 @@
         }
         this.query.statementDate_begin=this.getDateTime(new Date());
         this.query.statementDate_end=this.getDateTime(new Date());
-        this.findCoopBillSettleList();
+        //this.findCoopBillSettleList();
         this.$axios.get2('/prm/coopBill/queryServiceIsValid'
             )
             .then(function(response) {
@@ -270,12 +484,63 @@
                 this.servicetwooptions = response.data.data;
             }.bind(this));
 
-		},
-		provide() {
-		},
-		components: {
+        //从数据库查询设置信息
+        let pageName = '翌飞结算管理/报表管理/结算报表';
+        this.$axios.get2("/hrs/user/getUserPageSet?pageName=" + pageName)
+            .then(function(response) {
+                let lock_list_column = response.data.data;
+                if (lock_list_column && lock_list_column.length > 0) {
+                    this.tableColumns = this.sortBykey(lock_list_column, 'index');
+                } else {
+                    this.tableColumns = this.sortBykey(columns.prmBillSettleInfo, 'index');
+                }
+            }.bind(this));
+
 		},
 		methods: {
+      sortBykey(ary, key) {
+          return JSON.parse(JSON.stringify(ary)).sort(function(a, b) {
+              let x = a[key]
+              let y = b[key]
+              return ((x < y) ? -1 : (x > y) ? 1 : 0)
+          })
+      },
+      //标题样式
+      addPullRightClass({
+                            row,
+                            column,
+                            rowIndex,
+                            columnIndex
+                        }) {
+      },
+      addCellStayle(data) {
+
+      },
+      cellWidth(newWidth, oldWidth, column, event) {
+          let strColumn = JSON.stringify(columns.prmBillSettleInfo);
+          let userId = window.localStorage.getItem('userId');
+          let arrayC = JSON.parse(strColumn);
+          if (arrayC && arrayC.length > 0) {
+              try {
+                  arrayC.forEach((item, index) => {
+                      if (column.label == item.label) {
+                          item.width = newWidth
+                          throw Error('end')
+                      }
+                  })
+              } catch (e) {
+                  //TODO handle the exception
+              }
+              arrayC = this.sortBykey(arrayC, 'index')
+              localStorage.setItem(userId + '_prm_bill_settle_column_width', JSON.stringify(arrayC))
+          }
+      },
+      setting() {
+          this.setVisible = true;
+      },
+      setZeroFlag() {
+          this.findCoopBillSettleList();
+      },
       formatStartChargeTime(row, column) {
           if (row.startChargeTime) {
               return row.startChargeTime.substring(0,7);
@@ -300,12 +565,17 @@
           return  _year + "-" + _month;
       },
       getSummaries(param) {
-
           const sums = [];
-          sums[0] = '合计';
-          if(this.data2.length > 0) {
-              sums[9] = this.getNumber1(this.data2[0].acturalChargeTotal);
-              //sums[4] = this.getNumber1(this.data2[0].amountReceivedTotal);
+          sums[0] = '总计';
+          let loaclJsonArray = param.columns;
+          if (loaclJsonArray) {
+              for (let i = 0; i < loaclJsonArray.length; i++) {
+                  if (this.acturalChargeTotal) {
+                      if (loaclJsonArray[i].property === "acturalCharge1") {
+                          sums[i] = this.acturalChargeTotal; //金额
+                      }
+                  }
+              }
           }
           return sums;
       },
@@ -398,76 +668,90 @@
 				});
 			},
       findCoopBillSettleList() {
-          this.loading = true;
-          let coopName1 = "";
-          if(this.query.coopName){
-              coopName1 = this.query.coopName.toUpperCase();
-          }
-          this.$axios.post('/prm/coopBill/searchCoopBillSettleList', {
-              coopName: coopName1,
-              billTemplate: this.query.billTemplate,
-              departureStation: this.query.departureStation,
-              billConfirmName: this.query.billConfirmName,
-              saleConfirmName: this.query.saleConfirmName,
-              statementStatus: this.query.statementStatus,
-            statementDate_begin: this.query.statementDate_begin,
-            statementDate_end: this.query.statementDate_end,
-            validBeginDate: this.query.validBeginDate,
-            validEndDate: this.query.validEndDate,
-            invoiceWriteoffDateBegin: this.query.invoiceWriteoffDateBegin,
-            invoiceWriteoffDateEnd: this.query.invoiceWriteoffDateEnd,
-            serviceNameOne: this.query.serviceNameOne.toString(),
-            serviceNameTwo: this.query.serviceNameTwo.toString(),
-            paymentMethod: this.query.paymentMethod,
-            currentPage: this.currentPage,
-            pageSize: this.pageSize,
-            isNewBusiness: this.query.isNewBusiness
-          }, {
-              headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-              }
-          }).then(function(response) {
-              if(response.status = '200') {
-                  this.loading = false
-                  this.data1 = response.data.paramList
-                  this.totalNum = response.data.totalNum
-                  //this.getSpanArr(this.data1)
-              } else {
-                  this.loading = false
-                  this.$notify.error({
-                      title: '错误',
-                      message: '查询失败'
-                  });
-              }
-          }.bind(this)).catch(function(error) {
-              this.loading = false
-              console.log(error)
-          });
+          //从数据库查询设置信息
+          let pageName = '翌飞结算管理/报表管理/结算报表';
+          this.$axios.get2("/hrs/user/getUserPageSet?pageName=" + pageName)
+              .then(function(response) {
+                  let lock_list_column = response.data.data;
+                  if (lock_list_column && lock_list_column.length > 0) {
+                      this.tableColumns = this.sortBykey(lock_list_column, 'index');
+                  } else {
+                      this.tableColumns = this.sortBykey(columns.prmBillSettleInfo, 'index');
+                  }
 
-          this.$axios.get2("/prm/coopBill/getTotalSettle", {
-            coopName: coopName1,
-            billTemplate: this.query.billTemplate,
-            departureStation: this.query.departureStation,
-            billConfirmName: this.query.billConfirmName,
-            saleConfirmName: this.query.saleConfirmName,
-            isNewBusiness: this.query.isNewBusiness,
-            statementStatus: this.query.statementStatus,
-            statementDate_begin: this.query.statementDate_begin,
-            statementDate_end: this.query.statementDate_end,
-            validBeginDate: this.query.validBeginDate,
-            validEndDate: this.query.validEndDate,
-            invoiceWriteoffDateBegin: this.query.invoiceWriteoffDateBegin,
-            invoiceWriteoffDateEnd: this.query.invoiceWriteoffDateEnd,
-            serviceNameOne: this.query.serviceNameOne.toString(),
-            serviceNameTwo: this.query.serviceNameTwo.toString(),
-            paymentMethod: this.query.paymentMethod,
-          }, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }).then(function(response) {
-                  this.data2 = response.data.data;
-                  this.getSummaries();
+                  this.loading = true;
+                  let coopName1 = "";
+                  if(this.query.coopName){
+                      coopName1 = this.query.coopName.toUpperCase();
+                  }
+                  this.$axios.post('/prm/coopBill/searchCoopBillSettleList', {
+                      coopName: coopName1,
+                      billTemplate: this.query.billTemplate,
+                      departureStation: this.query.departureStation,
+                      billConfirmName: this.query.billConfirmName,
+                      saleConfirmName: this.query.saleConfirmName,
+                      statementStatus: this.query.statementStatus,
+                      statementDate_begin: this.query.statementDate_begin,
+                      statementDate_end: this.query.statementDate_end,
+                      validBeginDate: this.query.validBeginDate,
+                      validEndDate: this.query.validEndDate,
+                      invoiceWriteoffDateBegin: this.query.invoiceWriteoffDateBegin,
+                      invoiceWriteoffDateEnd: this.query.invoiceWriteoffDateEnd,
+                      serviceNameOne: this.query.serviceNameOne.toString(),
+                      serviceNameTwo: this.query.serviceNameTwo.toString(),
+                      paymentMethod: this.query.paymentMethod,
+                      currentPage: this.currentPage,
+                      pageSize: this.pageSize,
+                      isNewBusiness: this.query.isNewBusiness,
+                      showZeroFlag: this.query.showZeroFlag,
+                  }, {
+                      headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded'
+                      }
+                  }).then(function(response) {
+                      if(response.status = '200') {
+                          this.loading = false
+                          this.data1 = response.data.paramList
+                          this.totalNum = response.data.totalNum
+                          this.acturalChargeTotal = response.data.acturalChargeTotal
+                      } else {
+                          this.loading = false
+                          this.$notify.error({
+                              title: '错误',
+                              message: '查询失败'
+                          });
+                      }
+                  }.bind(this)).catch(function(error) {
+                      this.loading = false
+                      console.log(error)
+                  });
+
+                  /*this.$axios.get2("/prm/coopBill/getTotalSettle", {
+                      coopName: coopName1,
+                      billTemplate: this.query.billTemplate,
+                      departureStation: this.query.departureStation,
+                      billConfirmName: this.query.billConfirmName,
+                      saleConfirmName: this.query.saleConfirmName,
+                      isNewBusiness: this.query.isNewBusiness,
+                      statementStatus: this.query.statementStatus,
+                      statementDate_begin: this.query.statementDate_begin,
+                      statementDate_end: this.query.statementDate_end,
+                      validBeginDate: this.query.validBeginDate,
+                      validEndDate: this.query.validEndDate,
+                      invoiceWriteoffDateBegin: this.query.invoiceWriteoffDateBegin,
+                      invoiceWriteoffDateEnd: this.query.invoiceWriteoffDateEnd,
+                      serviceNameOne: this.query.serviceNameOne.toString(),
+                      serviceNameTwo: this.query.serviceNameTwo.toString(),
+                      paymentMethod: this.query.paymentMethod,
+                      showZeroFlag: this.query.showZeroFlag,
+                  }, {
+                      headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded'
+                      }
+                  }).then(function(response) {
+                      this.data2 = response.data.data;
+                      this.getSummaries();
+                  }.bind(this));*/
               }.bind(this));
       },
 
@@ -513,46 +797,75 @@
             this.openError("查询结果没有数据，不允许导出");
             return;
         }
-        let coopName1 = "";
-        if(this.query.coopName){
-            coopName1 = this.query.coopName.toUpperCase();
-        }
-				let params = {
-          "coopName": coopName1,
-          "billTemplate": this.query.billTemplate,
-          "departureStation": this.query.departureStation,
-          "billConfirmName": this.query.billConfirmName,
-          "saleConfirmName": this.query.saleConfirmName,
-          "isNewBusiness": this.query.isNewBusiness,
-          "statementStatus": this.query.statementStatus,
-          "statementDate_begin": this.query.statementDate_begin,
-          "statementDate_end": this.query.statementDate_end,
-          "validBeginDate": this.query.validBeginDate,
-          "validEndDate": this.query.validEndDate,
-          "serviceNameOne": this.query.serviceNameOne.toString(),
-          "invoiceWriteoffDateBegin": this.query.invoiceWriteoffDateBegin,
-          "invoiceWriteoffDateEnd": this.query.invoiceWriteoffDateEnd,
-          "paymentMethod": this.query.paymentMethod,
-          "serviceNameTwo": this.query.serviceNameTwo.toString(),
-
-				}
-				this.$axios.post3('/prm/coopBill/exportSettleExcel', params)
-					.then(function(response) {
-						var blob = new Blob([response.data], {
-							type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
-						});
-						var downloadElement = document.createElement('a');
-						var href = window.URL.createObjectURL(blob); // 创建下载的链接
-						downloadElement.href = href;
-						downloadElement.download = '结算报表' + '.xls'; // 下载后文件名
-						document.body.appendChild(downloadElement);
-						downloadElement.click(); // 点击下载
-						document.body.removeChild(downloadElement); // 下载完成移除元素
-						window.URL.revokeObjectURL(href); // 释放掉blob对象
-					}.bind(this));
-
+        this.$confirm('是否根据结果字段导出数据？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+        }).then(() => {
+            this.query.columnStrs = JSON.stringify(this.tableColumns)
+            this.exportExcelSure();
+        }).catch(() => {
+            this.query.columnStrs = '';
+            this.exportExcelSure();
+        });
 			},
+      exportExcelSure() {
+          let coopName1 = "";
+          if(this.query.coopName){
+              coopName1 = this.query.coopName.toUpperCase();
+          }
+          let params = {
+              "coopName": coopName1,
+              "billTemplate": this.query.billTemplate,
+              "departureStation": this.query.departureStation,
+              "billConfirmName": this.query.billConfirmName,
+              "saleConfirmName": this.query.saleConfirmName,
+              "isNewBusiness": this.query.isNewBusiness,
+              "statementStatus": this.query.statementStatus,
+              "statementDate_begin": this.query.statementDate_begin,
+              "statementDate_end": this.query.statementDate_end,
+              "validBeginDate": this.query.validBeginDate,
+              "validEndDate": this.query.validEndDate,
+              "serviceNameOne": this.query.serviceNameOne.toString(),
+              "invoiceWriteoffDateBegin": this.query.invoiceWriteoffDateBegin,
+              "invoiceWriteoffDateEnd": this.query.invoiceWriteoffDateEnd,
+              "paymentMethod": this.query.paymentMethod,
+              "serviceNameTwo": this.query.serviceNameTwo.toString(),
+              "showZeroFlag": this.query.showZeroFlag,
+              "columnStrs": this.query.columnStrs,
+          }
+          this.$axios.post3('/prm/coopBill/exportSettleExcel', params)
+              .then(function(response) {
+                  var blob = new Blob([response.data], {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                  });
+                  var downloadElement = document.createElement('a');
+                  var href = window.URL.createObjectURL(blob); // 创建下载的链接
+                  downloadElement.href = href;
+                  downloadElement.download = '结算报表' + '.xls'; // 下载后文件名
+                  document.body.appendChild(downloadElement);
+                  downloadElement.click(); // 点击下载
+                  document.body.removeChild(downloadElement); // 下载完成移除元素
+                  window.URL.revokeObjectURL(href); // 释放掉blob对象
+              }.bind(this));
+          this.query.columnStrs = '';
+      },
 		}
 	}
 </script>
 
+<style>
+  .prm_bill_settle .el-input__icon {
+    line-height: 30px !important;
+  }
+
+  .prm_bill_settle .el-form-item__content {
+    line-height: 30px !important;
+  }
+
+  .prm_bill_settle .el-input-group__append, .prm_bill_settle .el-input-group__prepend {
+    padding: 0px 10px !important;
+  }
+
+</style>

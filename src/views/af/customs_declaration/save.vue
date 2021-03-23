@@ -90,12 +90,28 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col class="elementWidth table_col_top table_col_right" style="width: 482px;">
+          <el-col class="elementWidth table_col_top" v-if="isLoading">
 						<el-form-item label="提运单号" style="margin-top: 10px;">
-							<el-input :value="ruleForm.awbNumber+(ruleForm.hawbNumber?('_'+ruleForm.hawbNumber):'')" auto-complete="off" clearable style="width:390px;" disabled>
+							<el-input :value="ruleForm.awbNumber+(ruleForm.hawbNumber?('_'+ruleForm.hawbNumber):'')" auto-complete="off" clearable style="width:150px;" disabled>
 							</el-input>
 						</el-form-item>
 					</el-col>
+          <el-col class="elementWidth table_col_top table_col_right" v-else style="width: 482px;">
+            <el-form-item label="提运单号" style="margin-top: 10px;">
+              <el-input :value="ruleForm.awbNumber+(ruleForm.hawbNumber?('_'+ruleForm.hawbNumber):'')" auto-complete="off" clearable style="width:390px;" disabled>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth table_col_top table_col_right" style="margin-left: -7px;" v-if="isLoading">
+            <el-form-item label="货物存放地点" label-width="96px" style="margin-top: 10px;">
+              <el-select style="width:150px;margin-left: -9px" v-model="ruleForm.warehouseId" filterable remote placeholder="请输入关键词" @visible-change="warehouseVisibleChange" :remote-method="warehouseRemoteMethod" :loading="warehouseLoading" clearable>
+                <el-option v-for="item in warehousesTemp" :key="item.warehouseId" :label="item.warehouseNameCn" :value="item.warehouseId">
+                  <span style="float: left;">{{item.warehouseCode}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span style="float: right;">{{item.warehouseNameCn}}  {{item.apCode}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
 				</el-row>
 
 				<el-row style="margin-top: 0px;">
@@ -130,16 +146,16 @@
 					</el-col>
 					<el-col class="elementWidth table_col_top table_col_right" v-else style="width: 482px;">
 						<el-form-item label="许可证号" style="margin-top: 10px;">
-							<el-input v-model="ruleForm.licenseNumber" auto-complete="off" clearable style="width:150px;" maxlength="20">
+							<el-input v-model="ruleForm.licenseNumber" auto-complete="off" clearable style="width:390px;" maxlength="20">
 							</el-input>
 						</el-form-item>
 					</el-col>
-          <el-col class="elementWidth table_col_top table_col_right" style="margin-left: -7px;" v-if="isLoading">
-            <el-form-item label="货物存放地点" label-width="96px" style="margin-top: 10px;">
-              <el-select style="width:150px;margin-left: -9px" v-model="ruleForm.warehouseId" filterable remote placeholder="请输入关键词" @visible-change="warehouseVisibleChange" :remote-method="warehouseRemoteMethod" :loading="warehouseLoading" clearable>
-                <el-option v-for="item in warehousesTemp" :key="item.warehouseId" :label="item.warehouseNameCn" :value="item.warehouseId">
-                  <span style="float: left;">{{item.warehouseCode}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span style="float: right;">{{item.warehouseNameCn}}  {{item.apCode}}</span>
+          <el-col class="elementWidth table_col_top table_col_right" style="margin-left: -16px;" v-if="isLoading">
+            <el-form-item label="启运港" label-width="96px" style="margin-top: 10px;">
+              <el-select v-model="ruleForm.portDepartureArrival" filterable remote placeholder="请输入关键词" @visible-change="portDepartureArrivalVisibleChange" :remote-method="portDepartureArrivalRemoteMethod" :loading="portDepartureArrivalLoading" style="width:150px;" clearable>
+                <el-option v-for="item in portDepartureArrivalsTemp" :key="item.nationCodeThree" :label="item.nationNameCn" :value="item.nationCodeThree">
+                  <span style="float: left;">{{item.nationCodeThree}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span style="float: right;">{{item.nationNameCn}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -457,6 +473,7 @@
 				cutModes: [],
 				cutModesTemp: [],
 				countrys: [],
+        portDepartureArrivalsTemp: [],
 				countryTradesTemp: [],
 				exportImportPorts: [],
 				exportImportPortsTemp: [],
@@ -478,6 +495,7 @@
 				warehouseLoading: false,
 				countryTradeLoading: false,
 				exportImportPortLoading: false,
+        portDepartureArrivalLoading: false,
 				countryDepartureArrival1Loading: false,
 				countryDepartureArrivalLoading: false,
 				productNameLoading: false,
@@ -509,6 +527,7 @@
 					licenseNumber: '',
 					contractNumber: '',
 					countryTrade: '',
+          portDepartureArrival: '',
 					countryDepartureArrival: '',
 					countryDepartureArrival1: '',
 					exportImportPort: '',
@@ -710,8 +729,11 @@
 			gotoSalesConsumption() {
 				this.frow.isSalesConsumption = true
 				this.ffrow.scType = 0
+        if(this.frow.businessScope=='AI'){
+          this.ffrow.scType = 1
+        }
 				this.ffrow.rowBean = {
-					scType: 0,
+					scType:  this.ffrow.scType,
 					scName: this.ruleForm.salesConsumptionName,
 					scCode: this.ruleForm.salesConsumptionCode,
 					scPrintRemark: ''
@@ -822,6 +844,27 @@
 					this.countryTradesTemp = this.countrys.slice(0, 10)
 					if (this.ruleForm.countryTrade && !this.countryTradesTemp.some(item => item.nationCodeThree == this.ruleForm.countryTrade)) {
 						this.countryTradesTemp = this.countryTradesTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryTrade))
+					}
+				}
+			},
+			portDepartureArrivalRemoteMethod(query) {
+				if (query) {
+					this.portDepartureArrivalLoading = true;
+					setTimeout(() => {
+						this.portDepartureArrivalLoading = false;
+						this.portDepartureArrivalsTemp = this.countrys.filter(item => {
+							return item.nationNameCn.toLowerCase().indexOf(query.toLowerCase()) > -1 || item.nationCodeThree.toLowerCase().indexOf(query.toLowerCase()) > -1
+						}).slice(0, 10)
+					}, 200)
+				} else {
+					this.portDepartureArrivalsTemp = this.countrys.slice(0, 10)
+				}
+			},
+			portDepartureArrivalVisibleChange(flag) {
+				if (flag) {
+					this.portDepartureArrivalsTemp = this.countrys.slice(0, 10)
+					if (this.ruleForm.portDepartureArrival && !this.portDepartureArrivalsTemp.some(item => item.nationCodeThree == this.ruleForm.portDepartureArrival)) {
+						this.portDepartureArrivalsTemp = this.portDepartureArrivalsTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.portDepartureArrival))
 					}
 				}
 			},
@@ -1154,6 +1197,9 @@
             if (this.countryTradesTemp.length > 0 && this.ruleForm.countryTrade && !this.countryTradesTemp.some(item => item.nationCodeThree == this.ruleForm.countryTrade)) {
               this.countryTradesTemp = this.countryTradesTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryTrade))
             }
+            if (this.portDepartureArrivalsTemp.length > 0 && this.ruleForm.portDepartureArrival && !this.portDepartureArrivalsTemp.some(item => item.nationCodeThree == this.ruleForm.portDepartureArrival)) {
+              this.portDepartureArrivalsTemp = this.portDepartureArrivalsTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.portDepartureArrival))
+            }
             if (this.countryDepartureArrivalsTemp.length > 0 && this.ruleForm.countryDepartureArrival && !this.countryDepartureArrivalsTemp.some(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival)) {
               this.countryDepartureArrivalsTemp = this.countryDepartureArrivalsTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival))
             }
@@ -1280,10 +1326,10 @@
               if (this.ruleForm.warehouseId && !this.warehousesTemp.some(item => item.warehouseId == this.ruleForm.warehouseId)) {
                 this.warehousesTemp = this.warehousesTemp.concat(this.warehouses.filter(item => item.warehouseId == this.ruleForm.warehouseId))
               }
-            }else{
-              if (this.warehousesTemp && this.warehousesTemp.length > 0) {
-                this.ruleForm.warehouseId = this.warehousesTemp[0].warehouseId
-              }
+            // }else{
+            //   if (this.warehousesTemp && this.warehousesTemp.length > 0) {
+            //     this.ruleForm.warehouseId = this.warehousesTemp[0].warehouseId
+            //   }
             }
           })
 				//贸易国
@@ -1295,6 +1341,7 @@
 						this.countryTradesTemp = this.countrys.slice(0, 10)
 						this.countryDepartureArrivalsTemp = this.countrys.slice(0, 10)
 						this.countryDepartureArrival1sTemp = this.countrys.slice(0, 10)
+						this.portDepartureArrivalsTemp = this.countrys.slice(0, 10)
             if(this.ruleForm.customsDeclarationId){
               if (this.ruleForm.countryTrade && !this.countryTradesTemp.some(item => item.nationCodeThree == this.ruleForm.countryTrade)) {
                 this.countryTradesTemp = this.countryTradesTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryTrade))
@@ -1305,10 +1352,13 @@
               if (this.ruleForm.countryDepartureArrival1 && !this.countryDepartureArrival1sTemp.some(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival1)) {
                 this.countryDepartureArrival1sTemp = this.countryDepartureArrival1sTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.countryDepartureArrival1))
               }
+              if (this.ruleForm.portDepartureArrival && !this.portDepartureArrivalsTemp.some(item => item.nationCodeThree == this.ruleForm.portDepartureArrival)) {
+                this.portDepartureArrivalsTemp = this.portDepartureArrivalsTemp.concat(this.countrys.filter(item => item.nationCodeThree == this.ruleForm.portDepartureArrival))
+              }
             }
 					})
 				//离境口岸
-				this.$axios.get('/afbase/category/queryCategoryByCategoryType/23')
+				this.$axios.get('/afbase/category/queryCategoryByCategoryType/29')
 					.then((response) => {
 						this.exportImportPorts = response.data.data
 						this.exportImportPortsTemp = this.exportImportPorts.slice(0, 10)

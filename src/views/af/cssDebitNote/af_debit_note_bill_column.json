@@ -118,7 +118,7 @@
       "prop": "invoiceNum",
       "flag": "true",
       "index": 16,
-      "width": 200,
+      "width": 280,
       "align": "center",
       "sortable": false
     },

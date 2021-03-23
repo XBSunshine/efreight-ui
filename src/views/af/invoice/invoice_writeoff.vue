@@ -5,7 +5,7 @@
 				<el-col class="elementWidth">
 					<el-form-item>
 						<el-input auto-complete="off" disabled style="width:630px" v-model="ruleForm.customerName">
-							<template slot="prepend">付款客户</template>
+							<template slot="prepend">收款客户</template>
 						</el-input>
 					</el-form-item>
 				</el-col>
@@ -106,7 +106,7 @@
 			</el-row>
 		</el-form>
     <div style="margin:10px 10px 10px 10px;">
-    	<el-button type="primary" size="small" v-on:click="doSave('ruleForm')">确定</el-button>
+    	<el-button type="primary" size="small" :loading="loading" v-on:click="doSave('ruleForm')">确定</el-button>
     	<el-button type="primary" size="small" v-on:click="handleClose">取消</el-button>
     </div>
 	</el-dialog>
@@ -122,6 +122,7 @@
 		},
 		data() {
 			return {
+        loading: false,
 				invoiceDetailSaveVisible: false,
 				currencyCodeOptions:[],
 				financialAccounts: [],
@@ -219,6 +220,7 @@
       },
       //保存
 			doSave(formName) {
+        this.loading = true;
         if(!this.ruleForm.amountWriteoff&&this.ruleForm.amountWriteoff!=0){
           this.openError("本次核销金额不能为空")
           return
@@ -235,6 +237,7 @@
 					if (valid) {
 						this.$axios.post2('/afbase/cssIncomeInvoiceDetailWriteoff/doSave', this.ruleForm)
 							.then((response) => {
+                this.loading = false;
 								if (response.data.code == 0) {
 									this.openSuccess("保存成功");
 									this.queryList();
@@ -245,9 +248,11 @@
 							}).catch((error) => {
 								let errorinfo = error.response.data.messageInfo;
 								this.openError(errorinfo)
+                this.loading = false;
 							});
 					} else {
 						console.log('error submit!!');
+            this.loading = false;
 						return false;
 					}
 				})

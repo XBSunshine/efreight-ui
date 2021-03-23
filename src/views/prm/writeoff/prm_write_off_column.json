@@ -1,0 +1,139 @@
+{
+  "columns": [
+    {
+      "label": "核销单号",
+      "prop": "writeOffNum",
+      "headerAlign": "center",
+      "index": 1,
+      "width": 160,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "账单名称",
+      "prop": "statementName",
+      "headerAlign": "center",
+      "index": 2,
+      "width": 500,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "账单月份",
+      "prop": "statementDate",
+      "headerAlign": "center",
+      "index": 3,
+      "width": 80,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "业务区域",
+      "prop": "zoneName",
+      "headerAlign": "center",
+      "index": 4,
+      "width": 80,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "发票号",
+      "prop": "invoiceNumber",
+      "headerAlign": "center",
+      "index": 5,
+      "width": 250,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "发票抬头",
+      "prop": "invoiceTitle",
+      "headerAlign": "center",
+      "index": 6,
+      "width": 250,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "发票日期",
+      "prop": "invoiceDate",
+      "headerAlign": "center",
+      "index": 7,
+      "width": 100,
+      "align": "left",
+      "sortable": false
+    },
+    {
+      "label": "账单金额",
+      "prop": "amountReceived",
+      "headerAlign": "center",
+      "index": 8,
+      "width": 100,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "本次核销金额",
+      "prop": "amountWriteOff",
+      "headerAlign": "center",
+      "index": 9,
+      "width": 120,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "核销日期",
+      "prop": "writeOffDate",
+      "headerAlign": "center",
+      "index": 10,
+      "width": 120,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "核销人",
+      "prop": "writeOffUser",
+      "headerAlign": "center",
+      "index": 11,
+      "width": 200,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "操作时间",
+      "prop": "optTime",
+      "headerAlign": "center",
+      "index": 12,
+      "width": 180,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "科目代码",
+      "prop": "financialAccountCode",
+      "headerAlign": "center",
+      "index": 13,
+      "width": 120,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "科目名称",
+      "prop": "financialAccountName",
+      "headerAlign": "center",
+      "index": 14,
+      "width": 180,
+      "align": "center",
+      "sortable": false
+    },
+    {
+      "label": "核销备注",
+      "prop": "writeOffRemark",
+      "headerAlign": "center",
+      "index": 15,
+      "width": 120,
+      "align": "center",
+      "sortable": false
+    }
+  ]
+}

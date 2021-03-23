@@ -41,6 +41,7 @@
 							<el-select v-model="query.statementStatus" clearable style="width: 120px;">
 								<el-option label="客户已确认" value="客户已确认"></el-option>
 								<el-option label="发票已开具" value="发票已开具"></el-option>
+                <el-option label="账单部分核销" value="账单部分核销"></el-option>
 								<el-option label="账单已核销" value="账单已核销"></el-option>
 							</el-select>
 						</el-form-item>
@@ -101,18 +102,24 @@
         </el-row>
 			</el-form>
 		</el-col>
-		<div>
-			<el-table :data="data" border :summary-method="getSummaries" show-summary>
-        <el-table-column align="center" label="操作" width="60" fixed="left">
-          <template slot-scope="scope">
-            <el-dropdown trigger="click" @command="handleCommand" @visible-change="handleChange(scope.row)">
-              <i class="el-icon-s-operation"></i>
-              <el-dropdown-menu slot="dropdown">
-              	<el-dropdown-item></el-dropdown-item>
-                <el-dropdown-item command="invoice" v-if="invoiceButtonFlag && (scope.row.statementStatus=='客户已确认' || scope.row.statementStatus=='发票已开具')">开具发票</el-dropdown-item>
-                <el-dropdown-item command="verify" v-if="verifyButtonFlag && scope.row.statementStatus=='发票已开具'">发票核销</el-dropdown-item>
-                <el-dropdown-item command="checkbill" v-if="checkbillButtonFlag">查看账单</el-dropdown-item>
-                <el-dropdown-item command="printbill" v-if="printbillButtonFlag">账单预览</el-dropdown-item>
+      <div>
+        <el-table :data="data" border :summary-method="getSummaries" show-summary>
+          <el-table-column align="center" label="操作" width="60" fixed="left">
+            <template slot-scope="scope">
+              <el-dropdown trigger="click" @command="handleCommand" @visible-change="handleChange(scope.row)">
+                <i class="el-icon-s-operation"></i>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item></el-dropdown-item>
+                  <el-dropdown-item command="invoice"
+                                    v-if="invoiceButtonFlag && (scope.row.statementStatus=='客户已确认' || scope.row.statementStatus=='发票已开具')">
+                    开具发票
+                  </el-dropdown-item>
+                  <el-dropdown-item command="verify"
+                                    v-if="verifyButtonFlag && (scope.row.statementStatus=='发票已开具' || scope.row.statementStatus=='账单部分核销')">
+                    发票核销
+                  </el-dropdown-item>
+                  <el-dropdown-item command="checkbill" v-if="checkbillButtonFlag">查看账单</el-dropdown-item>
+                  <el-dropdown-item command="printbill" v-if="printbillButtonFlag">账单预览</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -260,7 +267,7 @@
       if (buttonInfo.indexOf('sys_coop_bill_checkbill')>-1) {
           this.checkbillButtonFlag=true;
       }
-      if (buttonInfo.indexOf('sys_coop_bill_printbill')>-1) {
+      if (buttonInfo.indexOf('sys_coop_bill_printbill1')>-1) {
           this.printbillButtonFlag=true;
       }
       if (buttonInfo.indexOf('sys_coop_bill_delete')>-1) {
@@ -321,6 +328,8 @@
               } else {
                   invoiceAmount = row.invoiceAmount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
               }
+          }else {
+              return '0.00';
           }
           return invoiceAmount;
       },
@@ -544,18 +553,18 @@
 				} else if(command == 'send') {
 					this.handleSend(this.currRow)
 				} else if(command == 'verify') {
-					this.handleVerify(this.currRow)
-				} else if(command == 'invoice') {
-					this.handleInvoice(this.currRow)
-				} else if(command == 'delete') {
-					this.handleDelete(this.currRow)
-				}else if(command == 'checkbill') {
-            this.handleCheck(this.currRow)
-        }else if(command == 'printbill') {
-            this.handlePrint(this.currRow)
+          this.handleVerify(this.currRow)
+        } else if (command == 'invoice') {
+          this.handleInvoice(this.currRow)
+        } else if (command == 'delete') {
+          this.handleDelete(this.currRow)
+        } else if (command == 'checkbill') {
+          this.handleCheck(this.currRow)
+        } else if (command == 'printbill') {
+          this.handlePrint(this.currRow)
         }
-			}
-		}
+      },
+    }
 	}
 </script>
 

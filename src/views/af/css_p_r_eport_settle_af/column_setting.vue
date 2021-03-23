@@ -210,7 +210,7 @@
           }
           //责任航线
           if(column.prop == 'routingPersonName'){
-              if(this.query.businessScope != 'AE'){
+              if(this.frow.businessScope != 'AE'){
                   indexDelete.push(index);
               }
           }

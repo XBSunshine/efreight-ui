@@ -127,6 +127,14 @@
     "width": 220,
     "align": "left",
     "sortable": false
+  }, {
+    "label": "附件",
+    "prop": "files",
+    "flag": "true",
+    "index": 17,
+    "width": 220,
+    "align": "left",
+    "sortable": false
   }
 	]
 }

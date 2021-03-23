@@ -315,7 +315,7 @@
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    currthis.$axios.post('/prm/coopBill/customerConfirmBill/' + row.statementId + '/' + row.settlementId).then((response) => {
+                    currthis.$axios.post('/prm/coopBill/customerConfirmBill/' + row.statementId + '/' + row.settlementId + '/' + row.rowUuid).then((response) => {
                         if(response.data.code == '0') {
                             currthis.$notify({
                                 title: '成功',
@@ -324,10 +324,8 @@
                             });
                             currthis.findUnmakeCoopBillList();
                         } else {
-                            currthis.$notify.error({
-                                title: '错误',
-                                message: response.data.messageInfo
-                            });
+                            let errorinfo = response.data.messageInfo;
+                            this.openError(errorinfo);
                         }
                     }).catch((error) => {
                         currthis.$notify.error({
@@ -608,10 +606,10 @@
                     position: 'bottom-right'
                 });
             },
-            openError(info, flag) {
+            openError(info) {
                 this.$notify({
                     title: '',
-                    message: flag + '失败，' + info,
+                    message: '操作失败，'+info,
                     type: 'error',
                     position: 'bottom-right'
                 });

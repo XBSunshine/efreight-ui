@@ -1116,9 +1116,9 @@
 				loading: false,
 				ifFullscreen: false,
 				style: {},
-				orderTeDigitsWeight: 3,
-				orderTeDigitsVolume: 3,
-				orderTeDigitsChargeWeight: 3,
+				orderTiDigitsWeight: 3,
+				orderTiDigitsVolume: 3,
+				orderTiDigitsChargeWeight: 3,
 				divTitle: '铁路进口订单 - 新增',
 				ruleForm: {
           businessScope: 'TI',
@@ -1337,17 +1337,17 @@
 					if (row.totalVolume) {
 						let t = row.totalVolume.split('.');
 						if (t.length > 1) {
-							this.ruleForm.planVolume = t[0] + "." + t[1].substr(0, this.orderTeDigitsVolume);
+							this.ruleForm.planVolume = t[0] + "." + t[1].substr(0, this.orderTiDigitsVolume);
 						} else {
-							this.ruleForm.planVolume = parseFloat(row.totalVolume).toFixed(this.orderTeDigitsVolume);
+							this.ruleForm.planVolume = parseFloat(row.totalVolume).toFixed(this.orderTiDigitsVolume);
 						}
 					}
 					if (row.totalWeight) {
 						let t = row.totalWeight.split('.');
 						if (t.length > 1) {
-							this.ruleForm.planWeight = t[0] + "." + t[1].substr(0, this.orderTeDigitsWeight);
+							this.ruleForm.planWeight = t[0] + "." + t[1].substr(0, this.orderTiDigitsWeight);
 						} else {
-							this.ruleForm.planWeight = parseFloat(row.totalWeight).toFixed(this.orderTeDigitsWeight);
+							this.ruleForm.planWeight = parseFloat(row.totalWeight).toFixed(this.orderTiDigitsWeight);
 						}
 					}
 				}
@@ -1690,14 +1690,14 @@
 					if (this.ruleForm.planWeight) {
 						let t = this.ruleForm.planWeight.split('.');
 						if (t.length > 1) {
-							if (t[1].length < this.orderTeDigitsWeight) {
-								this.ruleForm.planWeight = t[0] + "." + t[1] + "000".substr(0, this.orderTeDigitsWeight - t[1].length);
+							if (t[1].length < this.orderTiDigitsWeight) {
+								this.ruleForm.planWeight = t[0] + "." + t[1] + "000".substr(0, this.orderTiDigitsWeight - t[1].length);
 							} else {
-								this.ruleForm.planWeight = parseFloat(t[0] + "." + t[1]).toFixed(this.orderTeDigitsWeight);
+								this.ruleForm.planWeight = parseFloat(t[0] + "." + t[1]).toFixed(this.orderTiDigitsWeight);
 							}
 						} else {
-							if (this.orderTeDigitsWeight !== 0) {
-								this.ruleForm.planWeight = t[0] + "." + "000".substr(0, this.orderTeDigitsWeight);
+							if (this.orderTiDigitsWeight !== 0) {
+								this.ruleForm.planWeight = t[0] + "." + "000".substr(0, this.orderTiDigitsWeight);
 							}
 						}
 					}
@@ -1705,14 +1705,14 @@
 					if (this.ruleForm.planVolume) {
 						let t = this.ruleForm.planVolume.split('.');
 						if (t.length > 1) {
-							if (t[1].length < this.orderTeDigitsVolume) {
-								this.ruleForm.planVolume = t[0] + "." + t[1] + "000".substr(0, this.orderTeDigitsVolume - t[1].length);
+							if (t[1].length < this.orderTiDigitsVolume) {
+								this.ruleForm.planVolume = t[0] + "." + t[1] + "000".substr(0, this.orderTiDigitsVolume - t[1].length);
 							} else {
-								this.ruleForm.planVolume = parseFloat(t[0] + "." + t[1]).toFixed(this.orderTeDigitsVolume);
+								this.ruleForm.planVolume = parseFloat(t[0] + "." + t[1]).toFixed(this.orderTiDigitsVolume);
 							}
 						} else {
-							if (this.orderTeDigitsVolume !== 0) {
-								this.ruleForm.planVolume = t[0] + "." + "000".substr(0, this.orderTeDigitsVolume);
+							if (this.orderTiDigitsVolume !== 0) {
+								this.ruleForm.planVolume = t[0] + "." + "000".substr(0, this.orderTiDigitsVolume);
 							}
 						}
 					}
@@ -1720,14 +1720,14 @@
 					if (this.ruleForm.planChargeWeight) {
 						let t = this.ruleForm.planChargeWeight.split('.');
 						if (t.length > 1) {
-							if (t[1].length < this.orderTeDigitsChargeWeight) {
-								this.ruleForm.planChargeWeight = t[0] + "." + t[1] + "000".substr(0, this.orderTeDigitsChargeWeight - t[1].length);
+							if (t[1].length < this.orderTiDigitsChargeWeight) {
+								this.ruleForm.planChargeWeight = t[0] + "." + t[1] + "000".substr(0, this.orderTiDigitsChargeWeight - t[1].length);
 							} else {
-								this.ruleForm.planChargeWeight = parseFloat(t[0] + "." + t[1]).toFixed(this.orderTeDigitsChargeWeight);
+								this.ruleForm.planChargeWeight = parseFloat(t[0] + "." + t[1]).toFixed(this.orderTiDigitsChargeWeight);
 							}
 						} else {
-							if (this.orderTeDigitsChargeWeight !== 0) {
-								this.ruleForm.planChargeWeight = t[0] + "." + "000".substr(0, this.orderTeDigitsChargeWeight);
+							if (this.orderTiDigitsChargeWeight !== 0) {
+								this.ruleForm.planChargeWeight = t[0] + "." + "000".substr(0, this.orderTiDigitsChargeWeight);
 							}
 						}
 					}
@@ -1748,34 +1748,34 @@
 			},
 			formatToFloat(prop) {
 				if (prop == 'planChargeWeight') {
-					if (this.orderTeDigitsChargeWeight === 0) {
+					if (this.orderTiDigitsChargeWeight === 0) {
 						this.ruleForm.planChargeWeight = this.ruleForm.planChargeWeight.replace(/[^0123456789]/g, "");
 					} else {
 						this.ruleForm.planChargeWeight = this.ruleForm.planChargeWeight.replace(/[^0123456789.]/g, "");
 					}
 					let t = this.ruleForm.planChargeWeight.split('.');
 					if (t.length > 1) {
-						this.ruleForm.planChargeWeight = t[0] + "." + t[1].substr(0, this.orderTeDigitsChargeWeight);
+						this.ruleForm.planChargeWeight = t[0] + "." + t[1].substr(0, this.orderTiDigitsChargeWeight);
 					}
 				} else if (prop == 'planVolume') {
-					if (this.orderTeDigitsVolume === 0) {
+					if (this.orderTiDigitsVolume === 0) {
 						this.ruleForm.planVolume = this.ruleForm.planVolume.replace(/[^0123456789]/g, "");
 					} else {
 						this.ruleForm.planVolume = this.ruleForm.planVolume.replace(/[^0123456789.]/g, "");
 					}
 					let t = this.ruleForm.planVolume.split('.');
 					if (t.length > 1) {
-						this.ruleForm.planVolume = t[0] + "." + t[1].substr(0, this.orderTeDigitsVolume);
+						this.ruleForm.planVolume = t[0] + "." + t[1].substr(0, this.orderTiDigitsVolume);
 					}
 				} else if (prop == 'planWeight') {
-					if (this.orderTeDigitsWeight === 0) {
+					if (this.orderTiDigitsWeight === 0) {
 						this.ruleForm.planWeight = this.ruleForm.planWeight.replace(/[^0123456789]/g, "");
 					} else {
 						this.ruleForm.planWeight = this.ruleForm.planWeight.replace(/[^0123456789.]/g, "");
 					}
 					let t = this.ruleForm.planWeight.split('.');
 					if (t.length > 1) {
-						this.ruleForm.planWeight = t[0] + "." + t[1].substr(0, this.orderTeDigitsWeight);
+						this.ruleForm.planWeight = t[0] + "." + t[1].substr(0, this.orderTiDigitsWeight);
 					}
 				} else if (prop == 'planPieces') {
 					this.ruleForm[prop] = this.ruleForm[prop].replace(/[^0123456789]/g, "");
@@ -1998,14 +1998,14 @@
 			//查询用户设置小数位
 			this.$axios.get("/hrs/user/getUserAboutKeepDecimalPlaces").then((response) => {
 				if (response.data.code == 0) {
-					if (response.data.data.orderTeDigitsWeight != null) {
-						this.orderTeDigitsWeight = response.data.data.orderTeDigitsWeight
+					if (response.data.data.orderTiDigitsWeight != null) {
+						this.orderTiDigitsWeight = response.data.data.orderTiDigitsWeight
 					}
-					if (response.data.data.orderTeDigitsVolume != null) {
-						this.orderTeDigitsVolume = response.data.data.orderTeDigitsVolume
+					if (response.data.data.orderTiDigitsVolume != null) {
+						this.orderTiDigitsVolume = response.data.data.orderTiDigitsVolume
 					}
-					if (response.data.data.orderTeDigitsChargeWeight != null) {
-						this.orderTeDigitsChargeWeight = response.data.data.orderTeDigitsChargeWeight
+					if (response.data.data.orderTiDigitsChargeWeight != null) {
+						this.orderTiDigitsChargeWeight = response.data.data.orderTiDigitsChargeWeight
 					}
 				} else {
 					this.openError(response.data.messageInfo)

@@ -257,9 +257,9 @@
       },*/
       beforeAvatarUpload3(file) {
           this.uptoken.key = this.buildUploadFileKey(file);
-          const isLt10M = file.size < 10 * 1024 * 1024;
+          const isLt10M = file.size < 50 * 1024 * 1024;
           if(!isLt10M) {
-              this.$message.error('上传模板大小不能超过 10MB!');
+              this.$message.error('上传模板大小不能超过 50MB!');
           }
           if(isLt10M) {
               this.ruleForm.helpDocumentUrl = "http://doc.yctop.com/" + this.uptoken.key

@@ -103,7 +103,7 @@
 								<template v-if="query.businessScope.endsWith('E')&&query.businessScope!=='TE'" slot="prepend">离港日期</template>
 								<template v-if="query.businessScope.endsWith('I')&&query.businessScope!=='TI'" slot="prepend">到港日期</template>
 								<template v-if="query.businessScope=='TE'" slot="prepend">发车日期</template>
-                <template v-if="query.businessScope=='TI'" slot="prepend">到达日期</template>
+                                <template v-if="query.businessScope=='TI'" slot="prepend">到达日期</template>
 								<template v-if="query.businessScope=='LC'" slot="prepend">用车日期</template>
 								<template v-if="query.businessScope=='IO'" slot="prepend">业务日期</template>
 								<el-date-picker slot="suffix" style="width: 133px;margin-right: -5px;" v-model="query.flightDateStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期">
@@ -127,6 +127,23 @@
 				</el-row>
 			</div>
 		</el-form>
+		<el-row style="margin-bottom: 10px;margin-left: 5px;">
+			<el-col class="elementWidth">
+				<div>勾选合计：</div>
+			</el-col>
+			<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth">
+				<span>收入金额：</span>
+				<span>{{sumIncome}}</span>
+			</el-col>
+			<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth">
+				<span>成本金额：</span>
+				<span>{{sumCost}}</span>
+			</el-col>
+			<el-col style="margin-left: 10px;margin-top: 2px;" class="elementWidth">
+				<span>毛利金额：</span>
+				<span>{{sumProfit}}</span>
+			</el-col>
+		</el-row>
 		<el-table v-loading="loading" :data="data" border ref="table" stripe class="table_settle" highlight-current-row :cell-class-name="addPullRightClass" :cell-style="addCellStayle" @header-dragend="cellWidth" @selection-change="handleSelectionChange" :max-height="tableHeight">
 			<el-table-column fixed type="selection" align="center" width="50">
 			</el-table-column>
@@ -261,7 +278,10 @@
 				loading: false,
 				showFlag: false,
 				useroptions: [],
-				tableHeight: '550px'
+				tableHeight: '550px',
+				sumCost:'0.00',
+				sumIncome:'0.00',
+				sumProfit:'0.00'
 			}
 		},
 		provide() {
@@ -1018,12 +1038,29 @@
 				this.$nextTick(() => {
 					let af_order_lock_header = this.$refs.af_order_lock_header.offsetHeight;
 					let af_order_lock_footer = this.$refs.af_order_lock_footer.offsetHeight;
-					let heightS = window.innerHeight - 90 - af_order_lock_header - af_order_lock_footer;
+					let heightS = window.innerHeight - 130 - af_order_lock_header - af_order_lock_footer;
 					this.tableHeight = heightS + "px";
 				});
 			},
 			handleSelectionChange(val) {
-				this.multipleSelection = val;
+				this.multipleSelection = val
+				let sumCost = 0.00
+				let sumIncome = 0.00
+				let sumProfit = 0.00
+				this.multipleSelection.forEach(item=>{
+					if(item.incomeAmount){
+						sumIncome+=item.incomeAmount
+					}
+					if(item.costAmount){
+						sumCost+=item.costAmount
+					}
+					if(item.profitAmount){
+						sumProfit+=item.profitAmount
+					}
+				})
+				this.sumCost = sumCost.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+				this.sumIncome = sumIncome.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+				this.sumProfit = sumProfit.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
 			},
 			init() {
 				//查询业务范畴

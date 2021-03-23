@@ -105,7 +105,7 @@
         <el-row v-show="showOrderFlag">
           <el-col class="elementWidth" style="margin-left: 0px;">
             <el-form-item prop="orderAeDigitsWeight" label-width="15px">
-              <font class="phoneNumberStyle">AE订单小数位</font>&nbsp;&nbsp;&nbsp;
+              <font class="phoneNumberStyle">AE订单小数位</font>
               <el-input v-model="ruleForm.orderAeDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderAeDigitsWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
@@ -138,7 +138,7 @@
         <el-row v-show="showOrderFlag">
           <el-col class="elementWidth" style="margin-left: 3px;">
             <el-form-item prop="orderAiDigitsWeight" label-width="15px">
-              <font class="phoneNumberStyle">AI订单小数位</font>&nbsp;&nbsp;&nbsp;
+              <font class="phoneNumberStyle">AI订单小数位</font>
               <el-input v-model="ruleForm.orderAiDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderAiDigitsWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
@@ -171,7 +171,7 @@
         <el-row v-show="showOrderFlag">
           <el-col class="elementWidth" >
             <el-form-item prop="orderSeDigitsWeight" label-width="15px">
-              <font class="phoneNumberStyle">SE订单小数位</font>&nbsp;&nbsp;&nbsp;
+              <font class="phoneNumberStyle">SE订单小数位</font>
               <el-input v-model="ruleForm.orderSeDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderSeDigitsWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
@@ -204,7 +204,7 @@
         <el-row v-show="showOrderFlag">
           <el-col class="elementWidth" style="margin-left: 3px;">
             <el-form-item prop="orderSiDigitsWeight" label-width="15px">
-              <font class="phoneNumberStyle">SI订单小数位</font>&nbsp;&nbsp;&nbsp;
+              <font class="phoneNumberStyle">SI订单小数位</font>
               <el-input v-model="ruleForm.orderSiDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderSiDigitsWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
@@ -237,7 +237,7 @@
         <el-row v-show="showOrderFlag">
           <el-col class="elementWidth" >
             <el-form-item prop="orderTeDigitsWeight" label-width="15px">
-              <font class="phoneNumberStyle">TE订单小数位</font>&nbsp;&nbsp;&nbsp;
+              <font class="phoneNumberStyle">TE订单小数位</font>
               <el-input v-model="ruleForm.orderTeDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderTeDigitsWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
@@ -269,8 +269,41 @@
         </el-row>
         <el-row v-show="showOrderFlag">
           <el-col class="elementWidth" >
+            <el-form-item prop="orderTiDigitsWeight" label-width="15px">
+              <font class="phoneNumberStyle" style="margin-right: 15px !important;">TI订单小数位</font>
+              <el-input v-model="ruleForm.orderTiDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderTiDigitsWeight')">
+                <template slot="prepend">
+                  <font style="color: red;">*</font>
+                  <span>毛重</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth" style="margin-left: 10px;">
+            <el-form-item prop="orderTiDigitsVolume" label-width="15px">
+              <el-input v-model="ruleForm.orderTiDigitsVolume" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderTiDigitsVolume')">
+                <template slot="prepend">
+                  <font style="color: red;">*</font>
+                  <span>体积</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth" style="margin-left: 10px;">
+            <el-form-item prop="orderTiDigitsChargeWeight" label-width="15px">
+              <el-input v-model="ruleForm.orderTiDigitsChargeWeight" auto-complete="off" style="width: 160px;" @input="formatToNumber('orderTiDigitsChargeWeight')">
+                <template slot="prepend">
+                  <font style="color: red;">*</font>
+                  <span>计费吨</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-show="showOrderFlag">
+          <el-col class="elementWidth" >
             <el-form-item prop="orderLcDigitsWeight" label-width="15px">
-              <font class="phoneNumberStyle">LC订单小数位</font>&nbsp;&nbsp;&nbsp;
+              <font class="phoneNumberStyle">LC订单小数位</font>
               <el-input v-model="ruleForm.orderLcDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderLcDigitsWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
@@ -292,6 +325,39 @@
           <el-col class="elementWidth" style="margin-left: 10px;">
             <el-form-item prop="orderLcDigitsChargeWeight" label-width="15px">
               <el-input v-model="ruleForm.orderLcDigitsChargeWeight" auto-complete="off" style="width: 160px;" @input="formatToNumber('orderLcDigitsChargeWeight')">
+                <template slot="prepend">
+                  <font style="color: red;">*</font>
+                  <span>计费吨</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-show="showOrderFlag">
+          <el-col class="elementWidth" >
+            <el-form-item prop="orderIoDigitsWeight" label-width="15px">
+              <font class="phoneNumberStyle">IO订单小数位</font>
+              <el-input v-model="ruleForm.orderIoDigitsWeight" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderIoDigitsWeight')">
+                <template slot="prepend">
+                  <font style="color: red;">*</font>
+                  <span>毛重</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth" style="margin-left: 10px;">
+            <el-form-item prop="orderIoDigitsVolume" label-width="15px">
+              <el-input v-model="ruleForm.orderIoDigitsVolume" auto-complete="off" style="width: 150px;" @input="formatToNumber('orderIoDigitsVolume')">
+                <template slot="prepend">
+                  <font style="color: red;">*</font>
+                  <span>体积</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="elementWidth" style="margin-left: 10px;">
+            <el-form-item prop="orderIoDigitsChargeWeight" label-width="15px">
+              <el-input v-model="ruleForm.orderIoDigitsChargeWeight" auto-complete="off" style="width: 160px;" @input="formatToNumber('orderIoDigitsChargeWeight')">
                 <template slot="prepend">
                   <font style="color: red;">*</font>
                   <span>计费吨</span>
@@ -549,9 +615,15 @@
           orderTeDigitsWeight:3,
           orderTeDigitsVolume:3,
           orderTeDigitsChargeWeight:3,
+          orderTiDigitsWeight:3,
+          orderTiDigitsVolume:3,
+          orderTiDigitsChargeWeight:3,
           orderLcDigitsWeight:1,
           orderLcDigitsVolume:3,
           orderLcDigitsChargeWeight:2,
+          orderIoDigitsWeight:1,
+          orderIoDigitsVolume:3,
+          orderIoDigitsChargeWeight:2,
           orderTrackCcUser: [],
           sendGoodsNotifyCcUser: [],
           sendBillCcUser: [],
@@ -728,6 +800,24 @@
               trigger: ['blur', 'change']
           },
           ],
+          orderTiDigitsWeight: [{
+              required: true,
+              message: '请输入TI毛重小数位数 0-3',
+              trigger: ['blur', 'change']
+          }
+          ],
+          orderTiDigitsVolume: [{
+              required: true,
+              message: '请输入TI体积小数位数 0-3',
+              trigger: ['blur', 'change']
+          },
+          ],
+          orderTiDigitsChargeWeight: [{
+              required: true,
+              message: '请输入TI计费吨小数位数 0-3',
+              trigger: ['blur', 'change']
+          },
+          ],
           orderLcDigitsWeight: [{
               required: true,
               message: '请输入LC毛重小数位数 0-2',
@@ -743,6 +833,24 @@
           orderLcDigitsChargeWeight: [{
               required: true,
               message: '请输入LC计费吨小数位数 0-2',
+              trigger: ['blur', 'change']
+          },
+          ],
+          orderIoDigitsWeight: [{
+              required: true,
+              message: '请输入IO毛重小数位数 0-2',
+              trigger: ['blur', 'change']
+          }
+          ],
+          orderIoDigitsVolume: [{
+              required: true,
+              message: '请输入IO体积小数位数 0-3',
+              trigger: ['blur', 'change']
+          },
+          ],
+          orderIoDigitsChargeWeight: [{
+              required: true,
+              message: '请输入IO计费吨小数位数 0-2',
               trigger: ['blur', 'change']
           },
           ],
@@ -847,6 +955,25 @@
                   this.ruleForm.orderTeDigitsChargeWeight = this.ruleForm.orderTeDigitsChargeWeight.substring(0,1);
               }
           }
+          //TI
+          if(item == 'orderTiDigitsWeight') {
+              this.ruleForm.orderTiDigitsWeight = this.ruleForm.orderTiDigitsWeight.replace(/[^0123]/g, "");
+              if(this.ruleForm.orderTiDigitsWeight.length > 1){
+                  this.ruleForm.orderTiDigitsWeight = this.ruleForm.orderTiDigitsWeight.substring(0,1);
+              }
+          }
+          if(item == 'orderTiDigitsVolume') {
+              this.ruleForm.orderTiDigitsVolume = this.ruleForm.orderTiDigitsVolume.replace(/[^0123]/g, "");
+              if(this.ruleForm.orderTiDigitsVolume.length > 1){
+                  this.ruleForm.orderTiDigitsVolume = this.ruleForm.orderTiDigitsVolume.substring(0,1);
+              }
+          }
+          if(item == 'orderTiDigitsChargeWeight') {
+              this.ruleForm.orderTiDigitsChargeWeight = this.ruleForm.orderTiDigitsChargeWeight.replace(/[^0123]/g, "");
+              if(this.ruleForm.orderTiDigitsChargeWeight.length > 1){
+                  this.ruleForm.orderTiDigitsChargeWeight = this.ruleForm.orderTiDigitsChargeWeight.substring(0,1);
+              }
+          }
 
           //LC
           if(item == 'orderLcDigitsWeight') {
@@ -865,6 +992,25 @@
               this.ruleForm.orderLcDigitsChargeWeight = this.ruleForm.orderLcDigitsChargeWeight.replace(/[^012]/g, "");
               if(this.ruleForm.orderLcDigitsChargeWeight.length > 1){
                   this.ruleForm.orderLcDigitsChargeWeight = this.ruleForm.orderLcDigitsChargeWeight.substring(0,1);
+              }
+          }
+          //IO
+          if(item == 'orderIoDigitsWeight') {
+              this.ruleForm.orderIoDigitsWeight = this.ruleForm.orderIoDigitsWeight.replace(/[^012]/g, "");
+              if(this.ruleForm.orderIoDigitsWeight.length > 1){
+                  this.ruleForm.orderIoDigitsWeight = this.ruleForm.orderIoDigitsWeight.substring(0,1);
+              }
+          }
+          if(item == 'orderIoDigitsVolume') {
+              this.ruleForm.orderIoDigitsVolume = this.ruleForm.orderIoDigitsVolume.replace(/[^0123]/g, "");
+              if(this.ruleForm.orderIoDigitsVolume.length > 1){
+                  this.ruleForm.orderIoDigitsVolume = this.ruleForm.orderIoDigitsVolume.substring(0,1);
+              }
+          }
+          if(item == 'orderIoDigitsChargeWeight') {
+              this.ruleForm.orderIoDigitsChargeWeight = this.ruleForm.orderIoDigitsChargeWeight.replace(/[^012]/g, "");
+              if(this.ruleForm.orderIoDigitsChargeWeight.length > 1){
+                  this.ruleForm.orderIoDigitsChargeWeight = this.ruleForm.orderIoDigitsChargeWeight.substring(0,1);
               }
           }
       },
@@ -1094,9 +1240,15 @@
                 orderTeDigitsWeight:this.ruleForm.orderTeDigitsWeight,
                 orderTeDigitsVolume:this.ruleForm.orderTeDigitsVolume,
                 orderTeDigitsChargeWeight:this.ruleForm.orderTeDigitsChargeWeight,
+                orderTiDigitsWeight:this.ruleForm.orderTiDigitsWeight,
+                orderTiDigitsVolume:this.ruleForm.orderTiDigitsVolume,
+                orderTiDigitsChargeWeight:this.ruleForm.orderTiDigitsChargeWeight,
                 orderLcDigitsWeight:this.ruleForm.orderLcDigitsWeight,
                 orderLcDigitsVolume:this.ruleForm.orderLcDigitsVolume,
                 orderLcDigitsChargeWeight:this.ruleForm.orderLcDigitsChargeWeight,
+                orderIoDigitsWeight:this.ruleForm.orderIoDigitsWeight,
+                orderIoDigitsVolume:this.ruleForm.orderIoDigitsVolume,
+                orderIoDigitsChargeWeight:this.ruleForm.orderIoDigitsChargeWeight,
                 orderTrackCcUser:this.ruleForm.orderTrackCcUser,
                 sendGoodsNotifyCcUser:this.ruleForm.sendGoodsNotifyCcUser,
                 sendBillCcUser:this.ruleForm.sendBillCcUser,
@@ -1134,9 +1286,15 @@
                 orderTeDigitsWeight:this.ruleForm.orderTeDigitsWeight,
                 orderTeDigitsVolume:this.ruleForm.orderTeDigitsVolume,
                 orderTeDigitsChargeWeight:this.ruleForm.orderTeDigitsChargeWeight,
+                orderTiDigitsWeight:this.ruleForm.orderTiDigitsWeight,
+                orderTiDigitsVolume:this.ruleForm.orderTiDigitsVolume,
+                orderTiDigitsChargeWeight:this.ruleForm.orderTiDigitsChargeWeight,
                 orderLcDigitsWeight:this.ruleForm.orderLcDigitsWeight,
                 orderLcDigitsVolume:this.ruleForm.orderLcDigitsVolume,
                 orderLcDigitsChargeWeight:this.ruleForm.orderLcDigitsChargeWeight,
+                orderIoDigitsWeight:this.ruleForm.orderIoDigitsWeight,
+                orderIoDigitsVolume:this.ruleForm.orderIoDigitsVolume,
+                orderIoDigitsChargeWeight:this.ruleForm.orderIoDigitsChargeWeight,
                 orderTrackCcUser:this.ruleForm.orderTrackCcUser,
                 sendGoodsNotifyCcUser:this.ruleForm.sendGoodsNotifyCcUser,
                 sendBillCcUser:this.ruleForm.sendBillCcUser,
@@ -1211,9 +1369,12 @@
         this.ruleForm.orderTeDigitsWeight = 3;
         this.ruleForm.orderTeDigitsVolume = 3;
         this.ruleForm.orderTeDigitsChargeWeight = 3;
-        this.ruleForm.orderLcDigitsWeight = 1;
-        this.ruleForm.orderLcDigitsVolume = 3;
-        this.ruleForm.orderLcDigitsChargeWeight = 2;
+        this.ruleForm.orderTiDigitsWeight = 3;
+        this.ruleForm.orderTiDigitsVolume = 3;
+        this.ruleForm.orderTiDigitsChargeWeight = 3;
+        this.ruleForm.orderIoDigitsWeight = 1;
+        this.ruleForm.orderIoDigitsVolume = 3;
+        this.ruleForm.orderIoDigitsChargeWeight = 2;
         this.ruleForm.orderTrackCcUser = [];
         this.ruleForm.sendGoodsNotifyCcUser = [];
         this.ruleForm.sendBillCcUser = [];
@@ -1376,6 +1537,16 @@
                   this.ruleForm.orderTeDigitsChargeWeight = response.data.data.orderTeDigitsChargeWeight;
               }
 
+              //TI
+              if (response.data.data.orderTiDigitsWeight != '' && response.data.data.orderTiDigitsWeight != null || response.data.data.orderTiDigitsWeight == 0) {
+                this.ruleForm.orderTiDigitsWeight = response.data.data.orderTiDigitsWeight;
+              }
+              if (response.data.data.orderTiDigitsVolume != '' && response.data.data.orderTiDigitsVolume != null || response.data.data.orderTiDigitsVolume == 0) {
+                this.ruleForm.orderTiDigitsVolume = response.data.data.orderTiDigitsVolume;
+              }
+              if (response.data.data.orderTiDigitsChargeWeight != '' && response.data.data.orderTiDigitsChargeWeight != null || response.data.data.orderTiDigitsChargeWeight == 0) {
+                this.ruleForm.orderTiDigitsChargeWeight = response.data.data.orderTiDigitsChargeWeight;
+              }
               //LC
               if (response.data.data.orderLcDigitsWeight != '' && response.data.data.orderLcDigitsWeight != null || response.data.data.orderLcDigitsWeight == 0) {
                   this.ruleForm.orderLcDigitsWeight = response.data.data.orderLcDigitsWeight;
@@ -1385,6 +1556,17 @@
               }
               if (response.data.data.orderLcDigitsChargeWeight != '' && response.data.data.orderLcDigitsChargeWeight != null || response.data.data.orderLcDigitsChargeWeight == 0) {
                   this.ruleForm.orderLcDigitsChargeWeight = response.data.data.orderLcDigitsChargeWeight;
+              }
+
+              //IO
+              if (response.data.data.orderIoDigitsWeight != '' && response.data.data.orderIoDigitsWeight != null || response.data.data.orderIoDigitsWeight == 0) {
+                  this.ruleForm.orderIoDigitsWeight = response.data.data.orderIoDigitsWeight;
+              }
+              if (response.data.data.orderIoDigitsVolume != '' && response.data.data.orderIoDigitsVolume != null || response.data.data.orderIoDigitsVolume == 0) {
+                  this.ruleForm.orderIoDigitsVolume = response.data.data.orderIoDigitsVolume;
+              }
+              if (response.data.data.orderIoDigitsChargeWeight != '' && response.data.data.orderIoDigitsChargeWeight != null || response.data.data.orderIoDigitsChargeWeight == 0) {
+                  this.ruleForm.orderIoDigitsChargeWeight = response.data.data.orderIoDigitsChargeWeight;
               }
 						}
 					}.bind(this));
@@ -1413,7 +1595,7 @@
 	}
 </script>
 <style type="text/css">
-
+  font.phoneNumberStyle {margin-right: 12px !important;}
   .hrsPersonalEdit-ruleForm .el-input__icon {
     line-height: 30px !important;
   }

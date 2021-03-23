@@ -26,7 +26,7 @@
 							<el-input style="width:210px;">
 								<template slot="prepend">
 									<span v-if="query.businessScope.endsWith('E')&&query.businessScope.startsWith('T')">发车日期</span>
-                  <span v-if="query.businessScope.endsWith('E')&&!query.businessScope.startsWith('T')">发车日期</span>
+                  <span v-if="query.businessScope.endsWith('E')&&!query.businessScope.startsWith('T')">开航日期</span>
 									<span v-if="query.businessScope.endsWith('I')&&query.businessScope.startsWith('T')">到达日期</span>
                   <span v-if="query.businessScope.endsWith('I')&&!query.businessScope.startsWith('T')">到港日期</span>
 									<span v-if="query.businessScope.endsWith('C')">用车日期</span>
@@ -291,8 +291,8 @@
 					</el-table-column> -->
 					<el-table-column v-if="item.label=='发票号码'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable">
 					   <template slot-scope="scope" v-if="scope.row.invoiceNum">
-					   	<p v-for="(item,index) in scope.row.invoiceNum.split('  ')" :key="index">
-					        <span>{{item.split(' ')[1]}}</span>
+					   	<p v-for="(item,index) in scope.row.invoiceNum.split('&')" :key="index">
+					        <span>{{item.split('#')[1]}}</span>
 					   	</p>
 					   </template>
 					</el-table-column>

@@ -87,7 +87,7 @@
 				form: {
 					acturalCharge:'',
           acturalCharge1: '',
-					discount:'',
+					//discount:'',
 					invoiceAmount:'',
 					invoiceNo: '',
 					billId: '',
@@ -107,13 +107,14 @@
 			}
 		},
 		created: function() {
-			this.form.billId = this.frow.billId;
+      this.form.billId = this.frow.billId;
+      this.form.rowUuid = this.frow.rowUuid;
       this.form.acturalCharge = this.frow.invoiceAmount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
       this.form.acturalCharge1 = this.frow.invoiceAmount;//用于保存到数据库
       this.form.statement_id = this.frow.statement_id;
-			this.form.discount = this.frow.discount;
-			this.form.invoiceNo = this.frow.invoiceNumber;
-			this.form.invoiceAmount = this.frow.invoiceAmount;
+      //this.form.discount = this.frow.discount;
+      this.form.invoiceNo = this.frow.invoiceNumber;
+      this.form.invoiceAmount = this.frow.invoiceAmount;
       this.form.invoiceTitle = this.frow.invoiceTitle;
       this.form.invoiceType = this.frow.invoiceType;
       this.form.invoiceRemark = this.frow.invoiceRemark;
@@ -150,7 +151,6 @@
           let _year = theDate.getFullYear();
           let _month = theDate.getMonth();
           let _day = theDate.getDate();
-          console.log(_day);
           _month = _month + 1;
           if (_month < 10) {
               _month = "0" + _month;
@@ -203,16 +203,17 @@
             isNeedUpdateInvoiceDate = 'need';
         }*/
 				this.$axios.post('/prm/coopBill/invoice', {
-            invoiceNumber: this.form.invoiceNo,
-            statement_id: this.form.statement_id,
-            acturalCharge: this.form.acturalCharge1,
-            invoiceTitle: this.form.invoiceTitle,
-            invoiceType: this.form.invoiceType,
-            invoiceRemark: this.form.invoiceRemark,
-            expressCompany: this.form.expressCompany,
-            expressNumber: this.form.expressNumber,
-            invoiceDate: this.form.invoiceDate,
-            //isNeedUpdateInvoiceDate: isNeedUpdateInvoiceDate,
+          invoiceNumber: this.form.invoiceNo,
+          statement_id: this.form.statement_id,
+          rowUuid: this.form.rowUuid,
+          acturalCharge: this.form.acturalCharge1,
+          invoiceTitle: this.form.invoiceTitle,
+          invoiceType: this.form.invoiceType,
+          invoiceRemark: this.form.invoiceRemark,
+          expressCompany: this.form.expressCompany,
+          expressNumber: this.form.expressNumber,
+          invoiceDate: this.form.invoiceDate,
+          //isNeedUpdateInvoiceDate: isNeedUpdateInvoiceDate,
         }, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'

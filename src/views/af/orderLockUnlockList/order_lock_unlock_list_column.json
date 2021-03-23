@@ -63,7 +63,7 @@
 		"align": "center",
 		"sortable": false
 	}, {
-		"label": "应收金额",
+		"label": "收入金额",
 		"prop": "incomeAmount",
 		"flag": "true",
 		"index": 8,

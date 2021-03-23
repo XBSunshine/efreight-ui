@@ -77,7 +77,8 @@ export default {
     findByPage() {
       this.setHeight();
       let coopId = this.frow.coopId;
-      this.$axios.get("/prm/coopStatement/detail/" + coopId)
+      let billTemplate = this.frow.billTemplate;
+      this.$axios.get("/prm/coopStatement/detail/" + coopId + "/" + billTemplate)
         .then(function (response) {
           if (response.data.code == 0) {
             this.data = response.data.data;
@@ -107,9 +108,10 @@ export default {
     },
     exportExcel() {
       let coopId = this.frow.coopId;
+      let billTemplate = this.frow.billTemplate;
       let params = {};
       params['columnStr'] = JSON.stringify(columns.info);
-      this.$axios.post3('/prm/coopStatement/exportDetail/' + coopId, params).then((response) => {
+      this.$axios.post3('/prm/coopStatement/exportDetail/' + coopId + '/' + billTemplate, params).then((response) => {
         var blob = new Blob([response.data], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
         });

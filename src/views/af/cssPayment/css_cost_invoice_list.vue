@@ -170,12 +170,18 @@
 								<el-dropdown-item command="view">查看</el-dropdown-item>
 								<el-dropdown-item command="delete" v-if="cssCostInvoiceDeletePermission">删除</el-dropdown-item>
 								<el-dropdown-item command="rollback" v-if="cssCostInvoiceRollbackPermission">退回</el-dropdown-item>
+								<el-dropdown-item command="fileUpload" v-if="cssCostInvoiceFileUploadPermission">附件</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
 					</template>
 				</el-table-column>
 				<template v-for="(item,index) in tableColumns">
-					<el-table-column :key="index" :prop="item.prop" :label="item.label" :width="item.width" header-align="center" :align="item.align" :sortable="item.sortable" :formatter="formatter"></el-table-column>
+					<el-table-column v-if="item.prop!='filesList'" :key="index" :prop="item.prop" :label="item.label" :width="item.width" header-align="center" :align="item.align" :sortable="item.sortable" :formatter="formatter"></el-table-column>
+					<el-table-column v-else :key="index" :prop="item.prop" :label="item.label" :width="item.width" header-align="center" :align="item.align">
+						<template slot-scope="scope">
+							<p v-for="(file,index) in scope.row.filesList" :key="index" style="cursor: pointer;color: blue;text-decoration: underline;" @click="clickFile(file.fileUrl)">{{file.fileName}}</p>
+						</template>
+					</el-table-column>
 				</template>
 			</el-table>
 		</div>
@@ -187,6 +193,7 @@
 		<invoiceWriteoff ref="addMission" v-if="writeoffVisible" :visible.sync="writeoffVisible" :frow="frow"></invoiceWriteoff>
 		<setVisibleTag ref="addMission" v-if="setVisible" :visible.sync="setVisible"></setVisibleTag>
 		<invoice ref="addMission" v-if="invoiceVisible" :visible.sync="invoiceVisible" :frow="frow"></invoice>
+		<fileUpload ref="addMission" v-if="fileUploadVisible" :visible.sync="fileUploadVisible" :frow="frow"></fileUpload>
 	</div>
 </template>
 <script>
@@ -195,6 +202,7 @@
 	import View from './payment/af_payment_view'
 	import InvoiceWriteoff from './invoice/invoice_writeoff'
 	import Invoice from './invoice/invoice_list_save'
+	import FileUpload from './fileUpload/file_upload_list'
 	export default {
 		data() {
 			return {
@@ -212,6 +220,7 @@
 				viewVisible: false,
 				writeoffVisible: false,
 				invoiceVisible: false,
+				fileUploadVisible: false,
 				frow: {},
 				query: {
 					businessScope: 'AE',
@@ -239,7 +248,8 @@
 				cssCostInvoiceCollectionPermission: false,
 				cssCostInvoiceDoWriteoffPermission: false,
 				cssCostInvoiceDeletePermission: false,
-				cssCostInvoiceRollbackPermission: false
+				cssCostInvoiceRollbackPermission: false,
+				cssCostInvoiceFileUploadPermission: false
 			}
 		},
 		created: function() {
@@ -256,6 +266,9 @@
 			}
 			if (buttonInfo.indexOf('css_cost_invoice_rollback') > -1) {
 				this.cssCostInvoiceRollbackPermission = true
+			}
+			if (buttonInfo.indexOf('css_cost_invoice_fileUpload') > -1) {
+				this.cssCostInvoiceFileUploadPermission = true
 			}
 			//查询业务范畴
 			this.$axios.get2('/afbase/category/paramsNew', {
@@ -293,7 +306,8 @@
 			'setVisibleTag': setVisibleVue,
 			'viewdetail': View,
 			'invoiceWriteoff': InvoiceWriteoff,
-			'invoice': Invoice
+			'invoice': Invoice,
+			'fileUpload': FileUpload
 		},
 		methods: {
 			formatter(row, column) {
@@ -361,6 +375,8 @@
 					this.invoiceVisible = true
 				} else if (command == 'rollback') {
 					this.rollback()
+				} else if(command == 'fileUpload'){
+					this.showFileUpload()
 				}
 			},
 			handleChange(command) {
@@ -382,6 +398,15 @@
 						this.openError(error.response.data.messageInfo)
 					})
 				}
+			},
+			showFileUpload(){
+				if(!this.frow.invoiceDetailId){
+					this.openError('未做收票 不允许上传附件')
+					return
+				}
+				this.fileUploadVisible = true
+				this.frow.flag = 'invoice'
+				this.frow.id = this.frow.invoiceDetailId
 			},
 			openError(info) {
 				this.$notify({
@@ -461,6 +486,9 @@
 					this.checkedAmountSum.push(this.formatQWF(checkedAmountSumMap[key]) + ' (' + key + ')')
 				}
 
+			},
+			clickFile(url){
+				window.open(url)
 			},
 			queryList() {
 				this.loading = true

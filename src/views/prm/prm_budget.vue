@@ -75,6 +75,8 @@
     </el-form>
     <div>
       <el-table :data="budgetData" :span-method="spanMethod" border style="width: 100%; margin-top: 20px"
+                :height="tableH"
+                :row-class-name="tableRowClassName"
                 :cell-class-name="cellClassName">
         <el-table-column align="center" prop="zoneName" :resizable="false" label="业务区域" width="80"></el-table-column>
         <el-table-column align="center" prop="serviceName" :resizable="false" label="产品名称"
@@ -148,6 +150,7 @@ export default {
         "totalFillRate": true,
       },
       rowBeginIndex: {},
+      tableH: "750px",
     }
   },
   methods: {
@@ -271,7 +274,17 @@ export default {
     cellClassName({row, column, rowIndex, columnIndex}) {
       let key = column.property;
       return this.dangerExclude[key] ? "" : (row[key] || "").indexOf("-") >= 0 ? "prm_budget-danger" : "";
-    }
+    },
+    tableRowClassName({row, rowIndex}) {
+      return row['serviceName'] == "汇总" ? "prm-budget-yellow-row" : "";
+    },
+    setHeight() {
+      this.$nextTick(() => {
+        let prm_budget = this.$refs.prm_budget.offsetHeight;
+        let heightS = window.innerHeight - 120 - prm_budget;
+        this.tableH = heightS + "px";
+      });
+    },
   },
   created() {
     this.loadBudgetService();
@@ -281,7 +294,10 @@ export default {
     this.query.startDate = year + "-01";
     this.query.endDate = (year + "-" + (month < 10 ? "0" + month : month + ""));
     this.loadSeller();
-  }
+  },
+  mounted() {
+    this.setHeight();
+  },
 }
 </script>
 
@@ -312,6 +328,11 @@ export default {
 
 .prm_budget-danger {
   color: red;
+}
+
+.prm-budget-yellow-row {
+  background-color: #fdf5e6 !important;
+  font-weight: bold;
 }
 
 </style>

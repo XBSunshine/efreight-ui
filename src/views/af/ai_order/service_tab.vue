@@ -21,7 +21,7 @@
 				<span>元 </span>
 			</template>
 			<template v-if="incomeServicePermissionButton||incomeFindServicePermissionButton">
-				<span style="margin-left: 20px;">应收：{{getNumber(parseFloat(incomeValue))}}</span>
+				<span style="margin-left: 20px;">收入：{{getNumber(parseFloat(incomeValue))}}</span>
 				<span>元 </span>
 				<span>
 					(

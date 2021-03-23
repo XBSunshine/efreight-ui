@@ -181,6 +181,7 @@
           statementId: '',
           isDetail: '',//用于判断是否是从账单明细进来的
           remarkSaler: '',
+          rowUuid: '',
 				},
 				actionPath:'http://up-z1.qiniu.com',
 				accept3: ".pdf,.xls,.xlsx,.jpg,.tar,.zip,.doc,.docx",
@@ -227,6 +228,7 @@
       this.ruleForm.aircraftClassification=this.frow.aircraftClassification;
       this.ruleForm.itCode=this.frow.itCode;
       this.ruleForm.remarkSaler=this.frow.remarkSaler;
+      this.ruleForm.rowUuid=this.frow.rowUuid;
 
 			this.ruleForm.settlementPeriodType= this.settlementTypeFormat(this.frow.paymentMethod,this.frow.settlementPeriod,this.frow.settlementType);
 			if(this.frow.settlementType=='1'){//按量
@@ -489,9 +491,10 @@
 				this.$axios.post('/prm/coopBill/doFill', this.ruleForm)
 					.then(function(response) {
 						if(response.data.code == 0) {
+						  let rowUuidNew = response.data.data;
 							this.openSuccess();
 							this.findCoopBillList();
-              this.callback1(this.ruleForm.billId,this.ruleForm.acturalCharge,this.ruleForm.discount,this.ruleForm.fillNumber,this.ruleForm.planCharge,this.ruleForm.acturalChargeOld,this.ruleForm.fillUrl,this.ruleForm.fillName,this.ruleForm.remarkSaler);
+              this.callback1(this.ruleForm.billId,this.ruleForm.acturalCharge,this.ruleForm.discount,this.ruleForm.fillNumber,this.ruleForm.planCharge,this.ruleForm.acturalChargeOld,this.ruleForm.fillUrl,this.ruleForm.fillName,this.ruleForm.remarkSaler,rowUuidNew);
 							this.handleClose();
 						} else {
 							let errorinfo = response.data.messageInfo;

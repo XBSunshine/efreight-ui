@@ -127,6 +127,13 @@
             </el-input>
           </el-form-item>
         </el-col>
+        <el-col class="elementWidth">
+          <el-form-item label="" >
+            <el-input v-model="ruleForm2.goodsSourceCode"  disabled style="width:251px;margin-right: 5px;">
+              <template slot="prepend">货源地</template>
+            </el-input>
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <el-row style="height: 45px;margin-top: -20px;">
@@ -234,10 +241,22 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="" prop="msrUnitprice">
-            <el-input v-model="ruleForm2.msrUnitprice" @input="formatToFloat('msrUnitprice')"  style="width:251px;margin-right: 5px;">
-              <template slot="prepend"><font style="color: red;">*</font>MSR单价</template>
+            <el-input v-model="ruleForm2.msrUnitprice" @input="formatToFloat('msrUnitprice')"  style="width:216px;margin-right: 5px;">
+              <template slot="prepend"><font style="color: red;">*</font>MSR价格</template>
             </el-input>
           </el-form-item>
+        </el-col>
+        <el-col class="elementWidth">
+        	<el-form-item label-width="10px" prop="msrPriceType">
+        		<el-input style="width:79px;">
+              <!-- @change="setRoutingPersonName" -->
+              <template slot="prepend">&thinsp;</template>
+        			<el-select slot="suffix" v-model="ruleForm2.msrPriceType" @change="priceType('msrPriceType')" style="width:89px;margin-right: -5px;" >
+                 <el-option label="单价" value="单价"></el-option>
+                 <el-option label="总价" value="总价"></el-option>
+        			</el-select>
+        		</el-input>
+        	</el-form-item>
         </el-col>
         <el-col class="elementWidth">
           <el-form-item label="" prop="incomeWeight">
@@ -256,9 +275,9 @@
         </el-col>
         <el-col class="elementWidth">
         	<el-form-item label-width="10px" prop="routingPersonId">
-        		<el-input style="width:251px;">
+        		<el-input style="width:200px;">
         			<template slot="prepend"><font style="color: red;">*</font>航线负责人</template>
-        			<el-select slot="suffix" v-model="ruleForm2.routingPersonId"  @change="setRoutingPersonName" style="width:170px;margin-right: -5px;" >
+        			<el-select slot="suffix" v-model="ruleForm2.routingPersonId"  @change="setRoutingPersonName" style="width:112px;margin-right: -5px;" >
                 <el-option v-for="item in orgUserList" :key="item.value" :label="item.label" :value="item.value">
                 	<span style="float: left">{{ item.label }}</span>
                 	<span style="float: right; color: #8492a6; font-size: 13px">{{ item.label2 }}</span>
@@ -272,10 +291,22 @@
       <el-row>
         <el-col class="elementWidth">
           <el-form-item label="" prop="costUnitPrice">
-            <el-input v-model="ruleForm2.costUnitPrice"  @input="formatToFloat('costUnitPrice')" style="width:251px;margin-right: 5px;">
-              <template slot="prepend"><font style="color: red;">*</font>成本单价</template>
+            <el-input v-model="ruleForm2.costUnitPrice"  @input="formatToFloat('costUnitPrice')" style="width:216px;margin-right: 5px;">
+              <template slot="prepend"><font style="color: red;">*</font>成本价格</template>
             </el-input>
           </el-form-item>
+        </el-col>
+        <el-col class="elementWidth">
+        	<el-form-item label-width="10px" prop="costPriceType">
+        		<el-input style="width:79px;">
+              <!-- @change="setRoutingPersonName" -->
+              <template slot="prepend">&thinsp;</template>
+        			<el-select slot="suffix" v-model="ruleForm2.costPriceType"  @change="priceType('costPriceType')" style="width:89px;margin-right: -5px;" >
+                 <el-option label="单价" value="单价"></el-option>
+                 <el-option label="总价" value="总价"></el-option>
+        			</el-select>
+        		</el-input>
+        	</el-form-item>
         </el-col>
         <el-col class="elementWidth">
           <el-form-item label="" prop="costQuantity">
@@ -287,14 +318,14 @@
         </el-col>
         <el-col class="elementWidth">
           <el-form-item label="" >
-            <el-input v-model="ruleForm2.costAmount" disabled style="width:251px;margin-right: 5px;">
+            <el-input v-model="ruleForm2.costAmount" disabled style="width:251px;margin-right: 3px;">
               <template slot="prepend">成本金额</template>
             </el-input>
           </el-form-item>
         </el-col>
        <el-col class="elementWidth">
          <el-form-item label="" >
-           <el-input v-model="ruleForm2.flightAmount" disabled style="width:251px;margin-right: 5px;">
+           <el-input v-model="ruleForm2.flightAmount" disabled style="width:200px;margin-right: 5px;">
              <template slot="prepend">航线利润</template>
            </el-input>
          </el-form-item>
@@ -356,11 +387,13 @@
          	  msrUnitprice:'',
          	  incomeWeight:'',
          	  msrFunctionalAmount:'',
+            msrPriceType:'',
          	  routingPersonName:'',
             routingPersonId:null,
          	  costUnitPrice:'',
          	  costQuantity:'',
          	  costAmount:'',
+            costPriceType:'',
          	  flightAmount:'',
             orderId:'',
             rountingSignId:''
@@ -432,6 +465,28 @@
 
     methods: {
           orderCopy(order){
+            if (order.msrAmount != null && order.msrAmount != '') {
+            	this.ruleForm2.msrPriceType = "总价";
+              this.ruleForm2.incomeWeight = 1;
+              this.ruleForm2.msrUnitprice = (order.msrAmount*this.currencyRate).toFixed(2);
+            } else {
+              this.ruleForm2.msrUnitprice = (order.msrUnitprice*this.currencyRate).toFixed(2);
+            	this.ruleForm2.msrPriceType = "单价";
+              if(order.confirmChargeWeight){
+                 this.ruleForm2.incomeWeight=order.confirmChargeWeight;
+              }else{
+                this.ruleForm2.incomeWeight=order.planChargeWeight;
+              }
+            }
+
+            this.ruleForm2.costPriceType = "单价";
+            if(order.confirmChargeWeight){
+              this.ruleForm2.costQuantity=order.confirmChargeWeight;
+            }else{
+              this.ruleForm2.costQuantity=order.planChargeWeight;
+            }
+
+            this.ruleForm2.goodsSourceCode = order.goodsSourceCode;
              this.ruleForm2.awbNumber = order.awbNumber;
              this.ruleForm2.awbFromName = order.awbFromName;
              this.ruleForm2.awbFromId = order.awbFromId;
@@ -457,13 +512,7 @@
              this.ruleForm2.confirmDensity= order.confirmDensity;
              this.ruleForm2.planChargeWeight= order.planChargeWeight;
              this.ruleForm2.confirmChargeWeight= order.confirmChargeWeight;
-             if(order.confirmChargeWeight){
-                this.ruleForm2.incomeWeight=order.confirmChargeWeight;
-                this.ruleForm2.costQuantity=order.confirmChargeWeight;
-             }else{
-               this.ruleForm2.incomeWeight=order.planChargeWeight;
-               this.ruleForm2.costQuantity=order.planChargeWeight;
-             }
+
              this.ruleForm2.orderId = order.orderId;
              this.$axios.get('/afbase/rountingsign/view/' + this.frow.orderId+'/AE')
                .then(function(response) {
@@ -474,28 +523,45 @@
                     if(this.orderInfo.msrUnitprice&&this.currencyRate){
                        this.ruleForm2.msrUnitprice = (this.orderInfo.msrUnitprice*this.currencyRate).toFixed(2);
                        this.formatToFloat('msrUnitprice');
+                    }else if(this.orderInfo.msrAmount&&this.currencyRate){
+                       this.ruleForm2.msrUnitprice = (this.orderInfo.msrAmount*this.currencyRate).toFixed(2);
+                       this.formatToFloat('msrUnitprice');
                     }
                  }
                }.bind(this));
           },
           signCopy(sign){
             if(sign.signState==1){
-               this.ruleForm2.msrUnitprice =(sign.msrUnitprice||0).toFixed(2);
+               if(sign.msrAmount){
+                   this.ruleForm2.msrPriceType = "总价";
+                   this.ruleForm2.msrUnitprice =(sign.msrAmount||0).toFixed(2);
+               }else{
+                   this.ruleForm2.msrPriceType = "单价";
+                   this.ruleForm2.msrUnitprice =(sign.msrUnitprice||0).toFixed(2);
+               }
+               if(sign.cuAmount){
+                   this.ruleForm2.costPriceType = "总价";
+                   this.ruleForm2.costUnitPrice = (sign.cuAmount||0).toFixed(2);
+               }else{
+                   this.ruleForm2.costPriceType = "单价";
+                   this.ruleForm2.costUnitPrice = (sign.cuUnitprice||0).toFixed(2);
+               }
+               this.ruleForm2.incomeWeight =sign.incomeWeight;
+               this.ruleForm2.costQuantity = sign.costWeight;
+               if(sign.routingPersonName){
+               this.ruleForm2.routingPersonName=sign.routingPersonName;
+               this.ruleForm2.routingPersonId=sign.routingPersonId;
+               }
             }else{
               if(this.orderInfo.msrUnitprice&&this.currencyRate){
                  this.ruleForm2.msrUnitprice = (this.orderInfo.msrUnitprice*this.currencyRate).toFixed(2);
               }
             }
-            this.ruleForm2.costUnitPrice = (sign.cuUnitprice||0).toFixed(2);
+            this.ruleForm2.rountingSignId=sign.rountingSignId;
             this.formatToFloat('msrUnitprice');
             this.formatToFloat('costUnitPrice');
-            // this.ruleForm2.incomeWeight =sign.incomeWeight;
             // this.ruleForm2.msrFunctionalAmount=sign.msrFunctionalAmount;
-            if(sign.routingPersonName){
-            this.ruleForm2.routingPersonName=sign.routingPersonName;
-            this.ruleForm2.routingPersonId=sign.routingPersonId;
-            }
-            this.ruleForm2.rountingSignId=sign.rountingSignId;
+
           },
           submit(formName){
             this.$refs[formName].validate((valid) => {
@@ -578,6 +644,42 @@
         }
         return _year + "-" + _month+"-"+_date;
       },
+      priceType(a){
+         if(a=='msrPriceType'){
+           if(this.ruleForm2.msrPriceType=='单价'){
+              if(this.ruleForm2.incomeWeight&&this.ruleForm2.msrUnitprice){
+                this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*this.ruleForm2.incomeWeight).toFixed(2);
+                if(this.ruleForm2.costAmount){
+                  this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+                }
+              }
+           }else{
+              if(this.ruleForm2.msrUnitprice){
+                this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*1).toFixed(2);
+                if(this.ruleForm2.costAmount){
+                  this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+                }
+              }
+           }
+         }
+         if(a=='costPriceType'){
+            if(this.ruleForm2.costPriceType=='单价'){
+               if(this.ruleForm2.costUnitPrice&&this.ruleForm2.costQuantity){
+                   this.ruleForm2.costAmount = (this.ruleForm2.costUnitPrice*this.ruleForm2.costQuantity).toFixed(2);
+                 if(this.ruleForm2.msrFunctionalAmount){
+                   this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+                 }
+               }
+            }else{
+              if(this.ruleForm2.costUnitPrice){
+                  this.ruleForm2.costAmount = (this.ruleForm2.costUnitPrice*1).toFixed(2);
+                if(this.ruleForm2.msrFunctionalAmount){
+                  this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+                }
+              }
+            }
+         }
+      },
       formatToFloat(a){
         	this.ruleForm2[a] = this.ruleForm2[a].replace(/[^0123456789.]/g, "");
           if(this.ruleForm2[a].indexOf(".")>-1){
@@ -594,31 +696,47 @@
 
         if(a=='msrUnitprice'){
             if(this.ruleForm2.incomeWeight){
-                this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*this.ruleForm2.incomeWeight).toFixed(2);
-                if(this.ruleForm2.costAmount){
-                  this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
-                }
-            }
-        }else if(a=='incomeWeight'){
-          if(this.ruleForm2.msrUnitprice){
-              this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*this.ruleForm2.incomeWeight).toFixed(2);
+              if(this.ruleForm2.msrPriceType=='单价'){
+                 this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*this.ruleForm2.incomeWeight).toFixed(2);
+              }else{
+                 this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*1).toFixed(2);
+              }
               if(this.ruleForm2.costAmount){
                 this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
               }
+            }
+        }else if(a=='incomeWeight'){
+          if(this.ruleForm2.msrUnitprice){
+            if(this.ruleForm2.msrPriceType=='单价'){
+               this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*this.ruleForm2.incomeWeight).toFixed(2);
+            }else{
+               this.ruleForm2.msrFunctionalAmount = (this.ruleForm2.msrUnitprice*1).toFixed(2);
+            }
+            if(this.ruleForm2.costAmount){
+              this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+            }
           }
         }else if(a=='costUnitPrice'){
           if(this.ruleForm2.costQuantity){
+            if(this.ruleForm2.costPriceType=='单价'){
               this.ruleForm2.costAmount = (this.ruleForm2.costUnitPrice*this.ruleForm2.costQuantity).toFixed(2);
-              if(this.ruleForm2.msrFunctionalAmount){
-                this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
-              }
+            }else{
+              this.ruleForm2.costAmount = (this.ruleForm2.costUnitPrice*1).toFixed(2);
+            }
+            if(this.ruleForm2.msrFunctionalAmount){
+              this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+            }
           }
         }else if(a=='costQuantity'){
           if(this.ruleForm2.costUnitPrice){
+            if(this.ruleForm2.costPriceType=='单价'){
               this.ruleForm2.costAmount = (this.ruleForm2.costUnitPrice*this.ruleForm2.costQuantity).toFixed(2);
-              if(this.ruleForm2.msrFunctionalAmount){
-                this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
-              }
+            }else{
+              this.ruleForm2.costAmount = (this.ruleForm2.costUnitPrice*1).toFixed(2);
+            }
+            if(this.ruleForm2.msrFunctionalAmount){
+              this.ruleForm2.flightAmount = (this.ruleForm2.msrFunctionalAmount - this.ruleForm2.costAmount).toFixed(2);
+            }
           }
         }
 

@@ -34,7 +34,7 @@
 			"sortable": false
 		}, {
 			"label": "境内收货人",
-			"prop": "shipperName",
+			"prop": "consigneeName",
 			"headerAlign": "center",
 			"index": 5,
 			"width": 250,
@@ -42,7 +42,7 @@
 			"sortable": false
 		}, {
 			"label": "境外发货人",
-			"prop": "consigneeName",
+			"prop": "shipperName",
 			"headerAlign": "center",
 			"index": 6,
 			"width": 250,

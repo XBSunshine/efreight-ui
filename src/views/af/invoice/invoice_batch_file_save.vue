@@ -103,7 +103,7 @@
 				loading: false
 			};
 		},
-		inject: ['queryBatchFiles'],
+		inject: ['queryListFile'],
 		created() {
 			this.$axios.get('/hrs/org/getUpToken')
 				.then(function(response) {
@@ -150,7 +150,7 @@
           return false
         } else {
             this.uptoken.key = this.buildUploadFileKey(file);
-          this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
+            this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
             this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'))
             var item = {
                 fileName: this.ruleForm.fileName,
@@ -169,6 +169,41 @@
           });
       },
       handleSuccessChange3(response, file, fileList) { //上传成功后在图片框显示图片
+
+
+      },
+      handleErrorChange(err, file, fileList) { //上传成功后在图片框显示图片
+      				this.noExecute = true
+      				this.loading = false
+      				this.ruleForm.fileUrl = ''
+      				this.openError('保存失败，原因：附件上传失败！')
+    },
+    submitForm(formName) {
+             if(this.ruleForm.fileLists.length == 0){
+                 this.openError("请先选择附件");
+                 return;
+             }
+            this.noExecute = true
+
+            let ruleForm2={
+                 fileStrs:JSON.stringify(this.ruleForm.fileLists),
+                 invoiceDetailId:this.frow.invoiceDetailId,
+                 invoiceDetailWriteoffId:this.frow.invoiceDetailWriteoffId,
+                 businessType:this.frow.businessType
+            }
+            this.$axios.post2('/afbase/cssIncomeFiles/saveOrModify', ruleForm2)
+             .then((response) => {
+               if (response.data.code == 0) {
+                 this.openSuccess();
+                 this.queryListFile();
+                 // this.queryBatchFiles(this.ruleForm.fileLists);
+                 this.handleClose();
+               } else {
+                 this.openError(response.data.messageInfo)
+               }
+             }).catch((error) => {
+               this.openError(error.response.data.messageInfo)
+             });
       },
 			openSuccess() {
 				this.$notify({
@@ -186,23 +221,14 @@
 					position: 'bottom-right'
 				});
 			},
-			submitForm(formName) {
-			   if(this.ruleForm.fileLists.length == 0){
-             this.openError("请先选择附件");
-             return;
-         }
-        this.noExecute = true
-        this.openSuccess();
-        this.queryBatchFiles(this.ruleForm.fileLists);
-        this.handleClose();
-			},
+
 			clickSelect() {
           if(this.ruleForm.fileType == '照片'){
               this.accept3 = '.JPG,.JPEG,.BMP,.PNG'
           }else{
               this.accept3 = '.PDF,.DOC,.DOCX,.XLS,.XLSX,.TXT,.RAR,.ZIP,.JPG,.JPEG,.BMP,.PNG'
           }
-				//this.fileList = []
+				// this.fileList = []
 			},
       checkFileType(){
           if(this.ruleForm.fileType == '照片'){
@@ -216,102 +242,9 @@
                   }
               }
           }else{
-              /*if(this.ruleForm.fileUrl){
-                  if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP".indexOf(this.ruleForm.fileUrl.substring(this.ruleForm.fileUrl.lastIndexOf('.') + 1).toUpperCase()) > -1) {
 
-                  } else {
-                      this.openError("附件类型只可选择文件照片")
-                      this.ruleForm.fileType='照片'
-                      return
-                  }
-              }*/
           }
       },
-			uploadChange(file, fileList) {
-				if(this.noExecute) {
-					this.noExecute = false
-					return
-				}
-				if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP/JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
-
-				} else {
-					this.openError("附件格式有误")
-          this.ruleForm.fileName = ''
-          this.ruleForm.fileUrl = ''
-					return
-				}
-				if(this.ruleForm.fileType == '照片'){
-            if("JPG/JPEG/BMP/PNG".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
-
-            } else {
-                this.openError("只可选择图片类型(JPG/JPEG/BMP/PNG)")
-                this.ruleForm.fileName = ''
-                this.ruleForm.fileUrl = ''
-                return
-            }
-        }else{
-            /*if("PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP".indexOf(file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase()) > -1) {
-
-            } else {
-                this.openError("只可选择文件类型(PDF/DOC/DOCX/XLS/XLSX/TXT/RAR/ZIP)")
-                this.ruleForm.fileName = ''
-                this.ruleForm.fileUrl = ''
-                return
-            }*/
-        }
-				if(file.size > 10 * 1024 * 1024) {
-          this.openError("上传模板大小不能超过 10MB")
-          return false
-        } else {
-					let now = new Date()
-					let year = now.getFullYear()
-					let month = now.getMonth() + 1
-					if(month < 10) {
-						month = '0' + month
-					}
-          let day = now.getDate();
-          if (day < 10) {
-          	day = "0" + day;
-          }
-					this.uptoken.key = "Css_financial_expense_" + year.toString().substring(2) + month +day+ "_" + this.hexMD5(new Date().getTime()) + file.name.substring(file.name.lastIndexOf('.'));
-					this.ruleForm.fileUrl = "http://doc.yctop.com/" + this.uptoken.key
-					if(this.ruleForm.fileName == null || this.ruleForm.fileName == '') {
-						this.ruleForm.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
-					}
-				}
-				this.$message.success('选择成功')
-			},
-			handleSuccessChange(response, file, fileList) { //上传成功后在图片框显示图片
-				this.noExecute = true
-				//				if(!this.ruleForm.fileName.endsWith(this.ruleForm.fileUrl.substring(this.ruleForm.fileUrl.lastIndexOf('.')))) {
-				//					this.ruleForm.fileName += this.ruleForm.fileUrl.substring(this.ruleForm.fileUrl.lastIndexOf('.'))
-				//				}
-				// this.$axios.post2('/afbase/orderFiles/doSave', this.ruleForm)
-				// 	.then(function(response) {
-				// 		if(response.data.code == 0) {
-				// 			this.openSuccess();
-				// 			this.queryOrderFiles();
-				// 			this.handleClose();
-				// 		} else {
-				// 			this.openError(response.data.messageInfo);
-				// 			this.fileList = []
-				// 			this.ruleForm.fileUrl = ''
-				// 		}
-				// 		this.loading = false
-				// 	}.bind(this)).catch(function(error) {
-				// 		let errorinfo = error.response.data.message;
-				// 		this.openError(errorinfo);
-				// 		this.fileList = []
-				// 		this.ruleForm.fileUrl = ''
-				// 		this.loading = false
-				// 	}.bind(this));
-			},
-			handleErrorChange(err, file, fileList) { //上传成功后在图片框显示图片
-				this.noExecute = true
-				this.loading = false
-				this.ruleForm.fileUrl = ''
-				this.openError('保存失败，原因：附件上传失败！')
-			},
 			// 关闭
 			handleClose() {
 				this.$emit('update:visible', false);
@@ -496,7 +429,11 @@
       },
       buildUploadFileKey(file) {
         let orgUuid = localStorage.getItem("orgUuid");
-        return 'org/css/' + orgUuid + "/financial_expense_" + this.hexMD5(new Date().format("yyMMddhhmmss")) +new Date().getTime()+ file.name.substring(file.name.lastIndexOf('.'));
+        if(this.frow.businessType=='writeoff'){
+          return 'org/'+new Date().format("yyMM")+"/"+ orgUuid + "/income_invoice_" +new Date().format("ddhhmmss")+new Date().getTime() + file.name.substring(file.name.lastIndexOf('.'));
+        }else{
+          return 'org/'+new Date().format("yyMM")+"/"+ orgUuid + "/income_invoice_writeoff_"+new Date().format("ddhhmmss")+new Date().getTime() + file.name.substring(file.name.lastIndexOf('.'));
+        }
       }
     }
 	}

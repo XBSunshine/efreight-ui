@@ -7,7 +7,7 @@
 						<el-form-item>
 							<el-input style="width:155px;">
 								<template slot="prepend">业务范畴</template>
-								<el-select slot="suffix" v-model="query.businessScope" placeholder="请选择" style="width:86px;margin-right: -5px;">
+								<el-select slot="suffix" v-model="query.businessScope" @change="queryCssFinacialAccount" placeholder="请选择" style="width:86px;margin-right: -5px;">
 									<el-option v-for="item in businessCodes" :key="item.paramRanking" :label="item.paramText" :value="item.paramText">
 									</el-option>
 								</el-select>
@@ -103,7 +103,21 @@
 					</el-col>
 					<el-col class="elementWidth">
 						<el-form-item>
-							<el-input style="width:219px;margin-left: 255px;">
+							<el-input auto-complete="off" style="width:245px;">
+								<template slot="prepend">
+									<span>&nbsp;&nbsp;&nbsp;&nbsp;科&nbsp;&nbsp;&nbsp;&nbsp;目&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								</template>
+								<el-select slot="suffix" v-model="query.financialAccountCode" placeholder="请选择" style="width:158px;margin-right: -5px;" clearable>
+									<el-option v-for="item in financialAccounts" :key="item.financialAccountId" :label="item.financialAccountName+' '+item.financialAccountCode" :value="item.financialAccountCode">
+										<span>{{item.financialAccountName}} {{item.financialAccountCode}}&nbsp;&nbsp;&nbsp;</span>
+									</el-option>
+								</el-select>
+							</el-input>
+						</el-form-item>
+					</el-col>
+					<el-col class="elementWidth">
+						<el-form-item>
+							<el-input style="width:219px;">
 								<template slot="prepend">发&nbsp;票&nbsp;日&nbsp;期</template>
 								<el-date-picker slot="suffix" v-model="query.invoiceDateStart" clearable type="date" value-format="yyyy-MM-dd" placeholder="开始日期" style="width: 138px;margin-right: -5px;">
 								</el-date-picker>
@@ -123,6 +137,7 @@
 						<el-dropdown v-if="scope.row.writeoffDate!=null" trigger="click" @command="handleCommand" @visible-change="handleChange(scope.row)">
 							<i class="el-icon-s-operation"></i>
 							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item command="fileUpload" v-if="cssCostInvoiceWriteoffFileUploadPermission">附件</el-dropdown-item>
 								<el-dropdown-item command="delete" v-if="cssCostInvoiceWriteoffDeletePermission">删除</el-dropdown-item>
 								<el-dropdown-item></el-dropdown-item>
 							</el-dropdown-menu>
@@ -143,7 +158,12 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column v-else :key="index" :prop="item.prop" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center" :formatter="formatter"></el-table-column>
+					<el-table-column v-else-if="item.prop=='filesList'" :key="index" :label="item.label" :width="item.width" header-align="center" :align="item.align">
+						<template slot-scope="scope">
+							<p v-for="file,index in scope.row.filesList" :key="index" style="cursor: pointer;color: blue;text-decoration: underline;" @click="clickFile(file.fileUrl)">{{file.fileName}}</p>
+						</template>
+					</el-table-column>
+					<el-table-column v-else :prop="item.prop" :key="index" :label="item.label" :width="item.width" :align="item.align" :sortable="item.sortable" header-align="center" :formatter="formatter"></el-table-column>
 				</template>
 			</el-table>
 		</div>
@@ -152,11 +172,13 @@
 			</el-pagination>
 		</div>
 		<setVisibleTag ref="addMission" v-if="setVisible" :visible.sync="setVisible"></setVisibleTag>
+		<fileUpload ref="addMission" v-if="fileUploadVisible" :visible.sync="fileUploadVisible" :frow="frow"></fileUpload>
 	</div>
 </template>
 <script>
 	import setVisibleVue from './writeoff/css_writeoff_setting'
 	import columns from './writeoff/css_wirteoff_column'
+	import FileUpload from './fileUpload/file_upload_list'
 	export default {
 		data() {
 			return {
@@ -172,9 +194,11 @@
 					pageOption: [10, 50, 100]
 				},
 				viewVisible: false,
+				fileUploadVisible: false,
 				frow: {},
 				query: {
 					businessScope: 'AE',
+					financialAccountCode: '',
 					currency: '',
 					customerName: '',
 					writeoffDateStart: this.getDateTime(),
@@ -186,10 +210,12 @@
 					columnStrs: ''
 				},
 				businessCodes: [],
+				financialAccounts: [],
 				currencys: [],
 				showFlag: false,
 				setVisible: false,
-				cssCostInvoiceWriteoffDeletePermission: false
+				cssCostInvoiceWriteoffDeletePermission: false,
+				cssCostInvoiceWriteoffFileUploadPermission: false
 			}
 		},
 		created: function() {
@@ -197,6 +223,9 @@
 			let buttonInfo = window.localStorage.getItem('buttonInfo')
 			if (buttonInfo.indexOf('css_cost_invoice_writeoff_delete') > -1) {
 				this.cssCostInvoiceWriteoffDeletePermission = true
+			}
+			if (buttonInfo.indexOf('css_cost_invoice_writeoff_fileUpload') > -1) {
+				this.cssCostInvoiceWriteoffFileUploadPermission = true
 			}
 			//查询业务范畴
 			this.$axios.get2('/afbase/category/paramsNew', {
@@ -206,6 +235,8 @@
 			}.bind(this)).catch(function(error) {
 				console.log(error);
 			})
+			//科目
+			this.queryCssFinacialAccount()
 			//查询币种
 			this.$axios.get('/afbase/currency').then(function(response) {
 				this.currencys = response.data.data;
@@ -233,6 +264,7 @@
 		},
 		components: {
 			'setVisibleTag': setVisibleVue,
+			'fileUpload': FileUpload
 		},
 		methods: {
 			setting() {
@@ -298,10 +330,17 @@
 					this.showView()
 				} else if (command == 'delete') {
 					this.doDelete()
+				} else if (command == 'fileUpload') {
+					this.showFileUpload()
 				}
 			},
 			handleChange(command) {
 				this.frow = command
+			},
+			showFileUpload() {
+				this.fileUploadVisible = true
+				this.frow.flag = 'writeoff'
+				this.frow.id = this.frow.invoiceDetailWriteoffId
 			},
 			openError(info) {
 				this.$notify({
@@ -360,6 +399,19 @@
 					});
 				});
 
+			},
+			clickFile(url) {
+				window.open(url)
+			},
+			queryCssFinacialAccount() {
+				//科目
+				this.query.financialAccountCode = ''
+				this.$axios.get('/afbase/cssFinancialAccount/' + this.query.businessScope).then((response) => {
+					this.financialAccounts = response.data.data.filter(item => item.financialAccountCode != '')
+					// if (this.financialAccounts && this.financialAccounts.length > 0) {
+					// 	this.query.financialAccountCode = this.financialAccounts[0].financialAccountCode
+					// }
+				})
 			},
 			queryList() {
 				this.loading = true

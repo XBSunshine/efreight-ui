@@ -110,7 +110,7 @@
             this.billNumber = this.frow.statementNumber;
             this.serviceName = this.frow.coopName+" ("+this.frow.statementName+")";
             this.query.acturalCharge=this.frow.acturalCharge
-            this.query.discount=this.frow.discount
+            //this.query.discount=this.frow.discount
             this.query.invoiceAmount=this.frow.invoiceAmount
             this.query.statement_id=this.frow.statement_id
             this.$axios.get('/prm/coopBill/checkBillByStatementId/' + this.query.statement_id).then(function(response) {

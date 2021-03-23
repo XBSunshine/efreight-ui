@@ -60,7 +60,7 @@
             <el-card class="box-card" id="panel-system-notify">
               <div slot="header" class="clearfix"><span class="tab-title">公告</span></div>
               <div v-for="notice in this.systemNotices" :key="notice.noticeId" class="system_notify">
-                <span><div class="spot1"></div>{{notice.noticeTitle}}</span>
+                <span><div class="spot1"></div><span v-html="notice.noticeTitle"></span></span>
                 <el-tag v-if="notice.noticeType == 'XTGX'">更新</el-tag>
                 <el-tag v-if="notice.noticeType == 'HDTG'" type="warning">推广</el-tag>
                 <el-tag v-if="notice.noticeType == 'XTWH'" type="danger">维护</el-tag>
@@ -141,7 +141,12 @@
                 <el-col :span="3" class="rank1" v-if="item.rankNumber===2"><el-image :src="icons.rank2"></el-image></el-col>
                 <el-col :span="3" class="rank1" v-if="item.rankNumber===3"><el-image :src="icons.rank3"></el-image></el-col>
                 <el-col :span="3" class="rank" v-if="item.rankNumber!==1&&item.rankNumber!==2&&item.rankNumber!==3">NO.{{item.rankNumber}}</el-col>
-                <el-col :span="15" class="org_name"><div class=""></div>{{item.orgName}}</el-col>
+                <el-col :span="15" class="org_name" v-if="item.companyProfile || item.companyAdvantage || item.companyContactInfo" style="color: #137DFA;text-decoration: underline;">
+                  <div class="system_other_item" @click="cellClick(item)">
+                    <span> {{item.orgName}}</span>
+                  </div>
+                </el-col>
+                <el-col :span="15" class="org_name" v-else>{{item.orgName}}</el-col>
                 <el-col :span="6" align="right" class="ac_index">{{item.activeIndex}}</el-col>
               </el-row>
             </div>
@@ -234,6 +239,7 @@
         </div>
       </div>
     </div>
+    <viewVisible ref="addMission" v-if="viewVisible" :visible.sync="viewVisible" :frow="frow"></viewVisible>
   </div>
 </template>
 
@@ -513,11 +519,14 @@
   import IntroJs from 'intro.js';
   import 'intro.js/introjs.css';
   import '../../assets/css/instro.css';
+  import viewVisible from './org_view'
 
     export default {
       name: "panel_new.vue",
       data(){
         return {
+          viewVisible: false,
+          frow: {},
           is1360: false,
           showNoticeCount: 3,
           ruleForm: {
@@ -931,7 +940,14 @@
 
         }
       },
+      components: {
+          'viewVisible': viewVisible
+      },
       methods: {
+        cellClick(row){
+            this.frow=row;
+            this.viewVisible=true;
+        },
         queryBookingSpace() {
           this.closeMenu();
           this.$router.query = this.ruleForm;

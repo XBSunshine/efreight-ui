@@ -140,6 +140,7 @@
                     serviceName: '',
                     coopName: '',
                     acturalChargeAll: '',
+                    rowUuid: ''
                 },
                 saveVisible:false,
                 currRow: '',
@@ -162,6 +163,7 @@
             'fill': Fill,
         },
         created: function(){
+            this.query.rowUuid = this.frow.rowUuid;
             this.query.billName = this.frow.billName;
             this.query.serviceName = this.frow.serviceName;
             this.query.coopName = this.frow.coopName;
@@ -308,6 +310,7 @@
             },
             handleFill(row) {
                 this.frow = row;
+                this.frow.rowUuid = this.query.rowUuid;
                 this.fillVisible = true;
             },
             setInvoiceAmountValue(){
@@ -393,10 +396,8 @@
                                     //this.findUnmakeCoopBillList();
                                     this.handleClose();
                                 } else {
-                                    currthis.$notify.error({
-                                        title: '错误',
-                                        message: response.data.messageInfo
-                                    });
+                                    let errorinfo = response.data.messageInfo;
+                                    this.openError(errorinfo);
                                 }
                             }).catch((error) => {
                                 currthis.$notify.error({
@@ -430,7 +431,8 @@
                 }*/
 
             },
-            callback1(billId,invoiceAmount,discount,fillNumber,planCharge,acturalChargeOld,fillUrl,fillName,remarkSaler) {
+            callback1(billId,invoiceAmount,discount,fillNumber,planCharge,acturalChargeOld,fillUrl,fillName,remarkSaler,rowUuidNew) {
+                this.query.rowUuid = rowUuidNew;
                 for(let i=0;i<this.data1.length;i++){
                     if(this.data1[i].billId==billId){
                         this.data1[i].acturalCharge=invoiceAmount;
@@ -527,10 +529,8 @@
                         this.openSuccess();
                         this.handleClose();
                     } else {
-                        currthis.$notify.error({
-                            title: '错误',
-                            message: response.data.messageInfo
-                        });
+                        let errorinfo = response.data.messageInfo;
+                        this.openError(errorinfo);
                     }
                 }).catch((error) => {
                     currthis.$notify.error({
